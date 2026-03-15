@@ -158,6 +158,70 @@ import Base from '../layouts/Base.astro';
         <!-- Tooltip -->
         <div class="topo-tip" id="topoTip"></div>
       </div>
+
+      <!-- Mobile topology — stacked card layout -->
+      <div class="topo-mobile" id="topoMobile">
+        <div class="tm-zone tm-vpn">
+          <div class="tm-zone-label">VPN Tunnel</div>
+          <div class="tm-node" data-info="WireGuard VPN gateway. Kill switch active. All download traffic encrypted.">
+            <span class="tm-name">Gluetun</span><span class="tm-sub">VPN Gateway</span>
+          </div>
+          <div class="tm-node" data-info="Torrent client. Runs inside Gluetun's network namespace. Port 9091.">
+            <span class="tm-name">Transmission</span><span class="tm-sub">Torrents :9091</span>
+          </div>
+          <div class="tm-node" data-info="Usenet client. 3 providers, 140 connections. Runs inside Gluetun's network. Port 8080.">
+            <span class="tm-name">SABnzbd</span><span class="tm-sub">Usenet :8080</span>
+          </div>
+          <div class="tm-kill"><span class="tm-kill-dot"></span> Kill Switch Active</div>
+        </div>
+        <div class="tm-connector"></div>
+        <div class="tm-zone tm-bridge">
+          <div class="tm-zone-label">Docker Bridge</div>
+          <div class="tm-grid">
+            <div class="tm-node" data-info="Movie search, download, organize. 48 custom formats. TRaSH HD Bluray + WEB guide.">
+              <span class="tm-name">Radarr</span><span class="tm-sub">Movies :7878</span>
+            </div>
+            <div class="tm-node" data-info="Game search via Prowlarr indexers. Downloads through VPN pipeline.">
+              <span class="tm-name">QuestArr</span><span class="tm-sub">Games :5002</span>
+            </div>
+            <div class="tm-node" data-info="TV show search, download, organize. 44 custom formats. Handles seasons, anime.">
+              <span class="tm-name">Sonarr</span><span class="tm-sub">TV :8989</span>
+            </div>
+            <div class="tm-node" data-info="Headless browser for Cloudflare challenges. Tagged to all public torrent indexers.">
+              <span class="tm-name">FlareSolverr</span><span class="tm-sub">CF Bypass :8191</span>
+            </div>
+            <div class="tm-node" data-info="Music library manager. Davo's guide. 5 custom formats. Prefers CD rips.">
+              <span class="tm-name">Lidarr</span><span class="tm-sub">Music :8686</span>
+            </div>
+            <div class="tm-node" data-info="Book + audiobook search. File-type detection sorts to Kavita or Audiobookshelf.">
+              <span class="tm-name">LazyLib</span><span class="tm-sub">Books :5299</span>
+            </div>
+            <div class="tm-node" data-info="Aggregates 12 indexers (8 torrent + 4 usenet). Single source of truth.">
+              <span class="tm-name">Prowlarr</span><span class="tm-sub">Indexers :9696</span>
+            </div>
+            <div class="tm-node" data-info="Browser ebook reader. OPDS support, reading progress, comics and manga.">
+              <span class="tm-name">Kavita</span><span class="tm-sub">Reader :5004</span>
+            </div>
+            <div class="tm-node" data-info="Auto subtitle downloads. Watches Radarr/Sonarr. Subsync for timing correction.">
+              <span class="tm-name">Bazarr</span><span class="tm-sub">Subtitles :6767</span>
+            </div>
+            <div class="tm-node" data-info="Audiobook server. Chapter support, bookmarks, sleep timer, mobile apps.">
+              <span class="tm-name">Audiobookshelf</span><span class="tm-sub">Audio :13378</span>
+            </div>
+            <div class="tm-node" data-info="User-friendly request interface. Friends search, request, and track here.">
+              <span class="tm-name">Seerr</span><span class="tm-sub">Requests :5055</span>
+            </div>
+          </div>
+        </div>
+        <div class="tm-connector"></div>
+        <div class="tm-zone tm-host">
+          <div class="tm-zone-label">Host Network</div>
+          <div class="tm-node tm-node-hero" data-info="Media server. Host network for DLNA. Hardware transcoding (QSV). Movies, TV, music streaming.">
+            <span class="tm-name">Jellyfin</span><span class="tm-sub">Media Server :8096</span>
+          </div>
+        </div>
+        <div class="tm-info" id="topoMobileInfo"></div>
+      </div>
     </section>
 
     <!-- ═══ HARDLINKS ═══ -->
@@ -704,6 +768,78 @@ import Base from '../layouts/Base.astro';
     pointer-events:none; z-index:10; box-shadow:0 8px 30px rgba(0,0,0,0.4);
   }
 
+  /* ═══ TOPOLOGY — MOBILE ═══ */
+  .topo-mobile { display:none; }
+
+  @media(max-width:900px) {
+    .topo-wrap { display:none; }
+    .topo-mobile { display:flex; flex-direction:column; gap:0; margin:16px 0; }
+
+    .tm-zone {
+      border-radius:12px; padding:16px; position:relative;
+    }
+    .tm-vpn { background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.2); }
+    .tm-bridge { background:rgba(34,211,238,0.04); border:1px solid rgba(34,211,238,0.12); }
+    .tm-host { background:rgba(99,102,241,0.04); border:1px solid rgba(99,102,241,0.12); }
+
+    .tm-zone-label {
+      font-size:0.65rem; text-transform:uppercase; letter-spacing:0.2em;
+      font-weight:600; margin-bottom:12px;
+      font-family:'SF Mono','Fira Code',monospace;
+    }
+    .tm-vpn .tm-zone-label { color:#6ee7b7; }
+    .tm-bridge .tm-zone-label { color:#67e8f9; }
+    .tm-host .tm-zone-label { color:#a5b4fc; }
+
+    .tm-node {
+      padding:10px 14px; border-radius:8px; margin-bottom:6px;
+      display:flex; justify-content:space-between; align-items:center;
+      cursor:pointer; transition:background 0.2s, border-color 0.2s;
+    }
+    .tm-vpn .tm-node { background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.15); }
+    .tm-bridge .tm-node { background:rgba(34,211,238,0.06); border:1px solid rgba(34,211,238,0.1); }
+    .tm-host .tm-node { background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.15); }
+
+    .tm-node.tm-active {
+      border-color:rgba(255,255,255,0.2);
+      background:rgba(255,255,255,0.05);
+    }
+
+    .tm-name { font-size:0.9rem; font-weight:600; color:#e0e6f0; }
+    .tm-sub { font-size:0.7rem; color:var(--text-muted); font-family:'SF Mono','Fira Code',monospace; }
+
+    .tm-node-hero { padding:16px; text-align:center; flex-direction:column; gap:4px; }
+    .tm-node-hero .tm-name { font-size:1.1rem; font-weight:700; color:#c4b5fd; }
+
+    .tm-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+
+    .tm-kill {
+      display:flex; align-items:center; justify-content:center; gap:8px;
+      margin-top:10px; padding:6px 16px; border-radius:20px;
+      background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.25);
+      font-size:0.7rem; font-weight:600; color:#6ee7b7;
+    }
+    .tm-kill-dot {
+      width:8px; height:8px; border-radius:50%; background:#10b981;
+      animation:tmPulse 2s ease-in-out infinite;
+    }
+    @keyframes tmPulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+
+    .tm-connector {
+      width:2px; height:20px; margin:0 auto;
+      background:linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+    }
+
+    .tm-info {
+      display:none; margin-top:12px; padding:12px 16px;
+      background:#131a2e; border:1px solid var(--border-h); border-radius:10px;
+      font-size:0.82rem; color:var(--text-dim); line-height:1.6;
+      animation:tmFadeIn 0.2s ease-out;
+    }
+    .tm-info.tm-show { display:block; }
+    @keyframes tmFadeIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
+  }
+
   /* ═══ HARDLINKS ═══ */
   .hl-demo {
     display:grid; grid-template-columns:1fr auto; gap:24px; align-items:center;
@@ -1042,9 +1178,18 @@ import Base from '../layouts/Base.astro';
     .docs-fab { display:flex; }
     .docs-main { padding:24px 16px 60px; }
     .stat-grid { grid-template-columns:repeat(3,1fr); }
-    .pipe-spine { left:20px; transform:none; }
-    .pipe-card { width:calc(100% - 48px); margin-left:48px !important; margin-right:0 !important; }
-    .pc-marker { left:-36px !important; right:auto !important; }
+    .pipe-spine { display:none; }
+    .pipe-journey { padding:8px 0 20px; }
+    .pipe-card {
+      width:100%; margin-left:0 !important; margin-right:0 !important;
+      margin-bottom:12px; padding:16px 18px;
+      border-left:3px solid rgba(var(--sr),0.3);
+    }
+    .pipe-card.pc-active { border-left-color:rgba(var(--sr),0.6); }
+    .pc-marker { display:none; }
+    .pc-header h3 { font-size:0.95rem; }
+    .pc-summary { font-size:0.8rem; }
+    .pc-detail { font-size:0.75rem; }
     .ts-flow { flex-direction:column; }
     .ts-flow-arrow { width:2px; height:14px; margin:4px auto; }
     .ts-flow-arrow::after { right:auto; left:-3px; top:auto; bottom:0; border:4px solid transparent; border-top-color:var(--border-h); border-left-color:transparent; }
@@ -1142,6 +1287,25 @@ import Base from '../layouts/Base.astro';
     node.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
   });
 
+  // ═══ MOBILE TOPOLOGY — tap to reveal info ═══
+  const mobileInfo = document.getElementById('topoMobileInfo');
+  document.querySelectorAll('.tm-node').forEach(node => {
+    node.addEventListener('click', () => {
+      const info = node.getAttribute('data-info');
+      if (!info || !mobileInfo) return;
+      const wasActive = node.classList.contains('tm-active');
+      document.querySelectorAll('.tm-node').forEach(n => n.classList.remove('tm-active'));
+      if (wasActive) {
+        mobileInfo.classList.remove('tm-show');
+      } else {
+        node.classList.add('tm-active');
+        mobileInfo.textContent = info;
+        mobileInfo.classList.add('tm-show');
+        mobileInfo.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    });
+  });
+
   // ═══ PIPELINE — Vertical Timeline ═══
   document.querySelectorAll('.pipe-card').forEach(card => {
     card.addEventListener('click', () => {
@@ -1156,20 +1320,24 @@ import Base from '../layouts/Base.astro';
     start: 'top 75%',
     once: true,
     onEnter: () => {
+      const isMobile = window.innerWidth <= 900;
       gsap.from('.pipe-card', {
         opacity: 0,
-        x: (i: number) => i % 2 === 0 ? -30 : 30,
-        duration: 0.6,
-        stagger: 0.12,
+        x: isMobile ? 0 : ((i: number) => i % 2 === 0 ? -30 : 30),
+        y: isMobile ? 15 : 0,
+        duration: 0.5,
+        stagger: 0.1,
         ease: 'power3.out'
       });
-      gsap.from('.pc-marker', {
-        scale: 0,
-        duration: 0.4,
-        stagger: 0.12,
-        ease: 'back.out(2)',
-        delay: 0.15
-      });
+      if (!isMobile) {
+        gsap.from('.pc-marker', {
+          scale: 0,
+          duration: 0.4,
+          stagger: 0.12,
+          ease: 'back.out(2)',
+          delay: 0.15
+        });
+      }
     }
   });
 

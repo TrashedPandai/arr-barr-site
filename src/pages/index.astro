@@ -158,7 +158,7 @@ import Terminal from '../components/Terminal.astro';
 <!-- On-shore zone — warm background from beach arrival -->
 <div class="shore-ground">
 
-<!-- CREW — editorial layout -->
+<!-- CREW — card-based layout, mobile-first -->
 <section class="crew-section">
   <h2 class="crew-heading split-title">The Crew</h2>
   <p class="crew-sub">Fifteen services. Each one does exactly one thing, extremely well.</p>
@@ -166,41 +166,128 @@ import Terminal from '../components/Terminal.astro';
   <div class="crew-list">
     <div class="crew-group">
       <span class="group-tag">Requests</span>
-      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/Fallenbagel/jellyseerr/main/public/logo_full.svg" alt="" loading="lazy"/><span class="entry-name">Jellyseerr</span><span class="entry-role">Search, click, done.</span><a class="entry-link" href="https://github.com/Fallenbagel/jellyseerr" target="_blank" rel="noopener">repo</a></div>
+      <div class="crew-cards">
+        <a class="crew-card" href="https://github.com/Fallenbagel/jellyseerr" target="_blank" rel="noopener">
+          <img class="card-icon" src="https://raw.githubusercontent.com/Fallenbagel/jellyseerr/main/public/logo_full.svg" alt="" loading="lazy"/>
+          <span class="card-name">Jellyseerr</span>
+          <span class="card-role">Search, click, done.</span>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+      </div>
     </div>
 
     <div class="crew-group">
       <span class="group-tag">Automation</span>
-      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/Radarr/Radarr/develop/Logo/128.png" alt="" loading="lazy"/><span class="entry-name">Radarr</span><span class="entry-role">Movies, handled.</span><a class="entry-link" href="https://radarr.video" target="_blank" rel="noopener">site</a></div>
-      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/Sonarr/Sonarr/develop/Logo/128.png" alt="" loading="lazy"/><span class="entry-name">Sonarr</span><span class="entry-role">Every episode, on time.</span><a class="entry-link" href="https://sonarr.tv" target="_blank" rel="noopener">site</a></div>
-      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/Lidarr/Lidarr/develop/Logo/128.png" alt="" loading="lazy"/><span class="entry-name">Lidarr</span><span class="entry-role">Albums in, organized.</span><a class="entry-link" href="https://lidarr.audio" target="_blank" rel="noopener">site</a></div>
-      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/lazylibrarian-icon.png" alt="" loading="lazy"/><span class="entry-name">LazyLibrarian</span><span class="entry-role">Books and audiobooks, sorted.</span><a class="entry-link" href="https://gitlab.com/LazyLibrarian/LazyLibrarian" target="_blank" rel="noopener">repo</a></div>
-      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/Doezer/QuestArr/main/public/logo192.png" alt="" loading="lazy"/><span class="entry-name">QuestArr</span><span class="entry-role">Games, cataloged.</span><a class="entry-link" href="https://github.com/Doezer/QuestArr" target="_blank" rel="noopener">repo</a></div>
+      <div class="crew-cards">
+        <a class="crew-card" href="https://radarr.video" target="_blank" rel="noopener">
+          <img class="card-icon" src="https://raw.githubusercontent.com/Radarr/Radarr/develop/Logo/128.png" alt="" loading="lazy"/>
+          <span class="card-name">Radarr</span>
+          <span class="card-role">Movies, handled.</span>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+        <a class="crew-card" href="https://sonarr.tv" target="_blank" rel="noopener">
+          <img class="card-icon" src="https://raw.githubusercontent.com/Sonarr/Sonarr/develop/Logo/128.png" alt="" loading="lazy"/>
+          <span class="card-name">Sonarr</span>
+          <span class="card-role">Every episode, on time.</span>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+        <a class="crew-card" href="https://lidarr.audio" target="_blank" rel="noopener">
+          <img class="card-icon" src="https://raw.githubusercontent.com/Lidarr/Lidarr/develop/Logo/128.png" alt="" loading="lazy"/>
+          <span class="card-name">Lidarr</span>
+          <span class="card-role">Albums in, organized.</span>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+        <a class="crew-card" href="https://gitlab.com/LazyLibrarian/LazyLibrarian" target="_blank" rel="noopener">
+          <img class="card-icon" src="https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/lazylibrarian-icon.png" alt="" loading="lazy"/>
+          <span class="card-name">LazyLibrarian</span>
+          <span class="card-role">Books and audiobooks, sorted.</span>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+        <a class="crew-card" href="https://github.com/Doezer/QuestArr" target="_blank" rel="noopener">
+          <img class="card-icon" src="https://raw.githubusercontent.com/Doezer/QuestArr/main/public/logo192.png" alt="" loading="lazy"/>
+          <span class="card-name">QuestArr</span>
+          <span class="card-role">Games, cataloged.</span>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+      </div>
     </div>
 
     <div class="crew-group">
       <span class="group-tag">Search</span>
-      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/128.png" alt="" loading="lazy"/><span class="entry-name">Prowlarr</span><span class="entry-role">Twelve indexers, one search.</span><a class="entry-link" href="https://prowlarr.com" target="_blank" rel="noopener">site</a></div>
-      <div class="crew-entry"><span class="entry-emoji">&#x1F6E1;&#xFE0F;</span><span class="entry-name">FlareSolverr</span><span class="entry-role">Gets past the bouncers.</span><a class="entry-link" href="https://github.com/FlareSolverr/FlareSolverr" target="_blank" rel="noopener">repo</a></div>
+      <div class="crew-cards">
+        <a class="crew-card" href="https://prowlarr.com" target="_blank" rel="noopener">
+          <img class="card-icon" src="https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/128.png" alt="" loading="lazy"/>
+          <span class="card-name">Prowlarr</span>
+          <span class="card-role">Twelve indexers, one search.</span>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+        <a class="crew-card" href="https://github.com/FlareSolverr/FlareSolverr" target="_blank" rel="noopener">
+          <span class="card-emoji">&#x1F6E1;&#xFE0F;</span>
+          <span class="card-name">FlareSolverr</span>
+          <span class="card-role">Gets past the bouncers.</span>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+      </div>
     </div>
 
     <div class="crew-group">
       <span class="group-tag">Downloads</span>
-      <div class="crew-entry"><span class="entry-emoji">&#x1F512;</span><span class="entry-name">Gluetun</span><span class="entry-role">VPN tunnel. Always on.</span><a class="entry-link" href="https://github.com/qdm12/gluetun" target="_blank" rel="noopener">repo</a></div>
-      <div class="crew-entry"><span class="entry-emoji">&#x1F300;</span><span class="entry-name">Transmission</span><span class="entry-role">Torrents, through the tunnel.</span><a class="entry-link" href="https://transmissionbt.com" target="_blank" rel="noopener">site</a></div>
-      <div class="crew-entry"><span class="entry-emoji">&#x26A1;</span><span class="entry-name">SABnzbd</span><span class="entry-role">Usenet, through the tunnel.</span><a class="entry-link" href="https://sabnzbd.org" target="_blank" rel="noopener">site</a></div>
+      <div class="crew-cards">
+        <a class="crew-card" href="https://github.com/qdm12/gluetun" target="_blank" rel="noopener">
+          <span class="card-emoji">&#x1F512;</span>
+          <span class="card-name">Gluetun</span>
+          <span class="card-role">VPN tunnel. Always on.</span>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+        <a class="crew-card" href="https://transmissionbt.com" target="_blank" rel="noopener">
+          <span class="card-emoji">&#x1F300;</span>
+          <span class="card-name">Transmission</span>
+          <span class="card-role">Torrents, through the tunnel.</span>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+        <a class="crew-card" href="https://sabnzbd.org" target="_blank" rel="noopener">
+          <span class="card-emoji">&#x26A1;</span>
+          <span class="card-name">SABnzbd</span>
+          <span class="card-role">Usenet, through the tunnel.</span>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+      </div>
     </div>
 
     <div class="crew-group">
       <span class="group-tag">Streaming</span>
-      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/jellyfin/jellyfin-ux/master/branding/SVG/icon-transparent.svg" alt="" loading="lazy"/><span class="entry-name">Jellyfin</span><span class="entry-role">Your library, any screen.</span><a class="entry-link" href="https://jellyfin.org" target="_blank" rel="noopener">site</a></div>
-      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/morpheus65535/bazarr/master/frontend/public/images/logo64.png" alt="" loading="lazy"/><span class="entry-name">Bazarr</span><span class="entry-role">Subtitles, automatic.</span><a class="entry-link" href="https://www.bazarr.media" target="_blank" rel="noopener">site</a></div>
+      <div class="crew-cards">
+        <a class="crew-card" href="https://jellyfin.org" target="_blank" rel="noopener">
+          <img class="card-icon" src="https://raw.githubusercontent.com/jellyfin/jellyfin-ux/master/branding/SVG/icon-transparent.svg" alt="" loading="lazy"/>
+          <span class="card-name">Jellyfin</span>
+          <span class="card-role">Your library, any screen.</span>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+        <a class="crew-card" href="https://www.bazarr.media" target="_blank" rel="noopener">
+          <img class="card-icon" src="https://raw.githubusercontent.com/morpheus65535/bazarr/master/frontend/public/images/logo64.png" alt="" loading="lazy"/>
+          <span class="card-name">Bazarr</span>
+          <span class="card-role">Subtitles, automatic.</span>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+      </div>
     </div>
 
     <div class="crew-group">
       <span class="group-tag">Reading</span>
-      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/Kareadita/Kavita/develop/Logo/kavita.svg" alt="" loading="lazy"/><span class="entry-name">Kavita</span><span class="entry-role">Ebooks in the browser.</span><a class="entry-link" href="https://www.kavitareader.com" target="_blank" rel="noopener">site</a></div>
-      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/advplyr/audiobookshelf/master/client/static/Logo.png" alt="" loading="lazy"/><span class="entry-name">Audiobookshelf</span><span class="entry-role">Audiobooks with progress sync.</span><a class="entry-link" href="https://www.audiobookshelf.org" target="_blank" rel="noopener">site</a></div>
+      <div class="crew-cards">
+        <a class="crew-card" href="https://www.kavitareader.com" target="_blank" rel="noopener">
+          <img class="card-icon" src="https://raw.githubusercontent.com/Kareadita/Kavita/develop/Logo/kavita.svg" alt="" loading="lazy"/>
+          <span class="card-name">Kavita</span>
+          <span class="card-role">Ebooks in the browser.</span>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+        <a class="crew-card" href="https://www.audiobookshelf.org" target="_blank" rel="noopener">
+          <img class="card-icon" src="https://raw.githubusercontent.com/advplyr/audiobookshelf/master/client/static/Logo.png" alt="" loading="lazy"/>
+          <span class="card-name">Audiobookshelf</span>
+          <span class="card-role">Audiobooks with progress sync.</span>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+      </div>
     </div>
   </div>
 </section>
@@ -319,33 +406,49 @@ import Terminal from '../components/Terminal.astro';
 
   .chapter-desc { font-size:0.9rem; color:var(--text-dim); max-width:520px; line-height:1.9; }
 
-  /* ═══ CREW — editorial list (on shore) ═══ */
-  .crew-section { max-width:780px; margin:0 auto; padding:60px 24px 80px; position:relative; }
+  /* ═══ CREW — card-based, mobile-first ═══ */
+  .crew-section { max-width:780px; margin:0 auto; padding:40px 16px 60px; position:relative; }
 
-  .crew-heading { font-size:clamp(2rem,5vw,3rem); font-weight:800; color:#f0f0f0; letter-spacing:-0.5px; margin-bottom:8px; }
-  .crew-sub { color:var(--text-muted); font-size:0.9rem; margin-bottom:48px; line-height:1.6; }
+  .crew-heading { font-size:clamp(1.8rem,5vw,3rem); font-weight:800; color:#f0f0f0; letter-spacing:-0.5px; margin-bottom:8px; }
+  .crew-sub { color:var(--text-muted); font-size:0.9rem; margin-bottom:32px; line-height:1.6; }
 
-  .crew-list { display:flex; flex-direction:column; gap:36px; }
+  .crew-list { display:flex; flex-direction:column; gap:28px; }
 
-  .crew-group { }
-  .group-tag { display:block; font-size:0.6rem; text-transform:uppercase; letter-spacing:0.25em; color:rgba(200,200,200,0.3); font-weight:600; margin-bottom:12px; font-family:'SF Mono','Fira Code',monospace; }
+  .group-tag { display:block; font-size:0.6rem; text-transform:uppercase; letter-spacing:0.25em; color:rgba(200,200,200,0.3); font-weight:600; margin-bottom:10px; font-family:'SF Mono','Fira Code',monospace; }
 
-  .crew-entry { display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.04); transition:border-color 0.3s; }
-  .crew-entry:hover { border-bottom-color:rgba(255,255,255,0.12); }
-  .crew-entry:last-child { border-bottom:none; }
+  .crew-cards { display:grid; grid-template-columns:1fr; gap:8px; }
 
-  .entry-icon { width:22px; height:22px; border-radius:5px; flex-shrink:0; object-fit:contain; opacity:0.8; }
-  .entry-emoji { width:22px; font-size:1rem; text-align:center; flex-shrink:0; line-height:1; }
-  .entry-name { font-size:clamp(1.1rem,3vw,1.4rem); font-weight:700; color:#e8e8e8; flex-shrink:0; min-width:160px; letter-spacing:-0.3px; }
-  .entry-role { font-size:0.85rem; color:var(--text-muted); flex:1; }
-  .entry-link {
-    font-size:0.72rem; color:var(--text-muted); text-decoration:none;
-    opacity:0; transition:opacity 0.2s; flex-shrink:0;
-    padding:2px 8px; border:1px solid rgba(255,255,255,0.08);
-    border-radius:4px;
+  .crew-card {
+    display:grid; grid-template-columns:32px 1fr auto; grid-template-rows:auto auto;
+    gap:1px 12px; align-items:center;
+    padding:12px 14px; border-radius:10px;
+    background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06);
+    text-decoration:none; color:inherit;
+    transition:background 0.2s, border-color 0.2s, transform 0.2s;
+    -webkit-tap-highlight-color:transparent;
   }
-  .crew-entry:hover .entry-link { opacity:1; }
-  .entry-link:hover { color:var(--sky); border-color:rgba(125,211,252,0.2); }
+  .crew-card:hover, .crew-card:active {
+    background:rgba(255,255,255,0.05); border-color:rgba(255,255,255,0.12);
+    transform:translateY(-1px);
+  }
+
+  .card-icon { width:28px; height:28px; border-radius:6px; object-fit:contain; opacity:0.85; grid-row:1 / 3; align-self:center; }
+  .card-emoji { width:28px; font-size:1.2rem; text-align:center; grid-row:1 / 3; align-self:center; line-height:1; }
+  .card-name { font-size:0.95rem; font-weight:700; color:#e8e8e8; letter-spacing:-0.2px; }
+  .card-role { grid-column:2; font-size:0.78rem; color:var(--text-muted); line-height:1.4; }
+  .card-arrow { grid-row:1 / 3; align-self:center; color:rgba(255,255,255,0.15); font-size:0.9rem; transition:color 0.2s, transform 0.2s; }
+  .crew-card:hover .card-arrow { color:var(--sky); transform:translateX(2px); }
+
+  /* Desktop: 2-column grid for groups with 3+ cards */
+  @media(min-width:640px) {
+    .crew-section { padding:60px 24px 80px; }
+    .crew-sub { margin-bottom:48px; }
+    .crew-list { gap:36px; }
+    .crew-cards { grid-template-columns:repeat(2, 1fr); gap:10px; }
+    .crew-card { padding:14px 18px; }
+    .card-icon { width:30px; height:30px; }
+    .card-name { font-size:1rem; }
+  }
 
   /* ═══ SHORE GROUND (warm "on land" background) ═══ */
   .shore-ground {
@@ -404,10 +507,6 @@ import Terminal from '../components/Terminal.astro';
     .chapter-content { position:relative; z-index:1; }
     .chapter-title { font-size:1.8rem; }
     .crew-heading { font-size:1.8rem; }
-    .entry-name { min-width:auto; font-size:1rem; }
-    .crew-entry { flex-wrap:wrap; gap:6px; }
-    .entry-link { opacity:1; }
-    .entry-role { min-width:100%; padding-left:34px; }
     .final-cta { padding:60px 20px 40px; }
     .beach-shore { height:200px; }
   }
@@ -811,11 +910,11 @@ import Terminal from '../components/Terminal.astro';
       scrollTrigger: { trigger: '.crew-heading', start: 'top 80%' }
     });
 
-    // ═══ Crew entries stagger per group ═══
+    // ═══ Crew cards stagger per group ═══
     gsap.utils.toArray<HTMLElement>('.crew-group').forEach(group => {
-      gsap.from(group.querySelectorAll('.crew-entry'), {
+      gsap.from(group.querySelectorAll('.crew-card'), {
         opacity: 0,
-        x: -20,
+        y: 12,
         duration: 0.4,
         stagger: 0.06,
         ease: 'power2.out',
