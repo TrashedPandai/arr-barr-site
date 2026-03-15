@@ -1,0 +1,351 @@
+---
+import Base from '../layouts/Base.astro';
+
+const tiers = [
+  {
+    name: 'The Software',
+    price: 'Free',
+    period: 'forever',
+    color: 'green',
+    highlight: false,
+    items: [
+      'All 15 services (Radarr, Sonarr, Lidarr, etc.)',
+      'Jellyfin media server',
+      'Kavita book reader',
+      'Audiobookshelf',
+      'The arr CLI tool',
+      'Unlimited users & streams',
+    ],
+    note: 'Every piece of software in the stack is free and open source.',
+  },
+  {
+    name: 'The Essentials',
+    price: '~$15',
+    period: '/month',
+    color: 'indigo',
+    highlight: true,
+    items: [
+      'VPN with WireGuard (~$5/mo)',
+      '1 usenet provider (~$10/mo)',
+      '1 free usenet indexer ($0)',
+      'Torrent indexers (free, public)',
+    ],
+    note: 'The minimum to run the full pipeline. Covers VPN privacy + one download source.',
+  },
+  {
+    name: 'The Full Spread',
+    price: '~$25',
+    period: '/month',
+    color: 'purple',
+    highlight: false,
+    items: [
+      'VPN with WireGuard (~$5/mo)',
+      '2-3 usenet providers (~$15/mo)',
+      '2+ paid usenet indexers (~$15-30/yr)',
+      'Better completion rates',
+      'More content found',
+      'Redundant sources',
+    ],
+    note: 'Multiple providers fill each other\'s gaps. Near-100% success rate on downloads.',
+  },
+];
+
+const hardware = [
+  { name: 'Synology DS920+', price: '$550', desc: 'Our reference hardware. Intel QSV for transcoding, 4 bays, low power.', tag: 'Recommended' },
+  { name: 'Used Mini PC', price: '$100-200', desc: 'Any Intel N100/N5105 box. Excellent for transcoding. Add external drives.', tag: 'Budget' },
+  { name: 'Old Desktop', price: '$0', desc: 'Repurpose what you have. If it runs Docker and stays on, it works.', tag: 'Free' },
+  { name: 'Raspberry Pi 5', price: '$80', desc: 'Works in a pinch but no hardware transcoding and limited RAM. Not ideal.', tag: 'Not recommended' },
+];
+
+const optional = [
+  { name: 'Domain name', price: '~$10/yr', desc: 'For remote access with a clean URL. Optional if you use Tailscale.' },
+  { name: 'Tailscale', price: 'Free', desc: 'Mesh VPN for secure remote access. Free tier covers personal use.' },
+  { name: 'Hard drives', price: '$50-150/ea', desc: 'More storage = bigger library. Start with what you have, expand later.' },
+  { name: 'Cloudflare', price: 'Free', desc: 'DNS and CDN. Free plan is plenty for a personal media site.' },
+];
+---
+
+<Base title="arr-barr — Costs" description="What's free, what's paid, and what's optional.">
+
+<div class="page-header">
+  <h1>What It Costs</h1>
+  <p>Honest numbers, no surprises</p>
+</div>
+
+<div class="costs-container">
+
+  <div class="costs-intro gs">
+    <p>The software is 100% free. The services that make it useful cost money. Here's the full picture so you can decide what makes sense for you.</p>
+  </div>
+
+  <!-- Tiers -->
+  <div class="tier-grid">
+    {tiers.map(tier => (
+      <div class={`tier-card tier-${tier.color} ${tier.highlight ? 'tier-highlight' : ''} gs`}>
+        {tier.highlight && <div class="tier-badge">Most common</div>}
+        <h2 class="tier-name">{tier.name}</h2>
+        <div class="tier-price">
+          <span class="tp-amount">{tier.price}</span>
+          <span class="tp-period">{tier.period}</span>
+        </div>
+        <ul class="tier-items">
+          {tier.items.map(item => (
+            <li>{item}</li>
+          ))}
+        </ul>
+        <p class="tier-note">{tier.note}</p>
+      </div>
+    ))}
+  </div>
+
+  <!-- Comparison -->
+  <div class="compare-section gs">
+    <h2>vs. Subscriptions You're Replacing</h2>
+    <div class="compare-grid">
+      <div class="compare-card compare-them">
+        <h3>Streaming Services</h3>
+        <div class="compare-items">
+          <div class="ci"><span>Netflix</span><span>$16/mo</span></div>
+          <div class="ci"><span>Hulu</span><span>$18/mo</span></div>
+          <div class="ci"><span>Disney+</span><span>$14/mo</span></div>
+          <div class="ci"><span>Max</span><span>$17/mo</span></div>
+          <div class="ci"><span>Spotify</span><span>$12/mo</span></div>
+          <div class="ci"><span>Audible</span><span>$15/mo</span></div>
+          <div class="ci ci-total"><span>Total</span><span>~$92/mo</span></div>
+        </div>
+        <p class="compare-note">And you still can't find everything. Content rotates, gets pulled, or is exclusive.</p>
+      </div>
+      <div class="compare-card compare-us">
+        <h3>arr-barr</h3>
+        <div class="compare-items">
+          <div class="ci"><span>VPN</span><span>$5/mo</span></div>
+          <div class="ci"><span>Usenet</span><span>$10/mo</span></div>
+          <div class="ci"><span>Indexers</span><span>~$2/mo</span></div>
+          <div class="ci ci-total"><span>Total</span><span>~$17/mo</span></div>
+        </div>
+        <p class="compare-note">Movies, TV, music, books, audiobooks, and games. Everything stays in your library forever. Share with friends and family.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hardware -->
+  <section class="hw-section gs">
+    <h2>Hardware</h2>
+    <p class="hw-intro">One-time cost. Use what you have or buy something dedicated.</p>
+    <div class="hw-grid">
+      {hardware.map(hw => (
+        <div class="hw-card">
+          <div class="hw-top">
+            <h3>{hw.name}</h3>
+            <span class={`hw-tag ${hw.tag === 'Not recommended' ? 'hw-warn' : ''}`}>{hw.tag}</span>
+          </div>
+          <div class="hw-price">{hw.price}</div>
+          <p>{hw.desc}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Optional -->
+  <section class="opt-section gs">
+    <h2>Optional Add-ons</h2>
+    <div class="opt-grid">
+      {optional.map(opt => (
+        <div class="opt-card">
+          <div class="opt-top">
+            <h3>{opt.name}</h3>
+            <span class="opt-price">{opt.price}</span>
+          </div>
+          <p>{opt.desc}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Bottom line -->
+  <div class="bottom-line gs">
+    <h2>The Bottom Line</h2>
+    <div class="bl-grid">
+      <div class="bl-card">
+        <div class="bl-label">Day 1 cost (if you have a PC)</div>
+        <div class="bl-val bl-green">$0</div>
+        <p>Install Docker, clone the repo, use free torrent indexers</p>
+      </div>
+      <div class="bl-card">
+        <div class="bl-label">Typical monthly</div>
+        <div class="bl-val bl-indigo">~$15-25</div>
+        <p>VPN + usenet provider + 1-2 indexers</p>
+      </div>
+      <div class="bl-card">
+        <div class="bl-label">Annual savings vs. streaming</div>
+        <div class="bl-val bl-gold">~$800+</div>
+        <p>Compared to stacking Netflix, Hulu, Disney+, Max, Spotify, and Audible</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</Base>
+
+<style>
+  .page-header { text-align:center; padding:50px 24px 10px; }
+  .page-header h1 {
+    font-size:clamp(1.8rem,5vw,2.5rem); font-weight:700;
+    background:linear-gradient(135deg,var(--indigo),var(--purple));
+    -webkit-background-clip:text; background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  .page-header p { color:var(--text-dim); font-size:1.05rem; margin-top:6px; }
+
+  .costs-container { max-width:960px; margin:0 auto; padding:0 24px 60px; }
+
+  .costs-intro { text-align:center; max-width:640px; margin:20px auto 40px; }
+  .costs-intro p { color:var(--text-dim); font-size:1rem; line-height:1.7; }
+
+  /* Tier grid */
+  .tier-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:50px; }
+
+  .tier-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:14px; padding:28px 24px; position:relative;
+  }
+  .tier-highlight {
+    border-color:rgba(99,102,241,0.35);
+    box-shadow:0 0 40px rgba(99,102,241,0.08);
+  }
+  .tier-badge {
+    position:absolute; top:-10px; left:50%; transform:translateX(-50%);
+    background:linear-gradient(135deg,var(--indigo),var(--purple));
+    color:#fff; font-size:0.68rem; font-weight:600;
+    padding:3px 14px; border-radius:20px;
+  }
+  .tier-name { font-size:1rem; font-weight:600; margin-bottom:12px; }
+  .tier-green .tier-name { color:#6ee7b7; }
+  .tier-indigo .tier-name { color:#a5b4fc; }
+  .tier-purple .tier-name { color:#c4b5fd; }
+
+  .tier-price { margin-bottom:16px; }
+  .tp-amount { font-size:2rem; font-weight:800; color:#f1f5f9; }
+  .tp-period { font-size:0.85rem; color:var(--text-muted); margin-left:4px; }
+
+  .tier-items { list-style:none; padding:0; margin-bottom:16px; }
+  .tier-items li {
+    padding:6px 0; font-size:0.85rem; color:var(--text-dim);
+    border-bottom:1px solid rgba(30,41,59,0.3);
+    display:flex; align-items:center; gap:8px;
+  }
+  .tier-items li::before {
+    content:''; width:5px; height:5px; border-radius:50%;
+    background:var(--text-muted); flex-shrink:0;
+  }
+  .tier-items li:last-child { border-bottom:none; }
+  .tier-note { font-size:0.78rem; color:var(--text-muted); line-height:1.6; font-style:italic; }
+
+  /* Comparison */
+  .compare-section { margin-bottom:50px; }
+  .compare-section h2 { font-size:1.3rem; color:#f1f5f9; text-align:center; margin-bottom:20px; }
+  .compare-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+
+  .compare-card {
+    border-radius:14px; padding:24px; position:relative; overflow:hidden;
+  }
+  .compare-card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  }
+  .compare-them {
+    background:rgba(248,113,113,0.04); border:1px solid rgba(248,113,113,0.15);
+  }
+  .compare-them::before { background:linear-gradient(90deg,#f87171,#fb923c); }
+  .compare-them h3 { color:#fca5a5; font-size:1rem; margin-bottom:12px; }
+  .compare-us {
+    background:rgba(16,185,129,0.04); border:1px solid rgba(16,185,129,0.15);
+  }
+  .compare-us::before { background:linear-gradient(90deg,#10b981,#34d399); }
+  .compare-us h3 { color:#6ee7b7; font-size:1rem; margin-bottom:12px; }
+
+  .compare-items { margin-bottom:12px; }
+  .ci {
+    display:flex; justify-content:space-between; padding:6px 0;
+    font-size:0.85rem; color:var(--text-dim);
+    border-bottom:1px solid rgba(30,41,59,0.3);
+  }
+  .ci:last-child { border-bottom:none; }
+  .ci-total { font-weight:700; color:#e0e6f0; padding-top:10px; border-top:1px solid var(--border-h); }
+  .compare-note { font-size:0.78rem; color:var(--text-muted); line-height:1.6; }
+
+  /* Hardware */
+  .hw-section { margin-bottom:50px; }
+  .hw-section h2 { font-size:1.3rem; color:#f1f5f9; margin-bottom:4px; }
+  .hw-intro { color:var(--text-dim); font-size:0.92rem; margin-bottom:16px; }
+  .hw-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+
+  .hw-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:12px; padding:18px;
+  }
+  .hw-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
+  .hw-card h3 { font-size:0.95rem; color:#e0e6f0; }
+  .hw-tag {
+    font-size:0.65rem; font-weight:500; padding:2px 8px; border-radius:4px;
+    background:rgba(99,102,241,0.1); color:var(--indigo);
+    border:1px solid rgba(99,102,241,0.2);
+  }
+  .hw-warn { background:rgba(248,113,113,0.1); color:var(--red); border-color:rgba(248,113,113,0.2); }
+  .hw-price { font-size:1.2rem; font-weight:700; color:var(--yellow); margin-bottom:6px; }
+  .hw-card p { font-size:0.82rem; color:var(--text-dim); line-height:1.6; }
+
+  /* Optional */
+  .opt-section { margin-bottom:50px; }
+  .opt-section h2 { font-size:1.3rem; color:#f1f5f9; margin-bottom:16px; }
+  .opt-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+
+  .opt-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:12px; padding:18px;
+  }
+  .opt-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+  .opt-card h3 { font-size:0.95rem; color:#e0e6f0; }
+  .opt-price {
+    font-size:0.82rem; font-weight:600; color:var(--emerald);
+  }
+  .opt-card p { font-size:0.82rem; color:var(--text-dim); line-height:1.6; }
+
+  /* Bottom line */
+  .bottom-line { text-align:center; padding:30px 0 10px; border-top:1px solid rgba(30,41,59,0.4); }
+  .bottom-line h2 { font-size:1.3rem; color:#f1f5f9; margin-bottom:20px; }
+  .bl-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+
+  .bl-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:14px; padding:24px 18px;
+  }
+  .bl-label { font-size:0.78rem; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.05em; }
+  .bl-val { font-size:2.2rem; font-weight:800; margin-bottom:8px; }
+  .bl-green { color:#4ade80; }
+  .bl-indigo { color:#818cf8; }
+  .bl-gold { color:#d4a04a; }
+  .bl-card p { font-size:0.78rem; color:var(--text-dim); line-height:1.5; }
+
+  .gs { opacity:0; transform:translateY(20px); }
+
+  @media(max-width:768px) {
+    .tier-grid { grid-template-columns:1fr; }
+    .compare-grid { grid-template-columns:1fr; }
+    .hw-grid { grid-template-columns:1fr; }
+    .opt-grid { grid-template-columns:1fr; }
+    .bl-grid { grid-template-columns:1fr; }
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.utils.toArray<HTMLElement>('.gs').forEach(el => {
+    gsap.to(el, { opacity:1, y:0, duration:0.7, ease:'power3.out',
+      scrollTrigger: { trigger:el, start:'top 85%' }
+    });
+  });
+</script>

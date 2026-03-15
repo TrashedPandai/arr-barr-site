@@ -1,0 +1,231 @@
+---
+import Base from '../layouts/Base.astro';
+
+const groups = [
+  {
+    title: 'The Front Desk',
+    subtitle: 'Where requests come in',
+    color: 'purple',
+    services: [
+      { name: 'Jellyseerr', role: 'Request Manager', desc: 'Beautiful UI where friends browse, request, and track movies & TV. The only thing most people ever touch.', icon: '&#x1F3AC;', iconType: 'emoji' },
+    ],
+  },
+  {
+    title: 'The Crew',
+    subtitle: 'Each one runs a piece of the operation',
+    color: 'cyan',
+    services: [
+      { name: 'Radarr', role: 'Movies', desc: 'Searches, grabs, renames, and organizes movies. Scores releases against 48 custom formats to pick the best quality.', icon: 'https://raw.githubusercontent.com/Radarr/Radarr/develop/Logo/128.png' },
+      { name: 'Sonarr', role: 'TV Shows', desc: 'Same as Radarr but for TV. Handles seasons, episodes, daily shows, and anime. 44 custom formats for quality scoring.', icon: 'https://raw.githubusercontent.com/Sonarr/Sonarr/develop/Logo/128.png' },
+      { name: 'Lidarr', role: 'Music', desc: 'Manages your music library by artist and album. Uses Davo\'s custom format guide to prefer CD rips and lossless.', icon: 'https://raw.githubusercontent.com/Lidarr/Lidarr/develop/Logo/128.png' },
+      { name: 'LazyLibrarian', role: 'Books', desc: 'Searches for ebooks and audiobooks. Sends to the right download client and sorts into your library with proper metadata.', icon: 'https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/lazylibrarian-icon.png' },
+      { name: 'Bazarr', role: 'Subtitles', desc: 'Automatically finds and downloads subtitles for every movie and episode. Syncs timing to match your exact file.', icon: 'https://raw.githubusercontent.com/morpheus65535/bazarr/master/frontend/public/images/logo64.png' },
+      { name: 'QuestArr', role: 'Games', desc: 'Game search and download manager. Searches Prowlarr indexers for games and sends them through the download pipeline.', icon: 'https://raw.githubusercontent.com/Doezer/QuestArr/main/public/logo192.png' },
+    ],
+  },
+  {
+    title: 'The Scouts',
+    subtitle: 'Finding the goods across 12 sources',
+    color: 'amber',
+    services: [
+      { name: 'Prowlarr', role: 'Indexer Manager', desc: 'Aggregates 12 indexers (8 torrent + 4 usenet) into one search. Every arr app searches through Prowlarr.', icon: '&#x1F50D;', iconType: 'emoji' },
+      { name: 'FlareSolverr', role: 'Cloudflare Bypass', desc: 'Runs a headless browser to solve Cloudflare challenges. Public torrent sites protected by Cloudflare work seamlessly.', icon: '&#x1F6E1;&#xFE0F;', iconType: 'emoji' },
+    ],
+  },
+  {
+    title: 'The Smuggler\'s Tunnel',
+    subtitle: 'Everything downloaded through encrypted VPN',
+    color: 'green',
+    services: [
+      { name: 'Gluetun', role: 'VPN Container', desc: 'WireGuard VPN with kill switch. All download traffic flows through an encrypted tunnel. Other containers connect through its network.', icon: '&#x1F512;', iconType: 'emoji' },
+      { name: 'Transmission', role: 'Torrent Client', desc: 'Lightweight torrent client. Runs inside Gluetun\'s network so every connection is VPN-protected. Supports port forwarding for better speeds.', icon: '&#x1F300;', iconType: 'emoji' },
+      { name: 'SABnzbd', role: 'Usenet Client', desc: 'Binary newsreader that downloads from 3 usenet providers (140 connections). SSL encrypted, runs through VPN for extra privacy.', icon: '&#x26A1;', iconType: 'emoji' },
+    ],
+  },
+  {
+    title: 'The Taproom',
+    subtitle: 'Pull up a chair &mdash; your media, your servers, no subscriptions',
+    color: 'indigo',
+    services: [
+      { name: 'Jellyfin', role: 'Movies, TV & Music', desc: 'Free, open-source media server. Stream to any device with hardware-accelerated transcoding. Your own Netflix + Spotify.', icon: '&#x1F4FA;', iconType: 'emoji' },
+      { name: 'Kavita', role: 'Books & Comics', desc: 'Beautiful reader for ebooks, comics, and manga. OPDS support, reading progress tracking, and a clean web UI.', icon: '&#x1F4D6;', iconType: 'emoji' },
+      { name: 'Audiobookshelf', role: 'Audiobooks & Podcasts', desc: 'Dedicated audiobook server with chapter support, bookmarks, sleep timer, and mobile apps. Better than Audible.', icon: '&#x1F3A7;', iconType: 'emoji' },
+    ],
+  },
+];
+---
+
+<Base title="arr-barr — The Crew" description="Meet the 15 services that make the operation run.">
+
+<div class="page-header">
+  <h1>The Crew</h1>
+  <p>15 services, each with one job</p>
+</div>
+
+<div class="crew-container">
+  <div class="crew-intro gs">
+    <p>Every member of the crew has a single responsibility. Together, they form an automated pipeline that goes from "I want to watch Dune" to "press play" with zero manual work.</p>
+  </div>
+
+  {groups.map(group => (
+    <section class={`crew-group crew-${group.color} gs`}>
+      <div class="group-header">
+        <h2 class="group-title">{group.title}</h2>
+        <p class="group-subtitle" set:html={group.subtitle} />
+      </div>
+      <div class={`service-grid sg-${group.services.length}`}>
+        {group.services.map(svc => (
+          <div class="service-card">
+            <div class="svc-icon">
+              {svc.iconType === 'emoji' ? (
+                <span class="svc-emoji" set:html={svc.icon} />
+              ) : (
+                <img src={svc.icon} alt={svc.name} loading="lazy" />
+              )}
+            </div>
+            <div class="svc-info">
+              <h3>{svc.name}</h3>
+              <span class="svc-role">{svc.role}</span>
+              <p>{svc.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  ))}
+
+  <!-- Flow summary -->
+  <div class="crew-flow gs">
+    <h2>How They Work Together</h2>
+    <div class="flow-chain">
+      <span class="fc-node fc-purple">Request</span>
+      <span class="fc-arrow">&#x2192;</span>
+      <span class="fc-node fc-cyan">Search &amp; Score</span>
+      <span class="fc-arrow">&#x2192;</span>
+      <span class="fc-node fc-amber">Find Sources</span>
+      <span class="fc-arrow">&#x2192;</span>
+      <span class="fc-node fc-green">Download (VPN)</span>
+      <span class="fc-arrow">&#x2192;</span>
+      <span class="fc-node fc-pink">Organize</span>
+      <span class="fc-arrow">&#x2192;</span>
+      <span class="fc-node fc-indigo">Stream</span>
+    </div>
+    <p class="flow-note">Every step is automated. You request, you wait a few minutes, you watch.</p>
+  </div>
+
+  <div class="crew-cta gs">
+    <p>Ready to get started? <a href="/guide">Read the guide</a> or explore the <a href="/architecture">technical architecture</a>.</p>
+  </div>
+</div>
+
+</Base>
+
+<style>
+  .page-header { text-align:center; padding:50px 24px 10px; }
+  .page-header h1 {
+    font-size:clamp(1.8rem,5vw,2.5rem); font-weight:700;
+    background:linear-gradient(135deg,var(--indigo),var(--purple));
+    -webkit-background-clip:text; background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  .page-header p { color:var(--text-dim); font-size:1.05rem; margin-top:6px; }
+
+  .crew-container { max-width:960px; margin:0 auto; padding:0 24px 60px; }
+
+  .crew-intro { text-align:center; max-width:680px; margin:20px auto 40px; }
+  .crew-intro p { color:var(--text-dim); font-size:1rem; line-height:1.7; }
+
+  /* Group sections */
+  .crew-group { margin-bottom:40px; }
+  .group-header { margin-bottom:16px; }
+  .group-title {
+    font-size:1.1rem; font-weight:600; letter-spacing:0.06em;
+    text-transform:uppercase; margin-bottom:2px;
+  }
+  .group-subtitle { font-size:0.88rem; color:var(--text-dim); }
+
+  /* Color variants */
+  .crew-purple .group-title { color:#c4b5fd; }
+  .crew-cyan .group-title { color:#67e8f9; }
+  .crew-amber .group-title { color:#fcd34d; }
+  .crew-green .group-title { color:#6ee7b7; }
+  .crew-indigo .group-title { color:#a5b4fc; }
+
+  /* Service grid */
+  .service-grid { display:grid; gap:12px; }
+  .sg-1 { grid-template-columns:1fr; max-width:500px; }
+  .sg-2 { grid-template-columns:1fr 1fr; }
+  .sg-3 { grid-template-columns:1fr 1fr 1fr; }
+  .sg-6 { grid-template-columns:1fr 1fr 1fr; }
+
+  .service-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:12px; padding:20px;
+    display:flex; gap:14px; align-items:flex-start;
+    transition:all 0.25s;
+  }
+  .service-card:hover {
+    border-color:var(--border-h);
+    transform:translateY(-2px);
+    box-shadow:0 8px 30px rgba(0,0,0,0.2);
+  }
+
+  .svc-icon { flex-shrink:0; }
+  .svc-icon img { width:36px; height:36px; border-radius:8px; }
+  .svc-emoji { font-size:1.8rem; line-height:1; display:block; width:36px; text-align:center; }
+  .svc-info h3 { font-size:0.95rem; font-weight:600; color:#e0e6f0; }
+  .svc-role {
+    display:inline-block; font-size:0.68rem; font-weight:500;
+    color:var(--text-muted); background:rgba(99,102,241,0.08);
+    border:1px solid rgba(99,102,241,0.15); padding:1px 8px;
+    border-radius:4px; margin:3px 0 6px;
+  }
+  .svc-info p { font-size:0.82rem; color:var(--text-dim); line-height:1.6; }
+
+  /* Flow chain */
+  .crew-flow {
+    text-align:center; padding:40px 0;
+    border-top:1px solid rgba(30,41,59,0.4);
+    margin-top:20px;
+  }
+  .crew-flow h2 { font-size:1.2rem; color:#f1f5f9; margin-bottom:20px; }
+  .flow-chain {
+    display:flex; align-items:center; justify-content:center;
+    flex-wrap:wrap; gap:8px;
+  }
+  .fc-node {
+    padding:8px 16px; border-radius:8px; font-size:0.82rem; font-weight:600;
+  }
+  .fc-purple { background:rgba(192,132,252,0.1); color:var(--purple); border:1px solid rgba(192,132,252,0.2); }
+  .fc-cyan { background:rgba(34,211,238,0.1); color:var(--cyan); border:1px solid rgba(34,211,238,0.2); }
+  .fc-amber { background:rgba(251,191,36,0.1); color:var(--yellow); border:1px solid rgba(251,191,36,0.2); }
+  .fc-green { background:rgba(16,185,129,0.1); color:var(--emerald); border:1px solid rgba(16,185,129,0.2); }
+  .fc-pink { background:rgba(244,114,182,0.1); color:var(--pink); border:1px solid rgba(244,114,182,0.2); }
+  .fc-indigo { background:rgba(99,102,241,0.1); color:var(--indigo); border:1px solid rgba(99,102,241,0.2); }
+  .fc-arrow { color:var(--text-muted); font-size:1rem; }
+  .flow-note { color:var(--text-muted); font-size:0.88rem; margin-top:16px; }
+
+  .crew-cta { text-align:center; padding:20px 0; }
+  .crew-cta p { color:var(--text-dim); font-size:0.95rem; }
+
+  .gs { opacity:0; transform:translateY(20px); }
+
+  @media(max-width:768px) {
+    .sg-2, .sg-3, .sg-6 { grid-template-columns:1fr; }
+    .service-card { flex-direction:column; }
+    .flow-chain { flex-direction:column; gap:4px; }
+    .fc-arrow { transform:rotate(90deg); }
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.utils.toArray<HTMLElement>('.gs').forEach(el => {
+    gsap.to(el, { opacity:1, y:0, duration:0.7, ease:'power3.out',
+      scrollTrigger: { trigger:el, start:'top 85%' }
+    });
+  });
+</script>

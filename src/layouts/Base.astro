@@ -29,8 +29,11 @@ const currentPath = Astro.url.pathname;
     <button class="hamburger" id="hamburger" aria-label="Menu">&#9776;</button>
     <div class="nav-links" id="navLinks">
       <a href="/" class:list={["nav-link", { active: currentPath === "/" }]}>Home</a>
-      <a href="/guide" class:list={["nav-link", { active: currentPath === "/guide" || currentPath === "/guide/" }]}>Read the Guide</a>
+      <a href="/guide" class:list={["nav-link", { active: currentPath === "/guide" || currentPath === "/guide/" }]}>The Guide</a>
+      <a href="/crew" class:list={["nav-link", { active: currentPath === "/crew" || currentPath === "/crew/" }]}>The Crew</a>
+      <a href="/costs" class:list={["nav-link", { active: currentPath === "/costs" || currentPath === "/costs/" }]}>Costs</a>
       <a href="/architecture" class:list={["nav-link", { active: currentPath === "/architecture" || currentPath === "/architecture/" }]}>Below Deck</a>
+      <a href="/docs" class:list={["nav-link", { active: currentPath.startsWith("/docs") }]}>Docs</a>
     </div>
   </div>
 </nav>

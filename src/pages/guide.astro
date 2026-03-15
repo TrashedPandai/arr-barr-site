@@ -2,18 +2,311 @@
 import Base from '../layouts/Base.astro';
 ---
 
-<Base title="arr-barr — Read the Guide">
-  <div class="page-header">
-    <h1>Welcome Aboard</h1>
-    <p>From empty dock to full operation</p>
+<Base title="arr-barr — The Guide" description="From empty dock to full operation in one sitting.">
+
+<div class="page-header">
+  <h1>The Guide</h1>
+  <p>From empty dock to full operation</p>
+</div>
+
+<div class="guide-container">
+
+  <!-- Progress nav -->
+  <nav class="guide-nav">
+    <a href="#prerequisites" class="gn-link">1. Prerequisites</a>
+    <a href="#clone" class="gn-link">2. Clone</a>
+    <a href="#configure" class="gn-link">3. Configure</a>
+    <a href="#vpn" class="gn-link">4. VPN</a>
+    <a href="#launch" class="gn-link">5. Launch</a>
+    <a href="#first-request" class="gn-link">6. First Request</a>
+    <a href="#friends" class="gn-link">7. Invite Friends</a>
+    <a href="#faq" class="gn-link">8. FAQ</a>
+  </nav>
+
+  <!-- Step 1: Prerequisites -->
+  <section id="prerequisites" class="guide-step gs">
+    <div class="step-num">1</div>
+    <h2>What You'll Need</h2>
+    <p class="step-desc">Before you set sail, make sure you've got the essentials on board.</p>
+
+    <div class="req-grid">
+      <div class="req-card">
+        <span class="req-icon">&#x1F5A5;</span>
+        <h3>A Server</h3>
+        <p>A Synology NAS, Linux box, or any machine that can run Docker 24/7. The DS920+ is our reference hardware, but anything with 4GB+ RAM works.</p>
+      </div>
+      <div class="req-card">
+        <span class="req-icon">&#x1F433;</span>
+        <h3>Docker & Compose</h3>
+        <p>Docker Engine + Docker Compose v2. Synology users get this through Container Manager. Linux users: follow the <a href="https://docs.docker.com/engine/install/">official install guide</a>.</p>
+      </div>
+      <div class="req-card">
+        <span class="req-icon">&#x1F510;</span>
+        <h3>A VPN Account</h3>
+        <p>A VPN provider that supports WireGuard. We use ProtonVPN (paid plan). Mullvad, AirVPN, and Windscribe also work. This is not optional.</p>
+      </div>
+      <div class="req-card">
+        <span class="req-icon">&#x1F4E6;</span>
+        <h3>A Usenet Provider</h3>
+        <p>At least one usenet provider (Newshosting, Frugal, etc.) and one usenet indexer (NZBgeek, NZBFinder). Torrent-only setups work too, but usenet is faster and more reliable.</p>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <strong>Budget estimate:</strong> VPN ~$5/mo + Usenet ~$10/mo + Indexer ~$0-15/yr. See the <a href="/costs">full cost breakdown</a>.
+    </div>
+  </section>
+
+  <!-- Step 2: Clone -->
+  <section id="clone" class="guide-step gs">
+    <div class="step-num">2</div>
+    <h2>Clone the Repo</h2>
+    <p class="step-desc">Get the code on your server.</p>
+
+    <div class="code-block">
+      <div class="code-header"><span>terminal</span></div>
+      <pre><code><span class="c-prompt">$</span> git clone git@github.com:TrashedPandai/arr-barr.git
+<span class="c-prompt">$</span> cd arr-barr</code></pre>
+    </div>
+
+    <p>This gives you everything: the Docker Compose stack, the CLI tool, config templates, and documentation.</p>
+
+    <div class="file-tree">
+      <div class="ft-title">What's in the box</div>
+      <div class="ft-item"><span class="ft-file">compose.yaml</span> <span class="ft-desc">All 15 services defined</span></div>
+      <div class="ft-item"><span class="ft-file">.env.example</span> <span class="ft-desc">Template for your secrets</span></div>
+      <div class="ft-item"><span class="ft-dir">.cli/</span> <span class="ft-desc">The <code>arr</code> command toolkit</span></div>
+      <div class="ft-item"><span class="ft-dir">templates/</span> <span class="ft-desc">Config templates for Bazarr, Transmission, LazyLibrarian</span></div>
+    </div>
+  </section>
+
+  <!-- Step 3: Configure -->
+  <section id="configure" class="guide-step gs">
+    <div class="step-num">3</div>
+    <h2>Configure Your Environment</h2>
+    <p class="step-desc">Copy the example env and fill in your details.</p>
+
+    <div class="code-block">
+      <div class="code-header"><span>terminal</span></div>
+      <pre><code><span class="c-prompt">$</span> cp .env.example .env
+<span class="c-prompt">$</span> nano .env</code></pre>
+    </div>
+
+    <div class="env-table">
+      <div class="env-row env-header"><span>Variable</span><span>What it does</span></div>
+      <div class="env-row"><span><code>DATA_ROOT</code></span><span>Where all media and downloads live. Single mount = hardlinks work.</span></div>
+      <div class="env-row"><span><code>PUID</code> / <code>PGID</code></span><span>User/group ID for file ownership. Synology: <code>1026:100</code>.</span></div>
+      <div class="env-row"><span><code>TZ</code></span><span>Your timezone. e.g. <code>America/New_York</code>.</span></div>
+      <div class="env-row"><span><code>VPN_*</code></span><span>WireGuard credentials from your VPN provider (see next step).</span></div>
+    </div>
+
+    <div class="warn-box">
+      <strong>Never commit your <code>.env</code></strong> &mdash; it contains VPN private keys and API secrets. It's already in <code>.gitignore</code>.
+    </div>
+  </section>
+
+  <!-- Step 4: VPN -->
+  <section id="vpn" class="guide-step gs">
+    <div class="step-num">4</div>
+    <h2>Set Up Your VPN</h2>
+    <p class="step-desc">All downloads route through an encrypted WireGuard tunnel. Nothing leaks.</p>
+
+    <div class="vpn-flow">
+      <div class="vpn-step">
+        <div class="vpn-num">A</div>
+        <div>
+          <strong>Get your WireGuard config</strong>
+          <p>Log into your VPN provider's website. Generate a WireGuard configuration file. You need the private key, endpoint address, and server public key.</p>
+        </div>
+      </div>
+      <div class="vpn-step">
+        <div class="vpn-num">B</div>
+        <div>
+          <strong>Fill in the <code>.env</code> VPN section</strong>
+          <p>Copy the private key, endpoint, and public key into the corresponding <code>WIREGUARD_*</code> variables.</p>
+        </div>
+      </div>
+      <div class="vpn-step">
+        <div class="vpn-num">C</div>
+        <div>
+          <strong>Pick a server</strong>
+          <p>Choose a server that supports port forwarding (ProtonVPN: any P2P server). Netherlands and Switzerland are solid choices.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <strong>Kill switch is on by default.</strong> If the VPN drops, all download traffic is blocked instantly. Your real IP never leaks.
+    </div>
+  </section>
+
+  <!-- Step 5: Launch -->
+  <section id="launch" class="guide-step gs">
+    <div class="step-num">5</div>
+    <h2>Launch the Stack</h2>
+    <p class="step-desc">One command to rule them all.</p>
+
+    <div class="code-block">
+      <div class="code-header"><span>terminal</span></div>
+      <pre><code><span class="c-comment"># Run the setup wizard (creates directories, copies templates)</span>
+<span class="c-prompt">$</span> arr setup
+
+<span class="c-comment"># Start all 15 services</span>
+<span class="c-prompt">$</span> arr start
+
+<span class="c-comment"># Check that everything is alive</span>
+<span class="c-prompt">$</span> arr health</code></pre>
+    </div>
+
+    <p>First boot takes a few minutes while containers pull their images. After that, you should see all 15 crew members reporting healthy.</p>
+
+    <div class="code-block">
+      <div class="code-header"><span>output</span></div>
+      <pre><code><span class="c-green">&#x25CF;</span> gluetun ............  <span class="c-green">tunnel up</span>        23ms
+<span class="c-green">&#x25CF;</span> transmission ........  <span class="c-green">healthy</span>          41ms
+<span class="c-green">&#x25CF;</span> sabnzbd .............  <span class="c-green">healthy</span>          38ms
+<span class="c-green">&#x25CF;</span> radarr ..............  <span class="c-green">healthy</span>          52ms
+<span class="c-green">&#x25CF;</span> sonarr ..............  <span class="c-green">healthy</span>          47ms
+<span class="c-green">&#x25CF;</span> jellyfin ............  <span class="c-green">healthy</span>          31ms
+
+<span class="c-green">15/15 crew members reporting</span>         all systems nominal</code></pre>
+    </div>
+  </section>
+
+  <!-- Step 6: First Request -->
+  <section id="first-request" class="guide-step gs">
+    <div class="step-num">6</div>
+    <h2>Your First Request</h2>
+    <p class="step-desc">Let's grab something and watch it end up in your library.</p>
+
+    <div class="request-flow">
+      <div class="rf-step">
+        <div class="rf-badge rf-purple">1</div>
+        <div>
+          <strong>Open Jellyseerr</strong>
+          <p>Navigate to <code>http://your-server:5055</code>. Search for a movie or show.</p>
+        </div>
+      </div>
+      <div class="rf-arrow">&#x2193;</div>
+      <div class="rf-step">
+        <div class="rf-badge rf-cyan">2</div>
+        <div>
+          <strong>Hit Request</strong>
+          <p>Jellyseerr sends the request to Radarr (movies) or Sonarr (TV). They search 12 indexers in parallel via Prowlarr.</p>
+        </div>
+      </div>
+      <div class="rf-arrow">&#x2193;</div>
+      <div class="rf-step">
+        <div class="rf-badge rf-green">3</div>
+        <div>
+          <strong>Best release auto-selected</strong>
+          <p>48 custom formats score each result. The highest-scoring release is grabbed through the encrypted VPN tunnel.</p>
+        </div>
+      </div>
+      <div class="rf-arrow">&#x2193;</div>
+      <div class="rf-step">
+        <div class="rf-badge rf-pink">4</div>
+        <div>
+          <strong>Hardlinked &amp; ready</strong>
+          <p>File is renamed, hardlinked to your library (zero extra disk space), artwork fetched, subtitles queued. Jellyfin sees it immediately.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <strong>Typical time:</strong> 2&ndash;10 minutes from request to watching, depending on file size and connection speed.
+    </div>
+  </section>
+
+  <!-- Step 7: Invite Friends -->
+  <section id="friends" class="guide-step gs">
+    <div class="step-num">7</div>
+    <h2>Invite Friends</h2>
+    <p class="step-desc">The whole point is sharing. Here's how to get your crew onboard.</p>
+
+    <div class="friends-grid">
+      <div class="friend-card">
+        <h3>For Watchers</h3>
+        <p>Create Jellyfin accounts for friends. They stream movies, TV, and music through any Jellyfin client &mdash; phone, TV, browser, Roku, anything.</p>
+        <span class="friend-tag">Zero setup for them</span>
+      </div>
+      <div class="friend-card">
+        <h3>For Requesters</h3>
+        <p>Give them Jellyseerr access. They browse, request, and track &mdash; it shows up in the library automatically. No technical knowledge needed.</p>
+        <span class="friend-tag">They just search and click</span>
+      </div>
+      <div class="friend-card">
+        <h3>For Operators</h3>
+        <p>Friends who want to run their own stack: fork the repo, follow this guide, and they're live. The CLI handles everything.</p>
+        <span class="friend-tag">Full stack in 30 minutes</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Step 8: FAQ -->
+  <section id="faq" class="guide-step gs">
+    <div class="step-num">8</div>
+    <h2>Troubleshooting &amp; FAQ</h2>
+    <p class="step-desc">Common questions from new crew members.</p>
+
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>My download is stuck / not starting</summary>
+        <div class="faq-body">
+          <p>Run <code>arr vpn</code> to check VPN status. If the tunnel is down, downloads are blocked by the kill switch (this is intentional). Check your WireGuard credentials in <code>.env</code>.</p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>Jellyfin says "No compatible streams"</summary>
+        <div class="faq-body">
+          <p>The file needs transcoding but your server can't keep up. Enable hardware transcoding in Jellyfin settings (QSV for Intel, VAAPI for others). On a Synology DS920+, QSV handles 4K with ease.</p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>A service won't start</summary>
+        <div class="faq-body">
+          <p>Run <code>arr logs &lt;service&gt;</code> to see what's wrong. Common causes: port conflict, missing directory, or bad permissions. <code>arr doctor</code> can diagnose most issues automatically.</p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>How do I update everything?</summary>
+        <div class="faq-body">
+          <p><code>arr update</code> pulls the latest code and recreates containers with new images. Your config and media are never touched &mdash; they live in persistent volumes.</p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>Is this legal?</summary>
+        <div class="faq-body">
+          <p>The software itself is 100% legal and open source. What you download with it is your responsibility. The VPN ensures your ISP can't see your traffic.</p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>Can I run this on a Raspberry Pi?</summary>
+        <div class="faq-body">
+          <p>Technically possible on a Pi 4/5, but not recommended. The arr apps are memory-hungry and transcoding needs real CPU/GPU power. A used mini PC or NAS is a much better experience.</p>
+        </div>
+      </details>
+      <details class="faq-item">
+        <summary>How much disk space do I need?</summary>
+        <div class="faq-body">
+          <p>Depends on your library goals. A starter library of ~100 movies + ~30 shows in 1080p runs about 2&ndash;3 TB. Hardlinks mean downloads and library files share the same disk space &mdash; no duplication.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- Bottom CTA -->
+  <div class="guide-cta gs">
+    <h2>You're ready to sail</h2>
+    <p>Questions? Check the <a href="/docs">docs</a> or dig into the <a href="/architecture">architecture</a>.</p>
   </div>
-  <div class="container" style="padding-bottom:80px;">
-    <p class="text-dim text-center">Guide page coming soon. Check back shortly.</p>
-  </div>
+
+</div>
+
 </Base>
 
 <style>
-  .page-header { text-align:center; padding:50px 24px 20px; }
+  .page-header { text-align:center; padding:50px 24px 10px; }
   .page-header h1 {
     font-size:clamp(1.8rem,5vw,2.5rem); font-weight:700;
     background:linear-gradient(135deg,var(--indigo),var(--purple));
@@ -21,4 +314,206 @@ import Base from '../layouts/Base.astro';
     -webkit-text-fill-color:transparent;
   }
   .page-header p { color:var(--text-dim); font-size:1.05rem; margin-top:6px; }
+
+  .guide-container { max-width:860px; margin:0 auto; padding:0 24px 60px; }
+
+  /* Progress nav */
+  .guide-nav {
+    display:flex; flex-wrap:wrap; gap:6px; justify-content:center;
+    padding:20px 0 40px; border-bottom:1px solid var(--border);
+    margin-bottom:40px; position:sticky; top:56px; z-index:100;
+    background:rgba(10,14,26,0.92); backdrop-filter:blur(12px);
+  }
+  .gn-link {
+    font-size:0.75rem; font-weight:500; color:var(--text-muted);
+    padding:5px 12px; border-radius:6px; border:1px solid var(--border);
+    text-decoration:none; transition:all 0.2s;
+  }
+  .gn-link:hover { color:var(--indigo); border-color:rgba(99,102,241,0.3); }
+
+  /* Steps */
+  .guide-step {
+    padding:40px 0; border-bottom:1px solid rgba(30,41,59,0.4);
+  }
+  .guide-step:last-of-type { border-bottom:none; }
+  .step-num {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:36px; height:36px; border-radius:50%;
+    background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.25);
+    color:var(--indigo); font-weight:700; font-size:0.9rem;
+    margin-bottom:12px;
+  }
+  .guide-step h2 { font-size:1.4rem; color:#f1f5f9; margin-bottom:6px; }
+  .step-desc { color:var(--text-dim); font-size:0.95rem; margin-bottom:20px; }
+
+  /* Prerequisite cards */
+  .req-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+  .req-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:12px; padding:18px;
+  }
+  .req-icon { font-size:1.4rem; display:block; margin-bottom:8px; }
+  .req-card h3 { font-size:0.95rem; color:#e0e6f0; margin-bottom:4px; }
+  .req-card p { font-size:0.82rem; color:var(--text-dim); line-height:1.6; }
+
+  /* Code blocks */
+  .code-block {
+    background:#080c16; border:1px solid rgba(99,102,241,0.15);
+    border-radius:10px; overflow:hidden; margin:16px 0;
+  }
+  .code-header {
+    padding:8px 14px; background:rgba(15,22,41,0.8);
+    border-bottom:1px solid rgba(30,41,59,0.6);
+    font-size:0.68rem; color:var(--text-muted);
+    font-family:'SF Mono','Fira Code',monospace;
+  }
+  .code-block pre {
+    padding:14px 16px; margin:0; overflow-x:auto;
+    font-family:'SF Mono','Fira Code',Consolas,monospace;
+    font-size:0.82rem; line-height:1.7; color:var(--text-dim);
+  }
+  .code-block code { background:none; border:none; padding:0; font-size:inherit; color:inherit; }
+  .c-prompt { color:var(--yellow); }
+  .c-comment { color:var(--text-muted); }
+  .c-green { color:var(--green); }
+
+  /* File tree */
+  .file-tree {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:10px; padding:16px; margin-top:16px;
+  }
+  .ft-title { font-size:0.75rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px; }
+  .ft-item { display:flex; align-items:center; gap:10px; padding:4px 0; font-size:0.85rem; }
+  .ft-file { color:var(--cyan); font-family:'SF Mono','Fira Code',monospace; font-size:0.8rem; }
+  .ft-dir { color:var(--yellow); font-family:'SF Mono','Fira Code',monospace; font-size:0.8rem; }
+  .ft-desc { color:var(--text-muted); font-size:0.78rem; }
+
+  /* Env table */
+  .env-table {
+    border:1px solid var(--border); border-radius:10px; overflow:hidden; margin:16px 0;
+  }
+  .env-row {
+    display:grid; grid-template-columns:180px 1fr; padding:10px 16px;
+    font-size:0.85rem; border-bottom:1px solid rgba(30,41,59,0.4);
+  }
+  .env-row:last-child { border-bottom:none; }
+  .env-header { background:var(--surface); font-weight:600; color:var(--text-muted); font-size:0.75rem; text-transform:uppercase; letter-spacing:0.06em; }
+  .env-row span:first-child { color:var(--cyan); }
+  .env-row span:last-child { color:var(--text-dim); }
+
+  /* Tip / Warn boxes */
+  .tip-box, .warn-box {
+    padding:14px 18px; border-radius:10px; font-size:0.85rem;
+    line-height:1.6; margin:16px 0;
+  }
+  .tip-box {
+    background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.2);
+    color:var(--text-dim);
+  }
+  .tip-box strong { color:#6ee7b7; }
+  .warn-box {
+    background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.2);
+    color:var(--text-dim);
+  }
+  .warn-box strong { color:#fcd34d; }
+
+  /* VPN flow */
+  .vpn-flow { display:flex; flex-direction:column; gap:16px; margin:16px 0; }
+  .vpn-step {
+    display:flex; gap:14px; align-items:flex-start;
+    background:rgba(16,185,129,0.04); border:1px solid rgba(16,185,129,0.15);
+    border-radius:10px; padding:16px;
+  }
+  .vpn-num {
+    flex-shrink:0; width:30px; height:30px; border-radius:50%;
+    background:rgba(16,185,129,0.15); color:#6ee7b7;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:0.85rem;
+  }
+  .vpn-step strong { color:#a7f3d0; font-size:0.9rem; }
+  .vpn-step p { color:var(--text-dim); font-size:0.82rem; margin-top:4px; line-height:1.6; }
+
+  /* Request flow */
+  .request-flow { display:flex; flex-direction:column; align-items:center; gap:0; margin:16px 0; }
+  .rf-step {
+    display:flex; gap:14px; align-items:flex-start; width:100%;
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:10px; padding:16px;
+  }
+  .rf-badge {
+    flex-shrink:0; width:30px; height:30px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:0.85rem;
+  }
+  .rf-purple { background:rgba(192,132,252,0.15); color:var(--purple); }
+  .rf-cyan { background:rgba(34,211,238,0.15); color:var(--cyan); }
+  .rf-green { background:rgba(74,222,128,0.15); color:var(--green); }
+  .rf-pink { background:rgba(244,114,182,0.15); color:var(--pink); }
+  .rf-step strong { color:#e0e6f0; font-size:0.9rem; }
+  .rf-step p { color:var(--text-dim); font-size:0.82rem; margin-top:4px; line-height:1.6; }
+  .rf-arrow { color:var(--text-muted); font-size:1.2rem; padding:4px 0; }
+
+  /* Friends grid */
+  .friends-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:16px; }
+  .friend-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:12px; padding:20px;
+  }
+  .friend-card h3 { font-size:0.95rem; color:#e0e6f0; margin-bottom:6px; }
+  .friend-card p { font-size:0.82rem; color:var(--text-dim); line-height:1.6; margin-bottom:10px; }
+  .friend-tag {
+    display:inline-block; font-size:0.7rem; font-weight:500;
+    color:var(--indigo); background:rgba(99,102,241,0.1);
+    border:1px solid rgba(99,102,241,0.2); padding:3px 10px; border-radius:6px;
+  }
+
+  /* FAQ */
+  .faq-list { display:flex; flex-direction:column; gap:8px; margin-top:16px; }
+  .faq-item {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:10px; overflow:hidden;
+  }
+  .faq-item summary {
+    padding:14px 18px; cursor:pointer; font-size:0.9rem;
+    font-weight:500; color:#e0e6f0; list-style:none;
+    display:flex; align-items:center; gap:10px;
+  }
+  .faq-item summary::before { content:'+ '; color:var(--indigo); font-weight:700; font-family:monospace; }
+  .faq-item[open] summary::before { content:'- '; }
+  .faq-item summary::-webkit-details-marker { display:none; }
+  .faq-body { padding:0 18px 14px; }
+  .faq-body p { font-size:0.85rem; color:var(--text-dim); line-height:1.7; }
+
+  /* Bottom CTA */
+  .guide-cta {
+    text-align:center; padding:40px 0 20px;
+  }
+  .guide-cta h2 { font-size:1.3rem; color:#f1f5f9; margin-bottom:6px; }
+  .guide-cta p { color:var(--text-dim); font-size:0.95rem; }
+
+  /* GSAP fade targets */
+  .gs { opacity:0; transform:translateY(20px); }
+
+  /* Responsive */
+  @media(max-width:768px) {
+    .req-grid { grid-template-columns:1fr; }
+    .friends-grid { grid-template-columns:1fr; }
+    .env-row { grid-template-columns:1fr; gap:4px; }
+    .guide-nav { position:static; flex-wrap:wrap; }
+  }
+  @media(max-width:480px) {
+    .guide-step h2 { font-size:1.2rem; }
+  }
 </style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.utils.toArray<HTMLElement>('.gs').forEach(el => {
+    gsap.to(el, { opacity:1, y:0, duration:0.7, ease:'power3.out',
+      scrollTrigger: { trigger:el, start:'top 85%' }
+    });
+  });
+</script>
