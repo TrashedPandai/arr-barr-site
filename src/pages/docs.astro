@@ -11,6 +11,7 @@ import Base from '../layouts/Base.astro';
     <div class="sb-brand">docs</div>
     <nav class="sb-nav">
       <a href="#stats" class="sb-link active">Overview</a>
+      <a href="/docs/diagrams" class="sb-link sb-page">Diagrams <span class="sb-arrow">&nearr;</span></a>
       <div class="sb-divider"></div>
       <span class="sb-label">Architecture</span>
       <a href="#topology" class="sb-link">Network Topology</a>
@@ -247,25 +248,74 @@ import Base from '../layouts/Base.astro';
     <!-- ═══ PIPELINE ═══ -->
     <section id="pipeline" class="ds">
       <h2>The Pipeline</h2>
-      <p class="sec-desc">Request to stream in 6 steps. Click any stage for details.</p>
+      <p class="sec-desc">From request to streaming in 6 steps. Click any stage for details.</p>
 
-      <div class="pipe-wrap" id="pipeWrap">
+      <div class="pipe-journey" id="pipeJourney">
+        <!-- SVG spine with animated data packets -->
+        <svg class="pipe-spine" viewBox="0 0 40 960" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="pipeGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#c084fc"/>
+              <stop offset="20%" stop-color="#fbbf24"/>
+              <stop offset="40%" stop-color="#22d3ee"/>
+              <stop offset="60%" stop-color="#10b981"/>
+              <stop offset="80%" stop-color="#f472b6"/>
+              <stop offset="100%" stop-color="#6366f1"/>
+            </linearGradient>
+          </defs>
+          <line x1="20" y1="0" x2="20" y2="960" stroke="url(#pipeGrad)" stroke-width="2" stroke-dasharray="6 4" opacity="0.5"/>
+          <circle class="pipe-packet" r="4" fill="#22d3ee" opacity="0.8">
+            <animateMotion dur="6s" repeatCount="indefinite" path="M20,0 L20,960"/>
+          </circle>
+          <circle class="pipe-packet" r="3" fill="#d4a04a" opacity="0.5">
+            <animateMotion dur="6s" repeatCount="indefinite" begin="2s" path="M20,0 L20,960"/>
+          </circle>
+        </svg>
+
         {[
-          {id:'req', label:'Request', icon:'&#x1F3AC;', color:'purple', detail:'User searches in Jellyseerr. Sends to Radarr (movies) or Sonarr (TV). Zero technical knowledge needed.'},
-          {id:'search', label:'Search', icon:'&#x1F50D;', color:'amber', detail:'Prowlarr fans out to 12 indexers (8 torrent + 4 usenet) in parallel. FlareSolverr handles Cloudflare-protected sites.'},
-          {id:'score', label:'Score', icon:'&#x2B50;', color:'cyan', detail:'Each result scored against 48 custom formats (Radarr) or 44 (Sonarr). Release group tier, version, quality markers all factor in. Highest score wins.'},
-          {id:'download', label:'Download', icon:'&#x1F512;', color:'green', detail:'Grabbed through encrypted WireGuard tunnel. Kill switch ensures zero leaks. Torrent or usenet depending on best available source.'},
-          {id:'import', label:'Import', icon:'&#x1F517;', color:'pink', detail:'Torrents: hardlinked (zero extra space, keeps seeding). Usenet: moved (staging cleared). File renamed per TRaSH naming convention. Artwork + metadata fetched.'},
-          {id:'stream', label:'Stream', icon:'&#x1F4FA;', color:'indigo', detail:'Jellyfin detects new file. Bazarr fetches subtitles. Hardware-accelerated transcoding if needed. Ready on any device.'},
-        ].map((stage, i) => (
-          <div class={`pipe-stage ps-${stage.color}`} data-idx={i} id={`ps-${stage.id}`}>
-            <div class="ps-icon" set:html={stage.icon} />
-            <div class="ps-label">{stage.label}</div>
-            <div class="ps-detail">{stage.detail}</div>
-            {i < 5 && <div class="ps-connector"><div class="ps-dot"></div></div>}
+          {id:'request', num:'01', title:'Request', color:'purple', rgb:'192,132,252',
+           services:['Jellyseerr'], summary:'User searches for content. Zero technical knowledge needed.',
+           details:[{k:'Interface', v:'Jellyseerr web UI or mobile'}, {k:'Routes to', v:'Radarr (movies) / Sonarr (TV)'}, {k:'Auto-approve', v:'Enabled for trusted users'}]},
+          {id:'search', num:'02', title:'Search', color:'amber', rgb:'251,191,36',
+           services:['Prowlarr','FlareSolverr'], summary:'12 indexers queried in parallel.',
+           details:[{k:'Indexers', v:'8 torrent + 4 usenet'}, {k:'Cloudflare', v:'FlareSolverr bypass'}, {k:'Sync', v:'Event-driven push to all arr apps'}]},
+          {id:'score', num:'03', title:'Score', color:'cyan', rgb:'34,211,238',
+           services:['Radarr','Sonarr','Lidarr'], summary:'48 custom formats rank every result.',
+           details:[{k:'Guide', v:'TRaSH HD Bluray + WEB'}, {k:'Reject', v:'LQ, 3D, x265(HD), Scene, AV1'}, {k:'Learn more', v:'See Quality Scoring below'}]},
+          {id:'download', num:'04', title:'Download', color:'green', rgb:'16,185,129',
+           services:['Gluetun','Transmission','SABnzbd'], summary:'Encrypted WireGuard tunnel. Kill switch active.',
+           details:[{k:'Protocol', v:'Best available (torrent or usenet)'}, {k:'Encryption', v:'WireGuard via Proton VPN'}, {k:'Kill switch', v:'iptables DROP — zero leaks'}]},
+          {id:'import', num:'05', title:'Import', color:'pink', rgb:'244,114,182',
+           services:['Radarr','Sonarr','Lidarr'], summary:'Hardlinked — zero extra disk space.',
+           details:[{k:'Torrent', v:'Hardlink (keeps seeding)'}, {k:'Usenet', v:'Move (staging cleared)'}, {k:'Rename', v:'TRaSH naming convention + metadata'}]},
+          {id:'stream', num:'06', title:'Stream', color:'indigo', rgb:'99,102,241',
+           services:['Jellyfin','Bazarr'], summary:'HW-accelerated, subtitles auto-fetched.',
+           details:[{k:'Transcoding', v:'Hardware QSV/VAAPI if needed'}, {k:'Subtitles', v:'Auto via Bazarr'}, {k:'Clients', v:'Any device, anywhere'}]},
+        ].map((s, i) => (
+          <div class={`pipe-card ${i % 2 === 0 ? 'pc-left' : 'pc-right'}`} style={`--sc:var(--${s.color === 'green' ? 'emerald' : s.color}); --sr:${s.rgb};`} data-stage={s.id}>
+            <div class="pc-marker"></div>
+            <div class="pc-content">
+              <div class="pc-header">
+                <span class="pc-num">{s.num}</span>
+                <h3>{s.title}</h3>
+              </div>
+              <div class="pc-services">
+                {s.services.map(svc => <span class="pc-svc">{svc}</span>)}
+              </div>
+              <p class="pc-summary">{s.summary}</p>
+              <div class="pc-detail">
+                {s.details.map(d => (
+                  <div class="pc-row">
+                    <span class="pc-key">{d.k}</span>
+                    <span class="pc-val">{d.v}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         ))}
       </div>
+      <p class="pipe-link"><a href="/docs/diagrams#main-flow">See the full sequence diagram &rarr;</a></p>
     </section>
 
     <!-- ═══ QUALITY SCORING ═══ -->
@@ -307,14 +357,14 @@ import Base from '../layouts/Base.astro';
               <div class="q-item"><span>No-RlsGroup / Obfuscated</span><span class="qi-reject">block</span></div>
               <div class="q-item"><span>Scene / Retags</span><span class="qi-reject">block</span></div>
             </div>
-            <p class="q-note">14 streaming CFs (AMZN, NF, etc.) score 0 &mdash; tagging only.</p>
+            <p class="q-note">14 streaming CFs score 0 &mdash; tagging only.</p>
           </div>
         </div>
 
         <!-- Live scorer -->
         <div class="scorer" id="scorer-radarr">
           <div class="sc-title">Live Score</div>
-          <div class="sc-release" id="scRelease">Dune.Part.Two.2024.2160p.IMAX.WEB-DL.DV.HDR.Atmos-FLUX</div>
+          <div class="sc-release" id="scRelease">Galactic.Plumber.3.2024.2160p.IMAX.WEB-DL.DV.HDR.Atmos-FLUX</div>
           <div class="sc-matches" id="scMatches"></div>
           <div class="sc-total">Score: <span id="scTotal">0</span></div>
         </div>
@@ -328,7 +378,7 @@ import Base from '../layouts/Base.astro';
           <div class="qd"><strong>DV Boost</strong> <span class="qi-score">+1000</span> &bull; HDR <span class="qi-score">+500</span> &bull; HDR10+ <span class="qi-score">+100</span></div>
           <div class="qd"><strong>SDR at 4K</strong> <span class="qi-reject">-10000</span> &mdash; want HDR for 4K content</div>
         </div>
-        <p class="q-note">44 CFs total. Same tier system as Radarr. Streaming services matter more for TV because a Netflix WEB-DL is almost certainly high quality.</p>
+        <p class="q-note">44 CFs total. Same tier system as Radarr. Streaming services matter more for TV because a streaming WEB-DL is almost certainly high quality.</p>
       </div>
 
       <!-- Lidarr -->
@@ -505,6 +555,9 @@ import Base from '../layouts/Base.astro';
   }
   .sb-link:hover { color:var(--text); background:rgba(99,102,241,0.04); }
   .sb-link.active { color:var(--indigo); border-left-color:var(--indigo); background:rgba(99,102,241,0.06); }
+  .sb-page { color:var(--gold-dim); display:flex; align-items:center; gap:4px; }
+  .sb-page:hover { color:var(--gold); background:rgba(212,160,74,0.06); }
+  .sb-arrow { font-size:0.65rem; opacity:0.6; }
 
   .docs-fab {
     display:none; position:fixed; bottom:20px; right:20px; z-index:200;

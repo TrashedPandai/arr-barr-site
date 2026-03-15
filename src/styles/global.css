@@ -129,10 +129,11 @@ img { max-width: 100%; height: auto; }
 footer {
   text-align: center;
   padding: 36px 24px;
-  border-top: 1px solid var(--border);
-  color: var(--text-muted);
+  border-top: 1px solid rgba(50,70,35,0.3);
+  color: rgba(160,175,140,0.6);
   font-size: 0.8rem;
-  margin-top: 40px;
+  margin-top: 0;
+  background: #283818;
 }
 
 /* ═══ Responsive ═══ */

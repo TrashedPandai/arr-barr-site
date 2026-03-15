@@ -53,12 +53,11 @@
 - [ ] Each card links to the service's docs or relevant guide section
 - [ ] Add to nav
 
-## Costs Page (`/costs`) — Not Started
-- [ ] Create `/costs` page
-- [ ] Tier breakdown: fully free vs paid indexers vs optional services
-- [ ] Visual diagram showing what you get at each tier
-- [ ] Monthly/yearly cost estimates
-- [ ] Add to nav
+## Costs Page (`/costs`) — Done
+- [x] Three-tier pricing: Torrents Only (~$5), Torrents+Usenet (~$15), Full Spread (~$25)
+- [x] Hardware options, optional add-ons, bottom line summary
+- [x] No streaming service comparison (we're not selling anything)
+- [x] All example media names are fictional
 
 ## Docs Section (`/docs`) — Not Started
 - [ ] Create `/docs` landing page with topic index

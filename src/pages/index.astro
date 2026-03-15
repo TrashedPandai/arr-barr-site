@@ -30,13 +30,24 @@ import Terminal from '../components/Terminal.astro';
 <div class="journey-wrap" id="journeyWrap">
   <!-- SVG Nautical Chart Path -->
   <svg class="journey-path" id="journeyPath" viewBox="0 0 60 1000" preserveAspectRatio="none" aria-hidden="true">
+    <!-- Static dotted map trail — always visible, faint -->
+    <path
+      d="M 30,0 C 45,60 15,120 30,180 C 45,240 10,300 30,360 C 50,420 15,480 30,540 C 45,600 10,660 30,720 C 50,780 15,840 30,900 C 45,940 30,970 30,1000"
+      fill="none"
+      stroke="#d4a04a"
+      stroke-width="2"
+      stroke-opacity="0.12"
+      stroke-linecap="round"
+      stroke-dasharray="6 10"
+    />
+    <!-- DrawSVG reveal path — solid, brighter, animates on scroll -->
     <path
       id="chartRoute"
       d="M 30,0 C 45,60 15,120 30,180 C 45,240 10,300 30,360 C 50,420 15,480 30,540 C 45,600 10,660 30,720 C 50,780 15,840 30,900 C 45,940 30,970 30,1000"
       fill="none"
       stroke="#d4a04a"
-      stroke-width="1.5"
-      stroke-opacity="0.4"
+      stroke-width="2.5"
+      stroke-opacity="0.6"
       stroke-linecap="round"
     />
     <!-- Chapter nodes as SVG circles -->
@@ -104,24 +115,35 @@ import Terminal from '../components/Terminal.astro';
   </div>
 </div>
 
-<!-- Beach shore transition — overhead view -->
+<!-- Beach shore transition — overhead view, waves crashing toward shore (top→bottom) -->
 <div class="beach-shore" id="beachShore">
-  <!-- Shallow water tint overlay — fades from deep to shallow -->
-  <div class="shore-shallow"></div>
-  <!-- Overhead foam lines — horizontal bands where waves break -->
-  <svg class="shore-foam-svg" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true">
-    <!-- Primary foam line -->
-    <path id="foamA" d="M0,70 C60,66 150,74 280,68 C400,62 520,76 650,69 C780,62 900,75 1020,67 C1100,63 1160,71 1200,68" stroke="rgba(255,255,255,0.14)" stroke-width="3" fill="none" stroke-linecap="round"/>
-    <path id="foamB" d="M0,72 C80,68 180,76 310,70 C440,64 560,78 680,71 C810,64 930,77 1050,69 C1130,65 1170,73 1200,70" stroke="rgba(255,255,255,0.14)" stroke-width="3" fill="none" stroke-linecap="round" visibility="hidden"/>
-    <!-- Secondary foam line (thinner, offset) -->
-    <path id="foam2A" d="M0,90 C70,86 190,94 320,88 C450,82 580,96 710,89 C840,82 960,95 1080,87 C1140,84 1180,91 1200,88" stroke="rgba(255,255,255,0.08)" stroke-width="2" fill="none" stroke-linecap="round"/>
-    <path id="foam2B" d="M0,92 C90,88 210,96 340,90 C470,84 600,98 730,91 C860,84 980,97 1100,89 C1150,86 1190,93 1200,90" stroke="rgba(255,255,255,0.08)" stroke-width="2" fill="none" stroke-linecap="round" visibility="hidden"/>
-    <!-- Faint third foam line — furthest wash up the sand -->
-    <path id="foam3A" d="M0,110 C100,107 250,114 400,109 C550,104 700,116 850,110 C1000,105 1100,113 1200,108" stroke="rgba(255,255,255,0.04)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-    <path id="foam3B" d="M0,112 C120,109 270,116 420,111 C570,106 720,118 870,112 C1020,107 1120,115 1200,110" stroke="rgba(255,255,255,0.04)" stroke-width="1.5" fill="none" stroke-linecap="round" visibility="hidden"/>
-    <!-- Subtle water sheen between foam lines -->
-    <path id="sheenA" d="M0,80 C150,76 350,84 550,78 C750,72 950,86 1200,80 L1200,88 C950,94 750,80 550,86 C350,92 150,84 0,88 Z" fill="rgba(100,180,200,0.03)"/>
-    <path id="sheenB" d="M0,82 C170,78 370,86 570,80 C770,74 970,88 1200,82 L1200,90 C970,96 770,82 570,88 C370,94 170,86 0,90 Z" fill="rgba(100,180,200,0.03)" visibility="hidden"/>
+  <svg class="shore-svg" viewBox="0 0 1200 400" preserveAspectRatio="none" aria-hidden="true">
+    <!-- LAYER 1: Breaking wave — the bright white foam band where wave crumbles -->
+    <path id="breakA" d="M0,160 C40,153 100,168 200,157 C300,146 380,170 480,158 C580,146 660,171 760,159 C860,147 940,169 1040,157 C1120,148 1170,163 1200,156" stroke="rgba(255,255,255,0.22)" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path id="breakB" d="M0,163 C55,156 120,171 220,160 C320,149 400,173 500,161 C600,149 680,174 780,162 C880,150 960,172 1060,160 C1140,151 1180,166 1200,159" stroke="rgba(255,255,255,0.22)" stroke-width="4" fill="none" stroke-linecap="round" visibility="hidden"/>
+    <path id="breakC" d="M0,157 C45,150 110,166 210,155 C310,144 390,168 490,156 C590,144 670,169 770,157 C870,145 950,167 1050,155 C1130,146 1175,161 1200,154" stroke="rgba(255,255,255,0.22)" stroke-width="4" fill="none" stroke-linecap="round" visibility="hidden"/>
+
+    <!-- LAYER 4: Wash sheet — wide semi-transparent band that rushes up beach -->
+    <path id="washA" d="M0,200 C100,192 250,208 400,196 C550,184 700,210 850,198 C1000,186 1100,204 1200,194 L1200,230 C1100,240 1000,222 850,234 C700,246 550,220 400,232 C250,244 100,228 0,236 Z" fill="rgba(255,255,255,0.04)"/>
+    <path id="washB" d="M0,206 C120,198 270,214 420,202 C570,190 720,216 870,204 C1020,192 1120,210 1200,200 L1200,240 C1120,250 1020,232 870,244 C720,256 570,230 420,242 C270,254 120,238 0,246 Z" fill="rgba(255,255,255,0.04)" visibility="hidden"/>
+    <path id="washC" d="M0,196 C90,188 240,204 390,192 C540,180 690,206 840,194 C990,182 1090,200 1200,190 L1200,224 C1090,234 990,216 840,228 C690,240 540,214 390,226 C240,238 90,222 0,230 Z" fill="rgba(255,255,255,0.04)" visibility="hidden"/>
+
+    <!-- LAYER 5: Primary foam line — bright, irregular, where wash meets sand -->
+    <path id="foamA" d="M0,245 C30,241 80,250 140,243 C200,236 260,252 340,244 C420,236 470,253 550,245 C630,237 690,254 770,246 C850,238 910,253 990,245 C1070,237 1120,249 1200,242" stroke="rgba(255,255,255,0.18)" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path id="foamB" d="M0,248 C40,244 90,253 150,246 C210,239 270,255 350,247 C430,239 480,256 560,248 C640,240 700,257 780,249 C860,241 920,256 1000,248 C1080,240 1130,252 1200,245" stroke="rgba(255,255,255,0.18)" stroke-width="3" fill="none" stroke-linecap="round" visibility="hidden"/>
+    <path id="foamC" d="M0,243 C35,239 85,248 145,241 C205,234 265,250 345,242 C425,234 475,251 555,243 C635,235 695,252 775,244 C855,236 915,251 995,243 C1075,235 1125,247 1200,240" stroke="rgba(255,255,255,0.18)" stroke-width="3" fill="none" stroke-linecap="round" visibility="hidden"/>
+
+    <!-- LAYER 6: Secondary foam — thinner, further up the sand -->
+    <path id="foam2A" d="M0,275 C60,271 160,280 280,273 C400,266 520,282 640,275 C760,268 880,281 1000,274 C1100,269 1160,277 1200,272" stroke="rgba(255,255,255,0.08)" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path id="foam2B" d="M0,278 C75,274 175,283 295,276 C415,269 535,285 655,278 C775,271 895,284 1015,277 C1115,272 1175,280 1200,275" stroke="rgba(255,255,255,0.08)" stroke-width="2" fill="none" stroke-linecap="round" visibility="hidden"/>
+
+    <!-- LAYER 7: Lace foam — the thinnest receding wash marks at high-tide line -->
+    <path id="laceA" d="M0,305 C80,302 200,310 350,304 C500,298 650,312 800,306 C950,300 1080,309 1200,303" stroke="rgba(255,255,255,0.035)" stroke-width="1" fill="none" stroke-linecap="round" stroke-dasharray="12 8 6 10"/>
+    <path id="laceB" d="M0,307 C90,304 210,312 360,306 C510,300 660,314 810,308 C960,302 1090,311 1200,305" stroke="rgba(255,255,255,0.035)" stroke-width="1" fill="none" stroke-linecap="round" stroke-dasharray="12 8 6 10" visibility="hidden"/>
+
+    <!-- LAYER 8: Water sheen — subtle teal shimmer in the wet zone -->
+    <path id="sheenA" d="M0,170 C150,164 350,178 550,168 C750,158 950,176 1200,168 L1200,210 C950,220 750,200 550,210 C350,220 150,206 0,212 Z" fill="rgba(100,180,200,0.025)"/>
+    <path id="sheenB" d="M0,174 C170,168 370,182 570,172 C770,162 970,180 1200,172 L1200,214 C970,224 770,204 570,214 C370,224 170,210 0,216 Z" fill="rgba(100,180,200,0.025)" visibility="hidden"/>
   </svg>
 </div>
 
@@ -183,6 +205,13 @@ import Terminal from '../components/Terminal.astro';
   <a href="/guide" class="btn btn-primary">Read the Guide</a>
 </section>
 
+<!-- Grass transition — sand fades to lush ground with subtle noise texture -->
+<div class="grass-zone" aria-hidden="true">
+  <svg class="grass-noise" width="0" height="0">
+    <filter id="grassNoise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+  </svg>
+</div>
+
 </div><!-- /shore-ground -->
 
 </Base>
@@ -218,27 +247,22 @@ import Terminal from '../components/Terminal.astro';
 
   /* ═══ BEACH SHORE ═══ */
   .beach-shore {
-    position:relative; width:100%; height:220px; overflow:hidden;
+    position:relative; width:100%; height:300px; overflow:hidden;
     background:linear-gradient(180deg,
-      #0a0e1a 0%,        /* deep ocean */
-      #0c1018 10%,        /* still ocean */
-      #0e1412 30%,        /* shallow water — green-dark tint */
-      #141210 50%,        /* wet sand line */
-      #1a1610 65%,        /* damp sand */
-      #1c1812 80%,        /* dry sand */
-      #181510 100%        /* warm dark — carries into crew */
+      #0a0e1a 0%,        /* deep ocean — continuous from journey */
+      #0b1018 6%,        /* deep water */
+      #0c1316 14%,       /* mid water — slight teal shift */
+      #0e1614 24%,       /* shallow water — green tint */
+      #111812 36%,       /* very shallow — sand visible beneath */
+      #171a10 48%,       /* wet sand */
+      #1d1e12 58%,       /* damp sand — darker */
+      #222014 68%,       /* dry sand */
+      #262316 78%,       /* warm sand */
+      #282518 88%,       /* bright sand — obviously beach */
+      #2a2719 100%       /* carries into shore-ground */
     );
   }
-  .shore-shallow {
-    position:absolute; top:0; left:0; right:0; height:40%;
-    background:linear-gradient(180deg,
-      rgba(60,100,120,0.06) 0%,
-      rgba(80,140,160,0.04) 60%,
-      transparent 100%
-    );
-    pointer-events:none;
-  }
-  .shore-foam-svg {
+  .shore-svg {
     position:absolute; inset:0; width:100%; height:100%;
     pointer-events:none;
   }
@@ -248,18 +272,14 @@ import Terminal from '../components/Terminal.astro';
 
   /* ═══ JOURNEY ═══ */
   .journey-wrap { position:relative; max-width:780px; margin:0 auto; padding:100px 24px 40px 80px; }
-  .journey-wrap::after {
-    content:''; position:absolute; bottom:0; left:0; right:0; height:200px;
-    background:linear-gradient(180deg, transparent 0%, rgba(20,18,14,0.3) 60%, rgba(26,21,16,0.5) 100%);
-    pointer-events:none; z-index:0;
-  }
+  .journey-wrap::after { display:none; }
 
   /* SVG Chart Path */
   .journey-path {
     position:absolute; left:20px; top:0; width:60px; height:100%;
     pointer-events:none; z-index:1;
   }
-  #chartRoute { stroke-dasharray:4 6; }
+  /* chartRoute styling is inline — DrawSVG controls dasharray for reveal */
   .chart-node { fill:rgba(200,200,200,0.1); stroke:rgba(200,200,200,0.25); stroke-width:1.5; transition:all 0.5s; }
   .chart-node.active { fill:var(--gold); stroke:var(--gold); filter:drop-shadow(0 0 6px rgba(212,160,74,0.5)); }
 
@@ -312,11 +332,13 @@ import Terminal from '../components/Terminal.astro';
   /* ═══ SHORE GROUND (warm "on land" background) ═══ */
   .shore-ground {
     background:linear-gradient(180deg,
-      #181510 0%,        /* continuous from beach bottom */
-      #161310 15%,
-      #131110 40%,       /* subtle warm dark */
-      #0f0e0c 70%,
-      #0c0b0a 100%       /* fade to near-black */
+      #2a2719 0%,        /* continuous from beach bottom — same warm sand */
+      #282517 8%,        /* still obviously sand */
+      #252215 20%,       /* slightly dimming */
+      #201e12 40%,       /* warm dark sand */
+      #1a1810 60%,       /* gradual cooldown */
+      #14120e 80%,
+      #0f0e0c 100%       /* fade to near-black */
     );
   }
 
@@ -326,6 +348,27 @@ import Terminal from '../components/Terminal.astro';
   .final-cta h2 { font-size:clamp(1.8rem,5vw,2.6rem); font-weight:800; color:#f0f0f0; position:relative; letter-spacing:-0.5px; }
   .final-cta p { color:var(--text-dim); font-size:0.92rem; margin:12px 0 28px; position:relative; }
   .final-cta .btn { position:relative; }
+
+  /* ═══ GRASS ZONE ═══ */
+  .grass-zone {
+    position:relative; width:100%; height:120px; overflow:hidden;
+    background:linear-gradient(180deg,
+      #0f0e0c 0%,
+      #111208 10%,
+      #151a0c 25%,
+      #1a2210 40%,
+      #1e2a12 55%,
+      #223014 70%,
+      #253416 85%,
+      #283818 100%
+    );
+  }
+  .grass-zone::after {
+    content:''; position:absolute; inset:0;
+    filter:url(#grassNoise); opacity:0.04;
+    pointer-events:none;
+  }
+  .grass-noise { position:absolute; }
 
   /* ═══ RESPONSIVE ═══ */
   @media(max-width:768px){
@@ -348,7 +391,7 @@ import Terminal from '../components/Terminal.astro';
     .entry-name { min-width:auto; font-size:1rem; }
     .crew-entry { flex-direction:column; gap:2px; }
     .final-cta { padding:60px 20px 40px; }
-    .beach-shore { height:140px; }
+    .beach-shore { height:200px; }
   }
   @media(max-width:480px){
     .journey-wrap { padding:40px 16px 16px; }
@@ -557,27 +600,78 @@ import Terminal from '../components/Terminal.astro';
         .to(waveA, { morphSVG: waveA, duration: 4, ease: 'sine.inOut' });
     }
 
-    // ═══ BEACH SHORE — Overhead foam lines (MorphSVG) ═══
-    const foamA = document.getElementById('foamA');
-    const foamB = document.getElementById('foamB');
-    if (foamA && foamB) {
-      gsap.to(foamA, { morphSVG: foamB, duration: 5, ease: 'sine.inOut', repeat: -1, yoyo: true });
-    }
-    const foam2A = document.getElementById('foam2A');
-    const foam2B = document.getElementById('foam2B');
-    if (foam2A && foam2B) {
-      gsap.to(foam2A, { morphSVG: foam2B, duration: 4.5, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 0.8 });
-    }
-    const foam3A = document.getElementById('foam3A');
-    const foam3B = document.getElementById('foam3B');
-    if (foam3A && foam3B) {
-      gsap.to(foam3A, { morphSVG: foam3B, duration: 4, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 1.5 });
-    }
-    // Water sheen between foam lines
-    const sheenA = document.getElementById('sheenA');
-    const sheenB = document.getElementById('sheenB');
-    if (sheenA && sheenB) {
-      gsap.to(sheenA, { morphSVG: sheenB, duration: 6, ease: 'sine.inOut', repeat: -1, yoyo: true });
+    // ═══ BEACH SHORE — Multi-layered wave system ═══
+    // Each layer animates independently but coordinated for realism
+    const shoreEls = {
+      breakA: document.getElementById('breakA'),
+      breakB: document.getElementById('breakB'),
+      breakC: document.getElementById('breakC'),
+      washA: document.getElementById('washA'),
+      washB: document.getElementById('washB'),
+      washC: document.getElementById('washC'),
+      foamA: document.getElementById('foamA'),
+      foamB: document.getElementById('foamB'),
+      foamC: document.getElementById('foamC'),
+      foam2A: document.getElementById('foam2A'),
+      foam2B: document.getElementById('foam2B'),
+      laceA: document.getElementById('laceA'),
+      laceB: document.getElementById('laceB'),
+      sheenA: document.getElementById('sheenA'),
+      sheenB: document.getElementById('sheenB'),
+    };
+
+    if (shoreEls.breakA) {
+      // Layer 1: Breaking wave — 3-shape cycle with acceleration feel
+      // Uses power1.in on approach, power2.out on recede — asymmetric like real break
+      const breakTl = gsap.timeline({ repeat: -1 });
+      breakTl
+        .to(shoreEls.breakA, {
+          morphSVG: shoreEls.breakB, duration: 3, ease: 'power1.in',
+          attr: { 'stroke-width': 5, 'stroke-opacity': 0.28 },
+        })
+        .to(shoreEls.breakA, {
+          morphSVG: shoreEls.breakC, duration: 2.5, ease: 'power2.out',
+          attr: { 'stroke-width': 3.5, 'stroke-opacity': 0.18 },
+        })
+        .to(shoreEls.breakA, {
+          morphSVG: shoreEls.breakA, duration: 3.5, ease: 'sine.inOut',
+          attr: { 'stroke-width': 4, 'stroke-opacity': 0.22 },
+        });
+
+      // Layer 4: Wash sheet — expands then contracts, fades in/out
+      const washTl = gsap.timeline({ repeat: -1 });
+      washTl
+        .fromTo(shoreEls.washA, { opacity: 0 }, { opacity: 1, duration: 1.5, ease: 'power2.in' })
+        .to(shoreEls.washA, { morphSVG: shoreEls.washB, duration: 3, ease: 'power3.out' })
+        .to(shoreEls.washA, { morphSVG: shoreEls.washC, duration: 2.5, ease: 'power1.in' })
+        .to(shoreEls.washA, { opacity: 0, duration: 2, ease: 'power2.out' }, '-=2')
+        .to(shoreEls.washA, { morphSVG: shoreEls.washA, duration: 0.01 })
+        .to({}, { duration: 1.5 }); // pause before next wave
+
+      // Layer 5: Primary foam line — 3-shape organic morph
+      const foamTl = gsap.timeline({ repeat: -1 });
+      foamTl
+        .to(shoreEls.foamA, { morphSVG: shoreEls.foamB, duration: 3.5, ease: 'power1.inOut' })
+        .to(shoreEls.foamA, { morphSVG: shoreEls.foamC, duration: 3, ease: 'sine.inOut' })
+        .to(shoreEls.foamA, { morphSVG: shoreEls.foamA, duration: 3.5, ease: 'power1.inOut' });
+
+      // Layer 6: Secondary foam — slower, offset timing
+      gsap.to(shoreEls.foam2A, {
+        morphSVG: shoreEls.foam2B,
+        duration: 5.5, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 1.2,
+      });
+
+      // Layer 7: Lace foam — receding, dashed, very subtle
+      gsap.to(shoreEls.laceA, {
+        morphSVG: shoreEls.laceB,
+        duration: 4, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 2,
+      });
+
+      // Layer 8: Water sheen — slow shimmer in wet zone
+      gsap.to(shoreEls.sheenA, {
+        morphSVG: shoreEls.sheenB,
+        duration: 7, ease: 'sine.inOut', repeat: -1, yoyo: true,
+      });
     }
 
     // ═══ DRAWSVG — Chart route reveals on scroll ═══
@@ -586,7 +680,7 @@ import Terminal from '../components/Terminal.astro';
       gsap.fromTo(chartRoute,
         { drawSVG: '0%' },
         {
-          drawSVG: '100%',
+          drawSVG: '93%',
           ease: 'none',
           scrollTrigger: {
             trigger: '#journeyWrap',
