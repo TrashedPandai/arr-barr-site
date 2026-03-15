@@ -104,25 +104,29 @@ import Terminal from '../components/Terminal.astro';
   </div>
 </div>
 
-<!-- Beach shore transition -->
+<!-- Beach shore transition — overhead view -->
 <div class="beach-shore" id="beachShore">
-  <!-- Surf waves — 3 shapes for MorphSVG cycling -->
-  <svg class="shore-waves" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true">
-    <path id="surfA" d="M0,80 C100,60 200,90 350,65 C500,40 600,75 750,55 C900,35 1050,70 1200,50 L1200,120 L0,120 Z" fill="rgba(100,160,180,0.08)"/>
-    <path id="surfB" d="M0,70 C150,50 300,80 450,55 C600,30 700,65 850,45 C1000,25 1100,60 1200,40 L1200,120 L0,120 Z" fill="rgba(100,160,180,0.08)" visibility="hidden"/>
-    <path id="surfC" d="M0,75 C120,55 250,85 400,60 C550,35 650,70 800,50 C950,30 1080,65 1200,45 L1200,120 L0,120 Z" fill="rgba(100,160,180,0.08)" visibility="hidden"/>
-  </svg>
-  <!-- Second surf layer — slightly offset, more transparent -->
-  <svg class="shore-waves shore-waves-back" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true">
-    <path id="surfD" d="M0,90 C180,65 350,95 500,70 C650,45 800,80 950,60 C1100,40 1150,55 1200,50 L1200,120 L0,120 Z" fill="rgba(140,200,220,0.05)"/>
-    <path id="surfE" d="M0,85 C200,60 380,90 530,65 C680,40 830,75 980,55 C1130,35 1180,50 1200,45 L1200,120 L0,120 Z" fill="rgba(140,200,220,0.05)" visibility="hidden"/>
-  </svg>
-  <!-- Foam edge — thin frothy white line -->
-  <svg class="foam-line" viewBox="0 0 1200 30" preserveAspectRatio="none" aria-hidden="true">
-    <path id="foamA" d="M0,20 C80,12 200,22 350,14 C500,8 620,18 750,10 C880,4 1020,16 1200,8" stroke="rgba(255,255,255,0.12)" stroke-width="2" fill="none" stroke-linecap="round"/>
-    <path id="foamB" d="M0,16 C100,8 220,20 370,12 C520,4 640,16 770,8 C900,2 1040,14 1200,6" stroke="rgba(255,255,255,0.12)" stroke-width="2" fill="none" stroke-linecap="round" visibility="hidden"/>
+  <!-- Shallow water tint overlay — fades from deep to shallow -->
+  <div class="shore-shallow"></div>
+  <!-- Overhead foam lines — horizontal bands where waves break -->
+  <svg class="shore-foam-svg" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true">
+    <!-- Primary foam line -->
+    <path id="foamA" d="M0,70 C60,66 150,74 280,68 C400,62 520,76 650,69 C780,62 900,75 1020,67 C1100,63 1160,71 1200,68" stroke="rgba(255,255,255,0.14)" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path id="foamB" d="M0,72 C80,68 180,76 310,70 C440,64 560,78 680,71 C810,64 930,77 1050,69 C1130,65 1170,73 1200,70" stroke="rgba(255,255,255,0.14)" stroke-width="3" fill="none" stroke-linecap="round" visibility="hidden"/>
+    <!-- Secondary foam line (thinner, offset) -->
+    <path id="foam2A" d="M0,90 C70,86 190,94 320,88 C450,82 580,96 710,89 C840,82 960,95 1080,87 C1140,84 1180,91 1200,88" stroke="rgba(255,255,255,0.08)" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path id="foam2B" d="M0,92 C90,88 210,96 340,90 C470,84 600,98 730,91 C860,84 980,97 1100,89 C1150,86 1190,93 1200,90" stroke="rgba(255,255,255,0.08)" stroke-width="2" fill="none" stroke-linecap="round" visibility="hidden"/>
+    <!-- Faint third foam line — furthest wash up the sand -->
+    <path id="foam3A" d="M0,110 C100,107 250,114 400,109 C550,104 700,116 850,110 C1000,105 1100,113 1200,108" stroke="rgba(255,255,255,0.04)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <path id="foam3B" d="M0,112 C120,109 270,116 420,111 C570,106 720,118 870,112 C1020,107 1120,115 1200,110" stroke="rgba(255,255,255,0.04)" stroke-width="1.5" fill="none" stroke-linecap="round" visibility="hidden"/>
+    <!-- Subtle water sheen between foam lines -->
+    <path id="sheenA" d="M0,80 C150,76 350,84 550,78 C750,72 950,86 1200,80 L1200,88 C950,94 750,80 550,86 C350,92 150,84 0,88 Z" fill="rgba(100,180,200,0.03)"/>
+    <path id="sheenB" d="M0,82 C170,78 370,86 570,80 C770,74 970,88 1200,82 L1200,90 C970,96 770,82 570,88 C370,94 170,86 0,90 Z" fill="rgba(100,180,200,0.03)" visibility="hidden"/>
   </svg>
 </div>
+
+<!-- On-shore zone — warm background from beach arrival -->
+<div class="shore-ground">
 
 <!-- CREW — editorial layout -->
 <section class="crew-section">
@@ -179,6 +183,8 @@ import Terminal from '../components/Terminal.astro';
   <a href="/guide" class="btn btn-primary">Read the Guide</a>
 </section>
 
+</div><!-- /shore-ground -->
+
 </Base>
 
 <style>
@@ -212,23 +218,28 @@ import Terminal from '../components/Terminal.astro';
 
   /* ═══ BEACH SHORE ═══ */
   .beach-shore {
-    position:relative; width:100%; height:160px; overflow:hidden;
+    position:relative; width:100%; height:220px; overflow:hidden;
     background:linear-gradient(180deg,
-      #0a0e1a 0%,
-      #0d100f 20%,
-      #14120e 40%,
-      #1a1510 55%,
-      #14120e 75%,
-      #0a0e1a 100%
+      #0a0e1a 0%,        /* deep ocean */
+      #0c1018 10%,        /* still ocean */
+      #0e1412 30%,        /* shallow water — green-dark tint */
+      #141210 50%,        /* wet sand line */
+      #1a1610 65%,        /* damp sand */
+      #1c1812 80%,        /* dry sand */
+      #181510 100%        /* warm dark — carries into crew */
     );
   }
-  .shore-waves {
-    position:absolute; bottom:0; left:0; width:100%; height:100%;
+  .shore-shallow {
+    position:absolute; top:0; left:0; right:0; height:40%;
+    background:linear-gradient(180deg,
+      rgba(60,100,120,0.06) 0%,
+      rgba(80,140,160,0.04) 60%,
+      transparent 100%
+    );
     pointer-events:none;
   }
-  .shore-waves-back { opacity:0.6; }
-  .foam-line {
-    position:absolute; top:25%; left:0; width:100%; height:30px;
+  .shore-foam-svg {
+    position:absolute; inset:0; width:100%; height:100%;
     pointer-events:none;
   }
 
@@ -280,8 +291,8 @@ import Terminal from '../components/Terminal.astro';
 
   .chapter-desc { font-size:0.9rem; color:var(--text-dim); max-width:520px; line-height:1.9; }
 
-  /* ═══ CREW — editorial list ═══ */
-  .crew-section { max-width:780px; margin:0 auto; padding:60px 24px 80px; }
+  /* ═══ CREW — editorial list (on shore) ═══ */
+  .crew-section { max-width:780px; margin:0 auto; padding:60px 24px 80px; position:relative; }
 
   .crew-heading { font-size:clamp(2rem,5vw,3rem); font-weight:800; color:#f0f0f0; letter-spacing:-0.5px; margin-bottom:8px; }
   .crew-sub { color:var(--text-muted); font-size:0.9rem; margin-bottom:48px; line-height:1.6; }
@@ -297,6 +308,17 @@ import Terminal from '../components/Terminal.astro';
 
   .entry-name { font-size:clamp(1.1rem,3vw,1.4rem); font-weight:700; color:#e8e8e8; flex-shrink:0; min-width:180px; letter-spacing:-0.3px; }
   .entry-role { font-size:0.85rem; color:var(--text-muted); }
+
+  /* ═══ SHORE GROUND (warm "on land" background) ═══ */
+  .shore-ground {
+    background:linear-gradient(180deg,
+      #181510 0%,        /* continuous from beach bottom */
+      #161310 15%,
+      #131110 40%,       /* subtle warm dark */
+      #0f0e0c 70%,
+      #0c0b0a 100%       /* fade to near-black */
+    );
+  }
 
   /* ═══ CTA ═══ */
   .final-cta { text-align:center; padding:100px 24px 60px; position:relative; max-width:600px; margin:0 auto; }
@@ -326,7 +348,7 @@ import Terminal from '../components/Terminal.astro';
     .entry-name { min-width:auto; font-size:1rem; }
     .crew-entry { flex-direction:column; gap:2px; }
     .final-cta { padding:60px 20px 40px; }
-    .beach-shore { height:100px; }
+    .beach-shore { height:140px; }
   }
   @media(max-width:480px){
     .journey-wrap { padding:40px 16px 16px; }
@@ -535,29 +557,27 @@ import Terminal from '../components/Terminal.astro';
         .to(waveA, { morphSVG: waveA, duration: 4, ease: 'sine.inOut' });
     }
 
-    // ═══ BEACH SHORE WAVES (MorphSVG) ═══
-    const surfA = document.getElementById('surfA');
-    const surfB = document.getElementById('surfB');
-    const surfC = document.getElementById('surfC');
-    if (surfA && surfB && surfC) {
-      const surfTl = gsap.timeline({ repeat: -1 });
-      surfTl
-        .to(surfA, { morphSVG: surfB, duration: 6, ease: 'sine.inOut' })
-        .to(surfA, { morphSVG: surfC, duration: 6, ease: 'sine.inOut' })
-        .to(surfA, { morphSVG: surfA, duration: 6, ease: 'sine.inOut' });
-    }
-    // Back layer surf
-    const surfD = document.getElementById('surfD');
-    const surfE = document.getElementById('surfE');
-    if (surfD && surfE) {
-      const surfBackTl = gsap.timeline({ repeat: -1, yoyo: true });
-      surfBackTl.to(surfD, { morphSVG: surfE, duration: 5, ease: 'sine.inOut' });
-    }
-    // Foam edge
+    // ═══ BEACH SHORE — Overhead foam lines (MorphSVG) ═══
     const foamA = document.getElementById('foamA');
     const foamB = document.getElementById('foamB');
     if (foamA && foamB) {
-      gsap.to(foamA, { morphSVG: foamB, duration: 4, ease: 'sine.inOut', repeat: -1, yoyo: true });
+      gsap.to(foamA, { morphSVG: foamB, duration: 5, ease: 'sine.inOut', repeat: -1, yoyo: true });
+    }
+    const foam2A = document.getElementById('foam2A');
+    const foam2B = document.getElementById('foam2B');
+    if (foam2A && foam2B) {
+      gsap.to(foam2A, { morphSVG: foam2B, duration: 4.5, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 0.8 });
+    }
+    const foam3A = document.getElementById('foam3A');
+    const foam3B = document.getElementById('foam3B');
+    if (foam3A && foam3B) {
+      gsap.to(foam3A, { morphSVG: foam3B, duration: 4, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 1.5 });
+    }
+    // Water sheen between foam lines
+    const sheenA = document.getElementById('sheenA');
+    const sheenB = document.getElementById('sheenB');
+    if (sheenA && sheenB) {
+      gsap.to(sheenA, { morphSVG: sheenB, duration: 6, ease: 'sine.inOut', repeat: -1, yoyo: true });
     }
 
     // ═══ DRAWSVG — Chart route reveals on scroll ═══
@@ -579,6 +599,7 @@ import Terminal from '../components/Terminal.astro';
     }
 
     // ═══ MOTIONPATH — Ship sails along the chart route ═══
+    // Ship stops at 93% — anchors just before the shore
     const ship = document.getElementById('journeyShip');
     const journeyWrap = document.getElementById('journeyWrap');
     if (ship && chartRoute && journeyWrap) {
@@ -589,6 +610,7 @@ import Terminal from '../components/Terminal.astro';
           align: chartRoute,
           alignOrigin: [0.5, 0.5],
           autoRotate: 90,
+          end: 0.93,
         },
         ease: 'none',
         scrollTrigger: {
