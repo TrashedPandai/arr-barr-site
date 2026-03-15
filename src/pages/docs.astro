@@ -812,6 +812,7 @@ import Base from '../layouts/Base.astro';
     .tm-node-hero .tm-name { font-size:1.1rem; font-weight:700; color:#c4b5fd; }
 
     .tm-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+    .tm-grid .tm-node:last-child:nth-child(odd) { grid-column:1 / -1; }
 
     .tm-kill {
       display:flex; align-items:center; justify-content:center; gap:8px;
