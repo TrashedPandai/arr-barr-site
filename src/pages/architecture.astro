@@ -3,22 +3,836 @@ import Base from '../layouts/Base.astro';
 ---
 
 <Base title="arr-barr — Below Deck">
-  <div class="page-header">
-    <h1>Below Deck</h1>
-    <p>The complete technical architecture</p>
+
+<div class="docs-layout">
+  <!-- Sidebar TOC -->
+  <aside class="docs-sidebar" id="docsSidebar">
+    <div class="sidebar-inner">
+      <span class="sidebar-label">Below Deck</span>
+      <nav class="toc">
+        <a href="#architecture" class="toc-link toc-h1 active">Architecture</a>
+        <a href="#big-picture" class="toc-link toc-h2">The Big Picture</a>
+        <a href="#services" class="toc-link toc-h2">15 Services</a>
+        <a href="#network-zones" class="toc-link toc-h2">Network Zones</a>
+        <a href="#hardlinks" class="toc-link toc-h2">Hardlink Architecture</a>
+        <a href="#volume-tiers" class="toc-link toc-h2">Volume Tiers</a>
+        <a href="#directory-tree" class="toc-link toc-h2">Directory Tree</a>
+
+        <a href="#flows" class="toc-link toc-h1">Flows</a>
+        <a href="#main-flow" class="toc-link toc-h2">Request to Stream</a>
+        <a href="#vpn-killswitch" class="toc-link toc-h2">VPN Kill Switch</a>
+        <a href="#search-vs-download" class="toc-link toc-h2">Search vs Download</a>
+        <a href="#indexer-architecture" class="toc-link toc-h2">Indexer Architecture</a>
+        <a href="#category-routing" class="toc-link toc-h2">Category Routing</a>
+        <a href="#usenet-tiers" class="toc-link toc-h2">Usenet Tiers</a>
+        <a href="#torrent-vs-usenet" class="toc-link toc-h2">Torrent vs Usenet</a>
+        <a href="#hardlink-flow" class="toc-link toc-h2">Hardlink Flow</a>
+        <a href="#dns" class="toc-link toc-h2">DNS Architecture</a>
+        <a href="#game-pipeline" class="toc-link toc-h2">Game Pipeline</a>
+        <a href="#book-sorting" class="toc-link toc-h2">Book Sorting</a>
+        <a href="#subtitle-flow" class="toc-link toc-h2">Subtitle Flow</a>
+
+        <a href="#quality" class="toc-link toc-h1">Quality &amp; Selection</a>
+        <a href="#decision-engine" class="toc-link toc-h2">Decision Engine</a>
+        <a href="#custom-formats" class="toc-link toc-h2">Custom Formats</a>
+        <a href="#scoring-examples" class="toc-link toc-h2">Scoring Examples</a>
+        <a href="#quality-profiles" class="toc-link toc-h2">Quality Profiles</a>
+        <a href="#upgrade-flow" class="toc-link toc-h2">Upgrade Flow</a>
+        <a href="#naming" class="toc-link toc-h2">Naming Conventions</a>
+
+        <a href="#operations" class="toc-link toc-h1">Operations &amp; CLI</a>
+        <a href="#command-map" class="toc-link toc-h2">Command Map</a>
+        <a href="#quick-reference" class="toc-link toc-h2">Quick Reference</a>
+        <a href="#setup-flow" class="toc-link toc-h2">Setup Flow</a>
+        <a href="#doctor" class="toc-link toc-h2">Doctor Self-Repair</a>
+        <a href="#downloads-dashboard" class="toc-link toc-h2">Downloads Dashboard</a>
+        <a href="#health-checks" class="toc-link toc-h2">Health Checks</a>
+        <a href="#update-pipeline" class="toc-link toc-h2">Update Pipeline</a>
+        <a href="#onboarding" class="toc-link toc-h2">Onboarding</a>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <div class="docs-content">
+    <div class="docs-header">
+      <h1>Below Deck</h1>
+      <p>The complete technical architecture. Every service, every flow, every decision — documented.</p>
+    </div>
+
+    <!-- ═══ SECTION 1: ARCHITECTURE ═══ -->
+    <section id="architecture" class="docs-section">
+      <h2 class="section-anchor">Architecture</h2>
+      <p>A self-hosted, automated media server stack that searches, downloads, organizes, and streams movies, TV, music, books, audiobooks, and games — with full VPN protection on all download traffic.</p>
+
+      <h3 id="big-picture">The Big Picture</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+graph TB
+    subgraph REQUEST["Request Layer"]
+        USER["Users / Friends"]
+        SEERR["Jellyseerr&lt;br/&gt;Request Interface"]
+    end
+    subgraph SEARCH["Search Layer"]
+        PROWLARR["Prowlarr&lt;br/&gt;Indexer Manager"]
+        FLARESOLVERR["FlareSolverr&lt;br/&gt;Cloudflare Bypass"]
+    end
+    subgraph MANAGE["Management Layer"]
+        RADARR["Radarr&lt;br/&gt;Movies"]
+        SONARR["Sonarr&lt;br/&gt;TV Shows"]
+        LIDARR["Lidarr&lt;br/&gt;Music"]
+        LAZYLIB["LazyLibrarian&lt;br/&gt;Books &amp; Audiobooks"]
+        QUESTARR["QuestArr&lt;br/&gt;Games"]
+        BAZARR["Bazarr&lt;br/&gt;Subtitles"]
+    end
+    subgraph VPN["VPN Tunnel — All Traffic Encrypted"]
+        direction LR
+        GLUETUN["Gluetun&lt;br/&gt;WireGuard VPN"]
+        TRANSMISSION["Transmission&lt;br/&gt;Torrents"]
+        SABNZBD["SABnzbd&lt;br/&gt;Usenet"]
+    end
+    subgraph STREAM["Streaming Layer"]
+        JELLYFIN["Jellyfin&lt;br/&gt;Movies, TV, Music"]
+        KAVITA["Kavita&lt;br/&gt;Ebook Reader"]
+        ABS["Audiobookshelf&lt;br/&gt;Audiobooks"]
+    end
+    USER --> SEERR
+    SEERR --> RADARR & SONARR
+    RADARR & SONARR & LIDARR --> PROWLARR
+    QUESTARR --> PROWLARR
+    PROWLARR --> FLARESOLVERR
+    RADARR & SONARR & LIDARR & LAZYLIB & QUESTARR --> TRANSMISSION & SABNZBD
+    GLUETUN --- TRANSMISSION & SABNZBD
+    BAZARR -.->|subtitles| RADARR & SONARR
+    TRANSMISSION & SABNZBD -->|organize| JELLYFIN & KAVITA & ABS
+    USER --> JELLYFIN & KAVITA & ABS
+    style VPN fill:#f38ba8,color:#1e1e2e
+    style STREAM fill:#a6e3a1,color:#1e1e2e
+      </pre></div>
+
+      <h3 id="services">15 Services at a Glance</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>#</th><th>Service</th><th>Port</th><th>Role</th><th>Always On?</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong>Gluetun</strong></td><td>—</td><td>WireGuard VPN tunnel with kill switch</td><td>Yes</td></tr>
+          <tr><td>2</td><td><strong>Transmission</strong></td><td>9091</td><td>Torrent download client (inside VPN)</td><td>Yes</td></tr>
+          <tr><td>3</td><td><strong>SABnzbd</strong></td><td>8080</td><td>Usenet download client (inside VPN)</td><td>Yes</td></tr>
+          <tr><td>4</td><td><strong>Prowlarr</strong></td><td>9696</td><td>Manages all indexers, syncs to arr apps</td><td>Yes</td></tr>
+          <tr><td>5</td><td><strong>FlareSolverr</strong></td><td>8191</td><td>Bypasses Cloudflare protection</td><td>Yes</td></tr>
+          <tr><td>6</td><td><strong>Radarr</strong></td><td>7878</td><td>Movie search, download, organize</td><td>Yes</td></tr>
+          <tr><td>7</td><td><strong>Sonarr</strong></td><td>8989</td><td>TV show search, download, organize</td><td>Yes</td></tr>
+          <tr><td>8</td><td><strong>Lidarr</strong></td><td>8686</td><td>Music search, download, organize</td><td>Yes</td></tr>
+          <tr><td>9</td><td><strong>Bazarr</strong></td><td>6767</td><td>Automatic subtitle downloads</td><td>Yes</td></tr>
+          <tr><td>10</td><td><strong>Jellyfin</strong></td><td>8096</td><td>Media server (self-hosted Netflix)</td><td>Yes</td></tr>
+          <tr><td>11</td><td><strong>Jellyseerr</strong></td><td>5055</td><td>User-friendly request interface</td><td>Yes</td></tr>
+          <tr><td>12</td><td><strong>QuestArr</strong></td><td>5002</td><td>Game search and download</td><td>Yes</td></tr>
+          <tr><td>13</td><td><strong>LazyLibrarian</strong></td><td>5299</td><td>Book &amp; audiobook search/download</td><td>Optional</td></tr>
+          <tr><td>14</td><td><strong>Kavita</strong></td><td>5004</td><td>Browser-based ebook reader</td><td>Optional</td></tr>
+          <tr><td>15</td><td><strong>Audiobookshelf</strong></td><td>13378</td><td>Audiobook server with progress tracking</td><td>Optional</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3 id="network-zones">Three Network Zones</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+graph TB
+    subgraph ZONE1["Zone 1: VPN Tunnel"]
+        direction LR
+        GL["Gluetun"] --- TX["Transmission"]
+        GL --- SB["SABnzbd"]
+    end
+    subgraph ZONE2["Zone 2: Docker Bridge"]
+        PW["Prowlarr"] & FS["FlareSolverr"]
+        RD["Radarr"] & SN["Sonarr"] & LD["Lidarr"]
+        BZ["Bazarr"] & SR["Seerr"] & QA["QuestArr"]
+    end
+    subgraph ZONE3["Zone 3: Host Network"]
+        JF["Jellyfin"]
+    end
+    ZONE2 -->|"gluetun:9091 / gluetun:8080"| ZONE1
+    ZONE3 -->|"localhost ports"| ZONE2
+    style ZONE1 fill:#f38ba8,color:#1e1e2e
+    style ZONE2 fill:#89b4fa,color:#1e1e2e
+    style ZONE3 fill:#a6e3a1,color:#1e1e2e
+      </pre></div>
+      <div class="callout">
+        <p><strong>Zone 1 — VPN Tunnel:</strong> Transmission and SABnzbd share Gluetun's network namespace. All traffic exits through the encrypted WireGuard tunnel. Kill switch blocks everything if VPN drops.</p>
+        <p><strong>Zone 2 — Docker Bridge:</strong> Management apps on a private bridge network, communicating by container name.</p>
+        <p><strong>Zone 3 — Host Network:</strong> Jellyfin runs on the host for maximum streaming performance and DLNA support.</p>
+      </div>
+
+      <h3 id="hardlinks">Hardlink Architecture (TRaSH Guides)</h3>
+      <p>The key to zero-waste storage: every service that touches both downloads and media mounts the <strong>same root directory</strong>, enabling hardlinks.</p>
+      <div class="mermaid-wrap"><pre class="mermaid">
+graph LR
+    subgraph SINGLE["Single Mount: DATA_ROOT to /data"]
+        DL["/data/downloads/torrents/movie.mkv&lt;br/&gt;inode #3899"]
+        MEDIA["/data/media/movies/Movie 2024/movie.mkv&lt;br/&gt;inode #3899"]
+    end
+    DL ===|"HARDLINK&lt;br/&gt;Same inode, zero extra space&lt;br/&gt;Torrent keeps seeding"| MEDIA
+    style SINGLE fill:#a6e3a1,color:#1e1e2e
+      </pre></div>
+      <div class="callout callout-info">A 50GB movie doesn't get copied — it gets a second filename pointing to the same data blocks. Torrent client seeds from the original path, Jellyfin streams from the library path. Zero duplication.</div>
+
+      <h3 id="volume-tiers">Volume Mount Tiers</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+graph TD
+    subgraph T1["Tier 1: Full /data read-write — Can hardlink"]
+        TX["Transmission"] & SB["SABnzbd"]
+        RD["Radarr"] & SN["Sonarr"] & LD["Lidarr"]
+        BZ["Bazarr"] & LL["LazyLibrarian"]
+    end
+    subgraph T2["Tier 2: Media Only read-only — Consumers"]
+        JF["Jellyfin"] & KV["Kavita"] & AB["Audiobookshelf"]
+    end
+    subgraph T3["Tier 3: Config Only — No media access"]
+        PW["Prowlarr"] & SR["Seerr"] & QA["QuestArr"]
+        FS["FlareSolverr"] & GL["Gluetun"]
+    end
+    style T1 fill:#a6e3a1,color:#1e1e2e
+    style T2 fill:#89b4fa,color:#1e1e2e
+    style T3 fill:#f9e2af,color:#1e1e2e
+      </pre></div>
+
+      <h3 id="directory-tree">Directory Tree</h3>
+      <div class="code-block"><pre><code>DATA_ROOT/
+├── config/                    Service databases &amp; settings (15 dirs)
+│   ├── radarr/               Movies DB, config
+│   ├── sonarr/               TV DB, config
+│   ├── lidarr/               Music DB, config
+│   ├── bazarr/               Subtitle DB
+│   ├── prowlarr/             Indexer DB
+│   ├── transmission/         Torrent client settings
+│   ├── sabnzbd/              Usenet client settings
+│   ├── jellyfin/             Media server config
+│   ├── jellyfin-cache/       Transcoding cache
+│   ├── seerr/                Request DB (must be 1000:1000)
+│   ├── lazylibrarian/        Book search config
+│   ├── kavita/               Ebook reader config
+│   ├── audiobookshelf/       Audiobook server config
+│   ├── audiobookshelf-meta/  Audiobook metadata
+│   └── questarr/             Game tracking DB
+├── downloads/                 Staging area
+│   ├── incomplete/           In-progress downloads
+│   ├── torrents/             Completed (keep for seeding)
+│   │   ├── radarr/ tv-sonarr/ lidarr/ books/ games/
+│   └── usenet/               Completed (disposable staging)
+│       ├── movies/ tv/ music/ books/ audiobooks/ games/
+├── media/                     Organized final library
+│   ├── movies/ tv/ music/    → Jellyfin
+│   ├── books/                → Kavita
+│   ├── audiobooks/           → Audiobookshelf
+│   └── games/                → GameVault
+└── backups/                   Config backup archives</code></pre></div>
+
+      <h4>Optional Service Profiles</h4>
+      <div class="table-wrap"><table>
+        <thead><tr><th>COMPOSE_PROFILES=</th><th>LazyLibrarian</th><th>Kavita</th><th>Audiobookshelf</th></tr></thead>
+        <tbody>
+          <tr><td><em>(empty)</em></td><td>OFF</td><td>OFF</td><td>OFF</td></tr>
+          <tr><td><code>kavita</code></td><td>ON</td><td>ON</td><td>—</td></tr>
+          <tr><td><code>audiobookshelf</code></td><td>ON</td><td>—</td><td>ON</td></tr>
+          <tr><td><code>kavita,audiobookshelf</code></td><td>ON</td><td>ON</td><td>ON</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- ═══ SECTION 2: FLOWS ═══ -->
+    <section id="flows" class="docs-section">
+      <h2 class="section-anchor">Flows</h2>
+      <p>The complete journey from "I want to watch something" to "it's streaming on my TV."</p>
+
+      <h3 id="main-flow">Request → Search → Download → Stream</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+sequenceDiagram
+    actor User
+    participant Seerr as Jellyseerr
+    participant Arr as Arr App
+    participant Prowlarr
+    participant VPN as Gluetun VPN
+    participant DL as Download Client
+    participant Library
+    participant Jellyfin
+    User->>Seerr: "I want The Matrix"
+    Seerr->>Arr: Add to wanted list
+    Arr->>Prowlarr: Search all indexers
+    Prowlarr-->>Arr: Results from 12 indexers
+    Arr->>Arr: Score with Custom Formats
+    alt Torrent
+        Arr->>DL: Send to Transmission
+        DL->>VPN: Download through tunnel
+        DL-->>Arr: Complete
+        Arr->>Library: HARDLINK
+    else Usenet
+        Arr->>DL: Send to SABnzbd
+        DL->>VPN: Download through tunnel
+        DL-->>Arr: Complete
+        Arr->>Library: MOVE
+    end
+    Library-->>Jellyfin: New file detected
+    Jellyfin-->>User: Ready to watch
+      </pre></div>
+
+      <h3 id="vpn-killswitch">VPN Kill Switch</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+sequenceDiagram
+    participant DL as Download Client
+    participant FW as Firewall iptables
+    participant VPN as VPN Tunnel
+    participant Internet
+    Note over VPN: Tunnel drops
+    DL->>FW: Try to download
+    FW--xDL: BLOCKED kill switch
+    Note over DL: Zero traffic leaks
+    FW->>VPN: Re-establish tunnel
+    VPN->>Internet: Connected
+    DL->>FW: Try again
+    FW->>VPN: Route through tunnel
+    VPN->>Internet: Download resumes
+      </pre></div>
+      <div class="callout">The kill switch uses iptables with a default DROP policy. Only VPN tunnel traffic, Docker-internal communication, and WireGuard handshake packets are allowed. IPv6 fully blocked.</div>
+
+      <h3 id="search-vs-download">Search vs Download Traffic</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+graph LR
+    subgraph SEARCH["Search Traffic — Direct, no VPN"]
+        ARR["Arr Apps"] -->|"HTTPS"| IDX["Indexer Sites"]
+        PW["Prowlarr"] -->|"via FlareSolverr"| CF["CF-Protected Sites"]
+    end
+    subgraph DOWNLOAD["Download Traffic — VPN encrypted"]
+        TX["Transmission"] -->|"WireGuard"| TRK["Torrent Trackers"]
+        SB["SABnzbd"] -->|"WireGuard"| USN["Usenet Servers"]
+    end
+    style SEARCH fill:#89b4fa,color:#1e1e2e
+    style DOWNLOAD fill:#f38ba8,color:#1e1e2e
+      </pre></div>
+
+      <h3 id="indexer-architecture">Indexer Architecture</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+graph TD
+    PW["Prowlarr — Central Manager"]
+    subgraph TORRENT["8 Torrent Indexers"]
+        T1["1337x"] & T2["EZTV"] & T3["Knaben"] & T4["LimeTorrents"]
+        T5["Nyaa.si"] & T6["SkidrowRepack"] & T7["The Pirate Bay"] & T8["YTS"]
+    end
+    subgraph USENET["4 Usenet Indexers"]
+        U1["NZBFinder"] & U2["NZBgeek"] & U3["NzbPlanet"] & U4["Usenet-Crawler"]
+    end
+    PW -->|"with FlareSolverr"| TORRENT
+    PW -->|"API key auth"| USENET
+    PW ==>|"fullSync every 6h"| RD["Radarr"] & SN["Sonarr"] & LD["Lidarr"]
+      </pre></div>
+
+      <h3 id="category-routing">Download Category Routing</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+graph TD
+    subgraph APPS["Arr Apps"]
+        RD["Radarr"] & SN["Sonarr"] & LD["Lidarr"] & LL["LazyLibrarian"] & QA["QuestArr"]
+    end
+    subgraph TORRENT["Transmission Dirs"]
+        T1["torrents/radarr/"] & T2["torrents/tv-sonarr/"] & T3["torrents/lidarr/"] & T4["torrents/books/"] & T5["torrents/games/"]
+    end
+    subgraph USENET["SABnzbd Categories"]
+        S1["usenet/movies/"] & S2["usenet/tv/"] & S3["usenet/music/"] & S4["usenet/books/"] & S5["usenet/games/"]
+    end
+    RD --> T1 & S1
+    SN --> T2 & S2
+    LD --> T3 & S3
+    LL --> T4 & S4
+    QA --> T5 & S5
+      </pre></div>
+
+      <h3 id="usenet-tiers">Usenet Server Tiers</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+graph TD
+    SB["SABnzbd"] -->|"Priority 0 — 100 conn"| P0["Primary Backbone"]
+    SB -->|"Priority 1 — 8 conn"| P1["Fill Server"]
+    SB -->|"Priority 2 — 40 conn"| P2["Backup Servers"]
+    P0 -->|"missing"| P1 -->|"still missing"| P2
+      </pre></div>
+
+      <h3 id="torrent-vs-usenet">Torrent vs Usenet</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Feature</th><th>Torrent</th><th>Usenet</th></tr></thead>
+        <tbody>
+          <tr><td>Protocol</td><td>Peer-to-peer</td><td>Client-server</td></tr>
+          <tr><td>Cost</td><td>Free</td><td>Paid subscription</td></tr>
+          <tr><td>Speed</td><td>Varies by seeders</td><td>Saturates bandwidth</td></tr>
+          <tr><td>Seeding</td><td>Must seed back (hardlinks!)</td><td>No obligation</td></tr>
+          <tr><td>Weakness</td><td>Slow for old/rare</td><td>DMCA takedowns</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3 id="hardlink-flow">The Hardlink Flow</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+sequenceDiagram
+    participant TX as Transmission
+    participant FS as Filesystem
+    participant RD as Radarr
+    participant JF as Jellyfin
+    TX->>FS: Download complete, inode #3899
+    TX->>TX: Continue seeding
+    RD->>FS: Hardlink to /media/movies/
+    Note over FS: Two filenames, one set of data blocks
+    JF->>FS: Stream from library path
+    Note over TX: Eventually stop seeding
+    TX->>FS: Delete download path
+    Note over FS: inode still has 1 link — data persists
+      </pre></div>
+      <div class="callout callout-warn"><strong>Common mistake:</strong> Two separate volume mounts = cross-device hardlink fails = files get COPIED = disk doubles. Always use a single mount <code>-v /data:/data</code>.</div>
+
+      <h3 id="dns">DNS Architecture</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+graph TD
+    subgraph VPN_DNS["Inside VPN"]
+        TX["Transmission"] & SB["SABnzbd"] --> GDNS["Gluetun DNS"]
+        GDNS -->|"Through tunnel"| CF["Cloudflare DNS"]
+    end
+    subgraph BRIDGE["Bridge Network"]
+        APPS["Arr Apps"] -->|"Hardcoded public DNS"| PUBLIC["Public DNS"]
+    end
+    subgraph HOST["Host Network"]
+        JF["Jellyfin"] --> SYS["System DNS"]
+    end
+    style VPN_DNS fill:#f38ba8,color:#1e1e2e
+      </pre></div>
+
+      <h3 id="game-pipeline">Game Pipeline</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+sequenceDiagram
+    participant QA as QuestArr
+    participant DL as Download Client
+    participant CRON as game-import.sh
+    participant LIB as Game Library
+    QA->>DL: User picks a game
+    DL->>DL: Downloads through VPN
+    loop Every 15 minutes
+        CRON->>DL: Download finished?
+        DL-->>CRON: Yes
+        CRON->>CRON: Safety checks
+        alt Torrent
+            CRON->>LIB: Hardlink
+        else Usenet
+            CRON->>LIB: Move
+        end
+    end
+      </pre></div>
+
+      <h3 id="book-sorting">Book Sorting</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+graph TD
+    DL["Download completes"] -->|"Every 10 min"| PP["PostProcessor"]
+    PP --> DETECT{"File type?"}
+    DETECT -->|"epub/pdf/mobi"| EBOOKS["/media/books/ — Kavita"]
+    DETECT -->|"mp3/m4b/m4a"| AUDIO["/media/audiobooks/ — Audiobookshelf"]
+      </pre></div>
+
+      <h3 id="subtitle-flow">Subtitle Flow</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+graph TD
+    TRIGGER["New media imported"] & SCHEDULE["Wanted scan every 6h"]
+    TRIGGER & SCHEDULE --> BZ["Bazarr"]
+    BZ --> PROV["Query subtitle providers"]
+    PROV --> SCORE["Score against media metadata"]
+    SCORE --> THRESH{"Above threshold?"}
+    THRESH -->|"Yes"| DL["Download .srt"]
+    THRESH -->|"No"| SKIP["Skip"]
+    DL --> PLACE["Place alongside media file"]
+    PLACE --> JF["Jellyfin auto-detects"]
+      </pre></div>
+    </section>
+
+    <!-- ═══ SECTION 3: QUALITY ═══ -->
+    <section id="quality" class="docs-section">
+      <h2 class="section-anchor">Quality &amp; Selection</h2>
+      <p>How the stack decides which release to download when multiple options exist.</p>
+
+      <h3 id="decision-engine">The Decision Engine</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+graph TD
+    RELEASE["Incoming Release"] --> Q{"Quality allowed?"}
+    Q -->|"No"| R1["REJECTED"]
+    Q -->|"Yes"| CF["Score Custom Formats"]
+    CF --> BAD{"Any -10000 CF?"}
+    BAD -->|"Yes"| R2["REJECTED"]
+    BAD -->|"No"| MIN{"Score >= minimum?"}
+    MIN -->|"No"| R3["REJECTED"]
+    MIN -->|"Yes"| RANK["ACCEPTED — ranked by score"]
+    RANK --> BEST["Highest score grabbed"]
+    BEST --> UP{"Better than existing?"}
+    UP -->|"Yes"| UPGRADE["UPGRADE"]
+    UP -->|"No"| SKIP["SKIP"]
+    style R1 fill:#f38ba8,color:#1e1e2e
+    style R2 fill:#f38ba8,color:#1e1e2e
+    style R3 fill:#f38ba8,color:#1e1e2e
+    style UPGRADE fill:#a6e3a1,color:#1e1e2e
+      </pre></div>
+
+      <h3 id="custom-formats">Custom Format Scoring</h3>
+      <h4>Radarr — Movies (48 Custom Formats)</h4>
+      <div class="mermaid-wrap"><pre class="mermaid">
+graph LR
+    subgraph POSITIVE["Positive Scores"]
+        direction TB
+        A["HD Bluray Tier 01: +1800"]
+        B["HD Bluray Tier 02: +1750"]
+        C["WEB Tier 01: +1700"]
+        D["WEB Tier 02: +1650"]
+        E["IMAX: +800"]
+        F["Special Edition: +125"]
+    end
+    subgraph NEGATIVE["Instant Reject -10000"]
+        direction TB
+        X["BR-DISK / LQ"]
+        Y["x265 HD / 3D"]
+        Z["Bad Groups / Obfuscated"]
+    end
+    style POSITIVE fill:#a6e3a1,color:#1e1e2e
+    style NEGATIVE fill:#f38ba8,color:#1e1e2e
+      </pre></div>
+
+      <h4>Sonarr vs Radarr Differences</h4>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Feature</th><th>Radarr</th><th>Sonarr</th></tr></thead>
+        <tbody>
+          <tr><td>Streaming services</td><td>Score 0 (tagging only)</td><td><strong>+75 each</strong> (17 services)</td></tr>
+          <tr><td>HDR/DV</td><td>Not scored</td><td>DV +1000, HDR +500</td></tr>
+          <tr><td>SDR at 4K</td><td>Not penalized</td><td><strong>-10000</strong></td></tr>
+        </tbody>
+      </table></div>
+
+      <h4>Lidarr — Music (Davo's Guide)</h4>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Format</th><th>Score</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>CD Rip</td><td>+500</td><td>Physical source = gold standard</td></tr>
+          <tr><td>Preferred Groups</td><td>+500</td><td>DeVOiD, PERFECT, ENRiCH</td></tr>
+          <tr><td>WEB Release</td><td>+200</td><td>Digital streaming source</td></tr>
+          <tr><td>Lossless Tag</td><td>+100</td><td>FLAC/ALAC indicator</td></tr>
+          <tr><td>Vinyl Rip</td><td>-10000</td><td>Rejected</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3 id="scoring-examples">Scoring Examples</h3>
+      <div class="code-block"><pre><code>Movie: The Matrix
+  Release A: Bluray.1080p.x264-DON         → Tier 01 (+1800) = 1800
+  Release B: IMAX.Bluray.1080p.x264-DON    → Tier 01 (+1800) + IMAX (+800) = 2600 WINNER
+  Release C: WEB-DL.AMZN-NTb               → WEB Tier 01 (+1700) = 1700
+  Release D: CAM.LQ-BadGroup               → LQ (-10000) = REJECTED
+
+TV: Premium 4K
+  Release A: 2160p.DSNP.DV.HDR.Atmos-FLUX  → 1700+75+1000+500+75 = 3350 WINNER
+  Release B: 1080p.NF.WEB-DL-GROUP         → 1650+75 = 1725
+  Release C: 2160p.SDR-BadGroup            → SDR at 4K (-10000) = REJECTED
+
+Music: FLAC Album
+  Release A: FLAC CD DeVOiD                → 500+500+100 = 1100 WINNER
+  Release B: FLAC WEB                      → 200+100 = 300
+  Release C: MP3-320                       → Score 0, below min (1) = SKIPPED</code></pre></div>
+
+      <h3 id="quality-profiles">Quality Profile Settings</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Setting</th><th>Radarr</th><th>Sonarr</th><th>Lidarr</th></tr></thead>
+        <tbody>
+          <tr><td>Upgrade allowed</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+          <tr><td>Cutoff quality</td><td>Bluray-1080p</td><td>WEB 2160p</td><td>Lossless</td></tr>
+          <tr><td>Min CF score</td><td>0</td><td>0</td><td>1</td></tr>
+          <tr><td>Cutoff CF score</td><td>10000</td><td>10000</td><td>10000</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3 id="upgrade-flow">Upgrade Flow</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+sequenceDiagram
+    participant RSS as RSS Sync
+    participant ARR as Arr App
+    participant LIB as Library
+    participant DL as Download Client
+    loop Every 15-30 min
+        RSS->>ARR: New release found, score 2600
+        ARR->>LIB: Current score?
+        LIB-->>ARR: 1700
+        ARR->>DL: Download upgrade
+        DL-->>ARR: Complete
+        ARR->>LIB: Replace — old removed, new hardlinked
+    end
+      </pre></div>
+
+      <h3 id="naming">Naming Conventions</h3>
+      <div class="code-block"><pre><code>Movies:
+  Movie Name (2024) &#123;Edition&#125; [CFs][Bluray-1080p][DTS-HD MA 7.1][HDR10][x265]-Group
+
+TV:
+  Series (2024) - S01E01 - Title [WEB Tier 01][EAC3 5.1][x264]-Group
+
+Music:
+  Album Title (2024)/01 - Track Title.flac
+
+Artist Folders:
+  &#123;Artist NameThe&#125; — "Beatles, The" sorts under B</code></pre></div>
+    </section>
+
+    <!-- ═══ SECTION 4: OPERATIONS ═══ -->
+    <section id="operations" class="docs-section">
+      <h2 class="section-anchor">Operations &amp; CLI</h2>
+      <p>12 commands, Catppuccin Mocha theming, animated ASCII logos, and real-time dashboards.</p>
+
+      <h3 id="command-map">Command Map</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+graph TD
+    USER["arr command"] --> D{"Dispatcher"}
+    D -->|"setup"| S1["First-time wizard"]
+    D -->|"status"| S2["Container dashboard"]
+    D -->|"update"| S3["Git pull + Docker pull"]
+    D -->|"doctor"| S4["6-check diagnostic"]
+    D -->|"downloads"| S5["Live TUI dashboard"]
+    D -->|"vpn"| S6["Tunnel status"]
+    D -->|"health"| S7["15 parallel checks"]
+    D -->|"logs"| S8["Log viewer"]
+    D -->|"restart"| S9["Smart restart"]
+    D -->|"backup"| S10["Config backup"]
+      </pre></div>
+
+      <h3 id="quick-reference">Quick Reference</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Command</th><th>What It Does</th></tr></thead>
+        <tbody>
+          <tr><td><code>arr setup</code></td><td>Full first-time initialization</td></tr>
+          <tr><td><code>arr status</code></td><td>Container health with troubleshooting hints</td></tr>
+          <tr><td><code>arr update</code></td><td>Pull latest code + images, restart changed containers</td></tr>
+          <tr><td><code>arr doctor</code></td><td>Diagnose and auto-fix 6 checks</td></tr>
+          <tr><td><code>arr downloads</code></td><td>Live TUI with progress bars and speeds</td></tr>
+          <tr><td><code>arr vpn</code></td><td>VPN tunnel status + geolocation</td></tr>
+          <tr><td><code>arr health</code></td><td>All 15 endpoints in parallel</td></tr>
+          <tr><td><code>arr logs sonarr</code></td><td>Last 100 lines (-f to follow)</td></tr>
+          <tr><td><code>arr restart vpn</code></td><td>Restart Gluetun + download clients</td></tr>
+          <tr><td><code>arr backup</code></td><td>Timestamped tar.gz of configs</td></tr>
+          <tr><td><code>arr backup --prune 5</code></td><td>Keep only 5 most recent</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3 id="setup-flow">Setup Flow</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+graph TD
+    S1["1. Install CLI"] --> S2["2. Configure .env"]
+    S2 --> S3["3. Create 20 directories"]
+    S3 --> S4["4. Apply config templates"]
+    S4 --> S5["5. Fix permissions"]
+    S5 --> S6["6. Pull Docker images"]
+    S6 --> Q{"Start now?"}
+    Q -->|"Yes"| UP["docker compose up -d"]
+    Q -->|"No"| DONE["Ready"]
+    style S1 fill:#89b4fa,color:#1e1e2e
+    style S6 fill:#a6e3a1,color:#1e1e2e
+      </pre></div>
+
+      <h3 id="doctor">Doctor Self-Repair</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+graph TD
+    C1["1. arr binary — compare vs source"] -->|"Differs"| F1["Auto-update"]
+    C2["2. .env vars — check missing"] -->|"Missing"| F2["Append"]
+    C3["3. VPN creds — check placeholders"] -->|"Found"| W3["Warning"]
+    C4["4. Directories — check 20 dirs"] -->|"Missing"| F4["Auto-create"]
+    C5["5. Templates — check deployed"] -->|"Missing"| F5["Auto-copy"]
+    C6["6. Seerr perms — check ownership"] -->|"Wrong"| F6["Auto-chown"]
+    style F1 fill:#a6e3a1,color:#1e1e2e
+    style F2 fill:#a6e3a1,color:#1e1e2e
+    style W3 fill:#f9e2af,color:#1e1e2e
+    style F4 fill:#a6e3a1,color:#1e1e2e
+    style F5 fill:#a6e3a1,color:#1e1e2e
+    style F6 fill:#a6e3a1,color:#1e1e2e
+      </pre></div>
+
+      <h3 id="downloads-dashboard">Downloads Dashboard</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+graph TD
+    subgraph BG["Background Fetcher"]
+        F1["Transmission RPC"] & F2["SABnzbd API"]
+    end
+    F1 & F2 -->|"4 parallel curls"| MAIN["Main Loop — 100ms poll"]
+    MAIN --> RENDER["Speed gauges, progress bars, ETAs"]
+    RENDER --> KB["q=quit, r=refresh"]
+    style BG fill:#89b4fa,color:#1e1e2e
+    style MAIN fill:#a6e3a1,color:#1e1e2e
+      </pre></div>
+
+      <h3 id="health-checks">Health Check Endpoints</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Service</th><th>Endpoint</th><th>Expected</th></tr></thead>
+        <tbody>
+          <tr><td>Gluetun</td><td>/v1/openvpn/status</td><td>302</td></tr>
+          <tr><td>Transmission</td><td>/transmission/rpc</td><td>409</td></tr>
+          <tr><td>SABnzbd</td><td>/api?mode=version</td><td>200</td></tr>
+          <tr><td>Prowlarr</td><td>/ping</td><td>200</td></tr>
+          <tr><td>FlareSolverr</td><td>/health</td><td>200</td></tr>
+          <tr><td>Radarr / Sonarr / Lidarr / Bazarr</td><td>/ping</td><td>200</td></tr>
+          <tr><td>Jellyfin</td><td>/System/Info/Public</td><td>200</td></tr>
+          <tr><td>Seerr</td><td>/api/v1/status</td><td>200</td></tr>
+          <tr><td>LazyLibrarian</td><td>/api?cmd=getVersion</td><td>200</td></tr>
+          <tr><td>Kavita</td><td>/api/health</td><td>200</td></tr>
+          <tr><td>Audiobookshelf</td><td>/healthcheck</td><td>200</td></tr>
+          <tr><td>QuestArr</td><td>/</td><td>200</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3 id="update-pipeline">Update Pipeline</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+sequenceDiagram
+    actor User
+    participant CLI as arr update
+    participant GIT as Git
+    participant DC as Docker Compose
+    User->>CLI: arr update
+    CLI->>GIT: git pull --ff-only
+    CLI->>DC: docker compose pull
+    CLI->>DC: docker compose up -d
+    Note over DC: Only changed containers recreated
+      </pre></div>
+
+      <h3 id="onboarding">Onboarding Friends</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+graph LR
+    A["1. Clone repo"] --> B["2. arr setup"]
+    B --> C["3. Edit .env"]
+    C --> D["4. arr start"]
+    D --> E["5. Open Seerr"]
+    style A fill:#89b4fa,color:#1e1e2e
+    style E fill:#a6e3a1,color:#1e1e2e
+      </pre></div>
+      <p>Friends update with <code>arr update</code> — pulls latest code and Docker images in one command.</p>
+    </section>
+
   </div>
-  <div class="container" style="padding-bottom:80px;">
-    <p class="text-dim text-center">Architecture deep dive coming soon. Check back shortly.</p>
-  </div>
+</div>
+
 </Base>
 
+<!-- Mermaid CDN -->
+<script>
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js';
+  script.onload = () => {
+    // @ts-ignore
+    window.mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        primaryColor: '#1a2340',
+        primaryTextColor: '#e0e6f0',
+        primaryBorderColor: '#334155',
+        lineColor: '#64748b',
+        secondaryColor: '#131a2e',
+        tertiaryColor: '#0f1629',
+        fontFamily: 'Inter, -apple-system, sans-serif',
+        fontSize: '13px',
+      },
+      flowchart: { curve: 'basis', padding: 12 },
+      sequence: { mirrorActors: false, messageAlign: 'left' },
+    });
+    // @ts-ignore
+    window.mermaid.run();
+  };
+  document.head.appendChild(script);
+</script>
+
+<!-- TOC scroll spy -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tocLinks = document.querySelectorAll('.toc-link');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          tocLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+          });
+        }
+      });
+    }, { rootMargin: '-80px 0px -70% 0px' });
+
+    document.querySelectorAll('[id]').forEach(el => observer.observe(el));
+
+    // Mobile TOC toggle
+    const sidebar = document.getElementById('docsSidebar');
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'toc-toggle';
+    toggleBtn.innerHTML = '&#9776; Sections';
+    toggleBtn.addEventListener('click', () => sidebar?.classList.toggle('open'));
+    sidebar?.parentElement?.insertBefore(toggleBtn, sidebar);
+    tocLinks.forEach(link => {
+      link.addEventListener('click', () => sidebar?.classList.remove('open'));
+    });
+  });
+</script>
+
 <style>
-  .page-header { text-align:center; padding:50px 24px 20px; }
-  .page-header h1 {
-    font-size:clamp(1.8rem,5vw,2.5rem); font-weight:700;
-    background:linear-gradient(135deg,var(--indigo),var(--purple));
-    -webkit-background-clip:text; background-clip:text;
-    -webkit-text-fill-color:transparent;
+  .docs-layout { display:flex; max-width:1300px; margin:0 auto; min-height:100vh; }
+
+  /* Sidebar */
+  .docs-sidebar { position:sticky; top:56px; height:calc(100vh - 56px); width:260px; flex-shrink:0; overflow-y:auto; border-right:1px solid var(--border); padding:24px 0; }
+  .sidebar-inner { padding:0 20px; }
+  .sidebar-label { font-size:0.6rem; text-transform:uppercase; letter-spacing:0.25em; color:rgba(200,200,200,0.3); font-weight:600; font-family:'SF Mono','Fira Code',monospace; display:block; margin-bottom:16px; }
+  .toc { display:flex; flex-direction:column; gap:1px; }
+  .toc-link { display:block; font-size:0.8rem; color:var(--text-muted); padding:4px 10px; border-radius:4px; text-decoration:none; transition:all 0.2s; line-height:1.5; }
+  .toc-link:hover { color:var(--text); background:rgba(255,255,255,0.03); }
+  .toc-link.active { color:var(--gold); background:rgba(212,160,74,0.08); }
+  .toc-h1 { font-weight:600; color:var(--text-dim); margin-top:12px; font-size:0.82rem; }
+  .toc-h2 { padding-left:20px; font-size:0.76rem; }
+  .toc-toggle { display:none; position:fixed; bottom:20px; right:20px; z-index:100; background:var(--surface); color:var(--text-dim); border:1px solid var(--border-h); padding:10px 18px; border-radius:10px; font-size:0.82rem; font-family:inherit; cursor:pointer; box-shadow:0 4px 20px rgba(0,0,0,0.4); }
+  .docs-sidebar::-webkit-scrollbar { width:4px; }
+  .docs-sidebar::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+
+  /* Content */
+  .docs-content { flex:1; min-width:0; padding:0 40px 80px; }
+  .docs-header { padding:50px 0 30px; border-bottom:1px solid var(--border); margin-bottom:40px; }
+  .docs-header h1 { font-size:clamp(1.8rem,5vw,2.5rem); font-weight:700; background:linear-gradient(135deg,var(--gold),#b8860b); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .docs-header p { color:var(--text-dim); font-size:1rem; margin-top:8px; line-height:1.6; }
+
+  .docs-section { padding-bottom:60px; border-bottom:1px solid rgba(255,255,255,0.04); margin-bottom:40px; }
+  .docs-section:last-child { border-bottom:none; }
+  .section-anchor { font-size:clamp(1.5rem,4vw,1.9rem); font-weight:700; color:#f1f5f9; margin-bottom:12px; scroll-margin-top:80px; }
+  .docs-section h3 { font-size:1.2rem; font-weight:600; color:#e0e6f0; margin:36px 0 12px; scroll-margin-top:80px; }
+  .docs-section h4 { font-size:1rem; font-weight:600; color:var(--text-dim); margin:24px 0 8px; scroll-margin-top:80px; }
+  .docs-section p { color:var(--text-dim); font-size:0.9rem; line-height:1.8; margin-bottom:12px; max-width:700px; }
+
+  /* Mermaid */
+  .mermaid-wrap { margin:16px 0 24px; background:rgba(15,22,41,0.5); border:1px solid rgba(30,41,59,0.5); border-radius:10px; padding:20px; overflow-x:auto; }
+  .mermaid-wrap pre.mermaid { background:none !important; border:none !important; padding:0 !important; margin:0 !important; font-size:0.8rem; color:var(--text-dim); }
+
+  /* Tables */
+  .table-wrap { margin:16px 0 24px; overflow-x:auto; border-radius:10px; border:1px solid rgba(30,41,59,0.5); }
+  table { width:100%; border-collapse:collapse; font-size:0.82rem; }
+  thead { background:rgba(15,22,41,0.8); }
+  th { text-align:left; padding:10px 14px; color:var(--text-dim); font-weight:600; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.08em; border-bottom:1px solid var(--border); }
+  td { padding:8px 14px; color:var(--text-dim); border-bottom:1px solid rgba(255,255,255,0.03); }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:rgba(255,255,255,0.02); }
+  td strong { color:#e0e6f0; }
+  td code { font-size:0.78rem; background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.15); padding:1px 6px; border-radius:4px; color:var(--cyan); }
+
+  /* Code blocks */
+  .code-block { margin:16px 0 24px; background:#080c16; border:1px solid rgba(30,41,59,0.5); border-radius:10px; overflow-x:auto; }
+  .code-block pre { padding:16px 20px; margin:0; font-family:'SF Mono','Fira Code',Consolas,monospace; font-size:0.78rem; line-height:1.7; color:var(--text-dim); }
+  .code-block code { background:none; border:none; padding:0; color:inherit; font-size:inherit; }
+
+  /* Callouts */
+  .callout { margin:16px 0 24px; padding:16px 20px; background:rgba(15,22,41,0.5); border-left:3px solid var(--border-h); border-radius:0 8px 8px 0; font-size:0.85rem; color:var(--text-dim); line-height:1.7; }
+  .callout p { margin-bottom:8px; max-width:none; }
+  .callout p:last-child { margin-bottom:0; }
+  .callout strong { color:#e0e6f0; }
+  .callout-info { border-left-color:var(--cyan); }
+  .callout-warn { border-left-color:var(--amber); }
+
+  /* Responsive */
+  @media(max-width:900px){
+    .docs-sidebar { position:fixed; left:0; top:56px; bottom:0; z-index:50; background:var(--bg); transform:translateX(-100%); transition:transform 0.3s; border-right:1px solid var(--border); }
+    .docs-sidebar.open { transform:translateX(0); }
+    .toc-toggle { display:block; }
+    .docs-content { padding:0 20px 60px; }
+    .docs-header { padding:30px 0 20px; }
+    .mermaid-wrap { padding:12px; }
   }
-  .page-header p { color:var(--text-dim); font-size:1.05rem; margin-top:6px; }
+  @media(max-width:480px){
+    .docs-content { padding:0 14px 40px; }
+    table { font-size:0.75rem; }
+    th,td { padding:6px 8px; }
+  }
 </style>

@@ -1,6 +1,5 @@
 ---
 import Base from '../layouts/Base.astro';
-import Compass from '../components/Compass.astro';
 import Terminal from '../components/Terminal.astro';
 ---
 
@@ -8,225 +7,541 @@ import Terminal from '../components/Terminal.astro';
 
 <section class="hero">
   <div class="hero-glow"></div>
-  <Compass />
-
-  <div class="hero-side left">
-    <svg viewBox="0 0 20 300" preserveAspectRatio="none" fill="none">
-      <line x1="10" y1="0" x2="10" y2="300" stroke="rgba(99,102,241,0.16)" stroke-width="0.5"/>
-      <circle cx="10" cy="30" r="2" fill="rgba(99,102,241,0.11)"/>
-      <circle cx="10" cy="150" r="2.5" stroke="rgba(99,102,241,0.11)" stroke-width="0.5"/>
-      <circle cx="10" cy="150" r="1" fill="rgba(99,102,241,0.13)"/>
-      <circle cx="10" cy="270" r="2" fill="rgba(99,102,241,0.11)"/>
-      <rect x="8" y="110" width="4" height="4" transform="rotate(45 10 112)" fill="rgba(99,102,241,0.16)"/>
-      <rect x="8" y="190" width="4" height="4" transform="rotate(45 10 192)" fill="rgba(99,102,241,0.16)"/>
-    </svg>
-  </div>
-  <div class="hero-side right">
-    <svg viewBox="0 0 20 300" preserveAspectRatio="none" fill="none">
-      <line x1="10" y1="0" x2="10" y2="300" stroke="rgba(99,102,241,0.16)" stroke-width="0.5"/>
-      <circle cx="10" cy="30" r="2" fill="rgba(99,102,241,0.11)"/>
-      <circle cx="10" cy="150" r="2.5" stroke="rgba(99,102,241,0.11)" stroke-width="0.5"/>
-      <circle cx="10" cy="150" r="1" fill="rgba(99,102,241,0.13)"/>
-      <circle cx="10" cy="270" r="2" fill="rgba(99,102,241,0.11)"/>
-      <rect x="8" y="110" width="4" height="4" transform="rotate(45 10 112)" fill="rgba(99,102,241,0.16)"/>
-      <rect x="8" y="190" width="4" height="4" transform="rotate(45 10 192)" fill="rgba(99,102,241,0.16)"/>
-    </svg>
-  </div>
-
+  <!-- Particles container -->
+  <div class="particles" id="particles" aria-hidden="true"></div>
   <h1>arr-barr</h1>
   <div class="hero-tag">Every crew needs a port</div>
   <Terminal />
+  <p class="hero-hook">
+    <span class="hook-word">Your</span>
+    <span class="hook-word">friend</span>
+    <span class="hook-word">clicks</span>
+    <span class="hook-word"><strong>Request.</strong></span>
+    <span class="hook-word">Here's</span>
+    <span class="hook-word">what</span>
+    <span class="hook-word">happens</span>
+    <span class="hook-word">next.</span>
+  </p>
   <div class="hero-cta">
     <a href="/guide" class="btn btn-primary">Read the Guide</a>
     <a href="/architecture" class="btn btn-ghost">Explore the Stack</a>
   </div>
-  <div class="hero-wave"><svg viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,30 C150,50 350,10 600,30 C850,50 1050,10 1200,30 L1200,60 L0,60 Z" fill="#0a0e1a" opacity="0.7"/><path d="M0,35 C200,55 400,15 600,35 C800,55 1000,15 1200,35 L1200,60 L0,60 Z" fill="#0a0e1a"/></svg></div>
+  <!-- Morphing wave divider -->
+  <div class="wave-divider hero-wave-morph">
+    <svg viewBox="0 0 1200 80" preserveAspectRatio="none" class="wave-svg">
+      <path id="waveA" d="M0,40 C150,65 350,15 600,40 C850,65 1050,15 1200,40 L1200,80 L0,80 Z" fill="#0a0e1a"/>
+      <path id="waveB" d="M0,50 C200,20 400,70 600,35 C800,10 1000,60 1200,45 L1200,80 L0,80 Z" fill="#0a0e1a" visibility="hidden"/>
+      <path id="waveC" d="M0,30 C100,55 300,25 500,50 C700,75 900,20 1200,35 L1200,80 L0,80 Z" fill="#0a0e1a" visibility="hidden"/>
+    </svg>
+  </div>
 </section>
 
-<!-- FLOW -->
-<div class="section-header">
-  <h2 class="section-title">How the Barr Runs</h2>
-  <p class="section-desc">Every member of the crew has a role. Together, they form an automated pipeline &mdash; zero manual work.</p>
-</div>
+<!-- JOURNEY -->
+<div class="journey-wrap" id="journeyWrap">
+  <!-- SVG Nautical Chart Path -->
+  <svg class="journey-path" id="journeyPath" viewBox="0 0 60 1000" preserveAspectRatio="none" aria-hidden="true">
+    <path
+      id="chartRoute"
+      d="M 30,0 C 45,60 15,120 30,180 C 45,240 10,300 30,360 C 50,420 15,480 30,540 C 45,600 10,660 30,720 C 50,780 15,840 30,900 C 45,940 30,970 30,1000"
+      fill="none"
+      stroke="#d4a04a"
+      stroke-width="1.5"
+      stroke-opacity="0.4"
+      stroke-linecap="round"
+    />
+    <!-- Chapter nodes as SVG circles -->
+    <circle class="chart-node" cx="30" cy="100" r="5" data-chapter="0"/>
+    <circle class="chart-node" cx="30" cy="350" r="5" data-chapter="1"/>
+    <circle class="chart-node" cx="30" cy="600" r="5" data-chapter="2"/>
+    <circle class="chart-node" cx="30" cy="850" r="5" data-chapter="3"/>
+  </svg>
 
-<div class="flow-container">
-  <div class="flow-diagram">
-    <div class="layer layer-request fl"><div class="layer-title">The Notice Board</div><div class="layer-subtitle">Post what you're looking for</div><div class="request-app"><span class="ri">&#x1F3AC;</span><div><div class="rn">Jellyseerr</div><div class="rd">Browse &bull; Request &bull; Track</div></div></div></div>
-    <div class="fa"><div class="fl-line"></div><div class="fl-label">Sends the order to the right crew member</div><div class="fl-line"></div><div class="fl-tri"></div></div>
-    <div class="layer layer-brains fl"><div class="layer-title">The Crew</div><div class="layer-subtitle">Each runs one part of the operation</div><div class="app-grid"><div class="ac"><div class="ai"><img src="https://raw.githubusercontent.com/Radarr/Radarr/develop/Logo/128.png" alt="Radarr" loading="lazy"></div><div class="an">Radarr</div><div class="ar">Movies</div></div><div class="ac"><div class="ai"><img src="https://raw.githubusercontent.com/Sonarr/Sonarr/develop/Logo/128.png" alt="Sonarr" loading="lazy"></div><div class="an">Sonarr</div><div class="ar">TV Shows</div></div><div class="ac"><div class="ai"><img src="https://raw.githubusercontent.com/Lidarr/Lidarr/develop/Logo/128.png" alt="Lidarr" loading="lazy"></div><div class="an">Lidarr</div><div class="ar">Music</div></div><div class="ac"><div class="ai"><img src="https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/lazylibrarian-icon.png" alt="LazyLib" loading="lazy"></div><div class="an">LazyLibrarian</div><div class="ar">Books</div></div><div class="ac"><div class="ai"><img src="https://raw.githubusercontent.com/morpheus65535/bazarr/master/frontend/public/images/logo64.png" alt="Bazarr" loading="lazy"></div><div class="an">Bazarr</div><div class="ar">Subtitles</div></div><div class="ac"><div class="ai"><img src="https://raw.githubusercontent.com/Doezer/QuestArr/main/public/logo192.png" alt="QuestArr" loading="lazy"></div><div class="an">QuestArr</div><div class="ar">Games</div></div></div></div>
-    <div class="fa"><div class="fl-line"></div><div class="fl-label">"Search every port for this"</div><div class="fl-line"></div><div class="fl-tri"></div></div>
-    <div class="layer layer-search fl"><div class="layer-title">The Scouts</div><div class="layer-subtitle">12 sources searched in parallel</div><div class="search-row"><div class="si"><span>&#x1F50D;</span><div class="sn">Prowlarr</div></div><div class="sp">+</div><div class="si"><span>&#x1F6E1;&#xFE0F;</span><div class="sn">FlareSolverr</div></div></div></div>
-    <div class="fa"><div class="fl-line"></div><div class="fl-label">Best cargo located &mdash; bring it in</div><div class="fl-line"></div><div class="fl-tri"></div></div>
-    <div class="layer layer-vpn fl"><div class="vpn-badge"><div class="vdot"></div>Tunnel Active &mdash; Encrypted</div><div class="layer-title">&#x1F512; The Smuggler's Tunnel</div><div class="layer-subtitle">All downloads through WireGuard VPN. Kill switch active.</div><div class="vpn-row"><div class="vc"><span>&#x26A1;</span><strong>SABnzbd</strong> Usenet</div><div class="vc"><span>&#x1F300;</span><strong>Transmission</strong> Torrents</div></div><div class="shield-row"><span class="st">&#x1F512; WireGuard</span><span class="st">&#x1F6AB; Kill Switch</span><span class="st">&#x1F6E1;&#xFE0F; IP Hidden</span><span class="st">&#x1F517; Hardlinks</span></div></div>
-    <div class="fa"><div class="fl-line"></div><div class="fl-label">Cargo sorted &amp; stowed</div><div class="fl-line"></div><div class="fl-tri"></div></div>
-    <div class="layer layer-storage fl"><div class="layer-title">The Vault</div><div class="layer-subtitle">Sorted with proper names, artwork, metadata</div><div class="vault-row"><span>&#x1F3AC; Movies</span><span>&#x1F4FA; TV</span><span>&#x1F3B5; Music</span><span>&#x1F4D6; Books</span><span>&#x1F3A7; Audio</span><span>&#x1F3AE; Games</span></div></div>
-    <div class="fa"><div class="fl-line"></div><div class="fl-label">Served up to the taproom</div><div class="fl-line"></div><div class="fl-tri"></div></div>
-    <div class="layer layer-players fl"><div class="layer-title">The Taproom</div><div class="layer-subtitle">Pull up a chair. Your server, no subscriptions.</div><div class="tap-row"><span>&#x1F4FA; Jellyfin</span><span>&#x1F4D6; Kavita</span><span>&#x1F3A7; Audiobookshelf</span><span>&#x1F3AE; GameVault</span></div></div>
+  <!-- Ship that sails along the path -->
+  <div class="journey-ship" id="journeyShip">
+    <svg viewBox="0 0 32 32" width="28" height="28">
+      <g fill="#d4a04a">
+        <!-- Hull -->
+        <path d="M4,24 Q6,28 16,28 Q26,28 28,24 L24,20 L8,20 Z" opacity="0.9"/>
+        <!-- Mast -->
+        <rect x="15" y="6" width="2" height="16" opacity="0.7"/>
+        <!-- Sail -->
+        <path d="M17,8 L17,18 L26,18 Q22,13 17,8 Z" opacity="0.8"/>
+        <path d="M15,8 L15,16 L8,16 Q11,12 15,8 Z" opacity="0.6"/>
+        <!-- Flag -->
+        <path d="M16,4 L16,8 L20,6 Z" fill="#e0976a"/>
+      </g>
+    </svg>
   </div>
-</div>
 
-<!-- Security -->
-<div class="sec-wrap">
-  <div class="sec-card">
-    <h2>&#x1F512; Covering Your Tracks</h2>
-    <div class="sec-grid">
-      <div class="sec-i"><span>&#x2705;</span><div><strong>VPN Kill Switch</strong><p>VPN drops, all traffic blocked instantly.</p></div></div>
-      <div class="sec-i"><span>&#x2705;</span><div><strong>WireGuard Encryption</strong><p>Your ISP sees encrypted data. Nothing more.</p></div></div>
-      <div class="sec-i"><span>&#x2705;</span><div><strong>Network Isolation</strong><p>Only downloads use VPN. Streaming stays fast.</p></div></div>
-      <div class="sec-i"><span>&#x2705;</span><div><strong>Zero-Waste Hardlinks</strong><p>50 GB file uses 50 GB, not 100 GB.</p></div></div>
+  <div class="chapter" data-accent="warm">
+    <div class="chapter-node"></div>
+    <div class="chapter-content">
+      <span class="chapter-label" data-final="01">01</span>
+      <h3 class="chapter-title split-title">Two taps and an impulse</h3>
+      <p class="chapter-analogy">Search. Request. Walk away.</p>
+      <p class="chapter-desc">Your friend had a thought. Two taps later, it's an order. Jellyseerr routes it to the right crew member &mdash; Radarr for movies, Sonarr for TV, Lidarr for music. They'll never touch the backend. They don't need to.</p>
+    </div>
+  </div>
+
+  <div class="chapter" data-accent="amber">
+    <div class="chapter-node"></div>
+    <div class="chapter-content">
+      <span class="chapter-label" data-final="02">02</span>
+      <h3 class="chapter-title split-title">The sweep</h3>
+      <p class="chapter-analogy">One search. Twelve sources. The best result wins.</p>
+      <p class="chapter-desc">Prowlarr searches every indexer in parallel. FlareSolverr slips past Cloudflare guards. Custom formats score every result &mdash; HDR, Atmos, proper encoding. The highest score wins.</p>
+    </div>
+  </div>
+
+  <div class="chapter" data-accent="emerald">
+    <div class="chapter-node"></div>
+    <div class="chapter-content">
+      <span class="chapter-label" data-final="03">03</span>
+      <h3 class="chapter-title split-title">The tunnel</h3>
+      <p class="chapter-analogy">Every download encrypted. No exceptions.</p>
+      <p class="chapter-desc">A WireGuard VPN tunnel wraps every download. If the tunnel drops, traffic stops &mdash; kill switch. Your ISP sees noise. Transmission handles torrents, SABnzbd handles Usenet. Both locked inside.</p>
+    </div>
+  </div>
+
+  <div class="chapter" data-accent="gold">
+    <div class="chapter-node"></div>
+    <div class="chapter-content">
+      <span class="chapter-label" data-final="04">04</span>
+      <h3 class="chapter-title split-title">Press play</h3>
+      <p class="chapter-analogy">Your library. No subscriptions. No removals. Yours.</p>
+      <p class="chapter-desc">Download completes. Hardlinked into the library &mdash; same file, two paths, zero wasted space. Renamed, artwork added, subtitles matched. It shows up in Jellyfin. Hit play.</p>
     </div>
   </div>
 </div>
 
-<!-- CTA -->
-<div class="cta-wrap">
-  <div class="cta-card">
-    <h2>&#x1F680; Ready to Join the Crew?</h2>
-    <p>Everything you need is in the repo.</p>
-    <a href="/guide" class="btn btn-primary">Read the Guide</a>
-  </div>
+<!-- Wave divider between journey and crew -->
+<div class="wave-divider journey-wave-morph">
+  <svg viewBox="0 0 1200 60" preserveAspectRatio="none" class="wave-svg wave-flip">
+    <path id="waveD" d="M0,20 C200,45 400,5 600,25 C800,45 1000,10 1200,30 L1200,60 L0,60 Z" fill="#0a0e1a" opacity="0.5"/>
+  </svg>
 </div>
+
+<!-- CREW — editorial layout -->
+<section class="crew-section">
+  <h2 class="crew-heading split-title">The Crew</h2>
+  <p class="crew-sub">Fifteen services. Each one does exactly one thing, extremely well.</p>
+
+  <div class="crew-list">
+    <div class="crew-group">
+      <span class="group-tag">Requests</span>
+      <div class="crew-entry"><span class="entry-name">Jellyseerr</span><span class="entry-role">Search, click, done.</span></div>
+    </div>
+
+    <div class="crew-group">
+      <span class="group-tag">Automation</span>
+      <div class="crew-entry"><span class="entry-name">Radarr</span><span class="entry-role">Movies, handled.</span></div>
+      <div class="crew-entry"><span class="entry-name">Sonarr</span><span class="entry-role">Every episode, on time.</span></div>
+      <div class="crew-entry"><span class="entry-name">Lidarr</span><span class="entry-role">Albums in, organized.</span></div>
+      <div class="crew-entry"><span class="entry-name">LazyLibrarian</span><span class="entry-role">Books and audiobooks, sorted.</span></div>
+      <div class="crew-entry"><span class="entry-name">QuestArr</span><span class="entry-role">Games, cataloged.</span></div>
+    </div>
+
+    <div class="crew-group">
+      <span class="group-tag">Search</span>
+      <div class="crew-entry"><span class="entry-name">Prowlarr</span><span class="entry-role">Twelve indexers, one search.</span></div>
+      <div class="crew-entry"><span class="entry-name">FlareSolverr</span><span class="entry-role">Gets past the bouncers.</span></div>
+    </div>
+
+    <div class="crew-group">
+      <span class="group-tag">Downloads</span>
+      <div class="crew-entry"><span class="entry-name">Gluetun</span><span class="entry-role">VPN tunnel. Always on.</span></div>
+      <div class="crew-entry"><span class="entry-name">Transmission</span><span class="entry-role">Torrents, through the tunnel.</span></div>
+      <div class="crew-entry"><span class="entry-name">SABnzbd</span><span class="entry-role">Usenet, through the tunnel.</span></div>
+    </div>
+
+    <div class="crew-group">
+      <span class="group-tag">Streaming</span>
+      <div class="crew-entry"><span class="entry-name">Jellyfin</span><span class="entry-role">Your library, any screen.</span></div>
+      <div class="crew-entry"><span class="entry-name">Bazarr</span><span class="entry-role">Subtitles, automatic.</span></div>
+    </div>
+
+    <div class="crew-group">
+      <span class="group-tag">Reading</span>
+      <div class="crew-entry"><span class="entry-name">Kavita</span><span class="entry-role">Ebooks in the browser.</span></div>
+      <div class="crew-entry"><span class="entry-name">Audiobookshelf</span><span class="entry-role">Audiobooks with progress sync.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="final-cta">
+  <div class="cta-glow"></div>
+  <h2 class="split-title">Clone. Configure. Stream.</h2>
+  <p>The entire stack in one repo. Documented, automated, ready.</p>
+  <a href="/guide" class="btn btn-primary">Read the Guide</a>
+</section>
 
 </Base>
 
 <style>
-  .hero { text-align:center; padding:100px 20px 80px; background:linear-gradient(180deg,#060d1f 0%,#0a1228 40%,var(--bg) 100%); position:relative; overflow:hidden; }
+  /* ═══ HERO ═══ */
+  .hero { text-align:center; padding:100px 20px 0; background:linear-gradient(180deg,#060d1f 0%,#0a1228 40%,var(--bg) 100%); position:relative; overflow:hidden; }
   .hero-glow { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse 70% 50% at 50% 10%,rgba(56,100,180,0.14) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 25% 70%,rgba(99,102,241,0.06) 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 75% 70%,rgba(45,212,191,0.05) 0%,transparent 60%); }
   .hero h1 { font-size:clamp(2.8rem,8vw,4.2rem); font-weight:800; background:linear-gradient(135deg,#7aa2f7,var(--indigo),var(--purple),#c084fc); background-size:300% 300%; animation:grad 8s ease infinite; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; position:relative; letter-spacing:-1px; }
   @keyframes grad{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
   .hero-tag { font-size:0.82rem; color:rgba(125,211,252,0.5); letter-spacing:5px; text-transform:uppercase; margin-top:6px; font-weight:500; position:relative; }
-  .hero-cta { display:flex; gap:12px; justify-content:center; margin-top:32px; flex-wrap:wrap; position:relative; }
-  .hero-wave { position:absolute; bottom:-2px; left:0; width:100%; height:60px; overflow:hidden; }
-  .hero-wave svg { position:absolute; bottom:0; width:200%; height:100%; animation:waveDrift 10s linear infinite; }
-  @keyframes waveDrift{to{transform:translateX(-50%)}}
-  .hero-side { position:absolute; top:15%; bottom:15%; width:30px; pointer-events:none; }
-  .hero-side.left { left:24px; } .hero-side.right { right:24px; }
-  .hero-side svg { width:100%; height:100%; }
-  @media(max-width:768px){ .hero-side{display:none} .hero{padding:70px 16px 60px} }
-  @media(max-width:480px){ .hero h1{font-size:2rem} .hero{padding:60px 14px 50px} }
 
-  /* Flow */
-  .flow-container { max-width:960px; margin:0 auto; padding:20px 24px 60px; }
-  .flow-diagram { display:flex; flex-direction:column; align-items:center; }
-  .fa { display:flex; flex-direction:column; align-items:center; padding:5px 0; }
-  .fl-line { width:3px; height:24px; background:linear-gradient(180deg,#475569,#334155); }
-  .fl-label { font-size:0.68rem; color:#e2e8f0; font-weight:500; letter-spacing:0.04em; text-transform:uppercase; padding:3px 12px; background:#334155; border-radius:12px; border:1px solid #475569; text-align:center; }
-  .fl-tri { width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-top:8px solid #475569; }
-  .fl { opacity:0; transform:translateY(30px); }
+  .hero-hook { font-size:clamp(1rem,2.5vw,1.2rem); color:var(--text-dim); margin:28px auto 0; max-width:480px; position:relative; line-height:1.7; }
+  .hero-hook strong { color:var(--text); }
+  .hook-word { display:inline-block; opacity:0; transform:translateY(8px); }
 
-  /* Layers */
-  .layer { width:100%; max-width:840px; border-radius:14px; padding:22px; position:relative; overflow:hidden; }
-  .layer::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
-  .layer-title { font-size:0.75rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:2px; }
-  .layer-subtitle { font-size:0.82rem; color:var(--text-dim); margin-bottom:14px; }
+  .hero-cta { display:flex; gap:12px; justify-content:center; margin-top:28px; flex-wrap:wrap; position:relative; }
 
-  .layer-request { background:linear-gradient(135deg,#1a1a2e,var(--surface2)); border:1px solid rgba(124,58,237,0.25); text-align:center; max-width:440px; }
-  .layer-request::before { background:linear-gradient(90deg,#a78bfa,#7c3aed); }
-  .layer-request .layer-title { color:#c4b5fd; }
-  .request-app { display:inline-flex; align-items:center; gap:10px; background:rgba(124,58,237,0.1); border:1px solid rgba(124,58,237,0.22); padding:10px 20px; border-radius:10px; }
-  .ri { font-size:1.3rem; } .rn { font-weight:600; color:#c4b5fd; font-size:0.95rem; } .rd { font-size:0.72rem; color:var(--text-dim); }
+  /* ═══ PARTICLES ═══ */
+  .particles { position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:0; }
+  .particle { position:absolute; border-radius:50%; will-change:transform,opacity; pointer-events:none; }
 
-  .layer-brains { background:linear-gradient(135deg,#0f172a,var(--surface2)); border:1px solid rgba(14,165,233,0.2); }
-  .layer-brains::before { background:linear-gradient(90deg,#22d3ee,#0ea5e9); }
-  .layer-brains .layer-title { color:#67e8f9; }
-  .app-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; }
-  .ac { background:rgba(14,165,233,0.05); border:1px solid rgba(14,165,233,0.12); border-radius:10px; padding:10px 6px; text-align:center; transition:all 0.3s; }
-  .ac:hover { background:rgba(14,165,233,0.1); transform:translateY(-2px); }
-  .ai { margin-bottom:4px; } .ai img { width:26px; height:26px; border-radius:5px; }
-  .an { font-weight:600; font-size:0.75rem; color:#e0f2fe; } .ar { font-size:0.62rem; color:#7dd3fc; }
+  /* ═══ WAVE DIVIDERS (MorphSVG) ═══ */
+  .wave-divider { position:relative; width:100%; height:80px; overflow:hidden; z-index:2; }
+  .hero-wave-morph { position:absolute; bottom:-1px; left:0; right:0; height:80px; }
+  .wave-svg { display:block; width:100%; height:100%; }
+  .wave-flip { transform:scaleY(-1); }
+  .journey-wave-morph { margin-top:-1px; }
 
-  .layer-search { background:linear-gradient(135deg,#1a1a2e,var(--surface2)); border:1px solid rgba(245,158,11,0.2); text-align:center; max-width:480px; }
-  .layer-search::before { background:linear-gradient(90deg,#fbbf24,#f59e0b); }
-  .layer-search .layer-title { color:#fcd34d; }
-  .search-row { display:flex; justify-content:center; align-items:center; gap:14px; }
-  .si { background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.18); border-radius:10px; padding:10px 16px; text-align:center; }
-  .si span { font-size:1.2rem; } .sn { font-weight:600; font-size:0.82rem; color:#fde68a; }
-  .sp { font-size:1.2rem; color:#475569; }
+  @media(max-width:768px){ .hero{padding:70px 16px 0} }
+  @media(max-width:480px){ .hero h1{font-size:2rem} .hero{padding:60px 14px 0} }
 
-  .layer-vpn { background:linear-gradient(135deg,#042f1c,#0a1f1a 50%,#0f172a); border:2px solid var(--emerald); box-shadow:0 0 30px rgba(16,185,129,0.06); text-align:center; }
-  .layer-vpn::before { background:linear-gradient(90deg,#34d399,#10b981,#059669); height:4px; }
-  .layer-vpn .layer-title { color:#6ee7b7; }
-  .vpn-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.25); padding:4px 12px; border-radius:20px; font-size:0.72rem; font-weight:600; color:#6ee7b7; margin-bottom:10px; }
-  .vdot { width:7px; height:7px; background:var(--emerald); border-radius:50%; animation:pulse 2s infinite; }
-  @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(16,185,129,0.4)}50%{opacity:0.8;box-shadow:0 0 0 6px rgba(16,185,129,0)}}
-  .vpn-row { display:flex; justify-content:center; gap:12px; margin:8px 0; flex-wrap:wrap; }
-  .vc { background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.15); border-radius:10px; padding:10px 16px; font-size:0.82rem; color:#a7f3d0; display:flex; align-items:center; gap:8px; }
-  .vc span { font-size:1.1rem; } .vc strong { color:#6ee7b7; }
-  .shield-row { display:flex; justify-content:center; gap:6px; margin-top:10px; flex-wrap:wrap; }
-  .st { font-size:0.65rem; font-weight:500; color:#6ee7b7; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.18); padding:2px 8px; border-radius:6px; }
+  /* ═══ JOURNEY ═══ */
+  .journey-wrap { position:relative; max-width:780px; margin:0 auto; padding:100px 24px 40px 80px; }
 
-  .layer-storage { background:linear-gradient(135deg,#1e1b2e,var(--surface2)); border:1px solid rgba(244,114,182,0.2); text-align:center; }
-  .layer-storage::before { background:linear-gradient(90deg,#fb7185,#f472b6); }
-  .layer-storage .layer-title { color:#fda4af; }
-  .vault-row { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
-  .vault-row span { background:rgba(244,114,182,0.06); border:1px solid rgba(244,114,182,0.15); padding:6px 12px; border-radius:8px; font-size:0.78rem; color:#fecdd3; }
+  /* SVG Chart Path */
+  .journey-path {
+    position:absolute; left:20px; top:0; width:60px; height:100%;
+    pointer-events:none; z-index:1;
+  }
+  #chartRoute { stroke-dasharray:4 6; }
+  .chart-node { fill:rgba(200,200,200,0.1); stroke:rgba(200,200,200,0.25); stroke-width:1.5; transition:all 0.5s; }
+  .chart-node.active { fill:var(--gold); stroke:var(--gold); filter:drop-shadow(0 0 6px rgba(212,160,74,0.5)); }
 
-  .layer-players { background:linear-gradient(135deg,#1e1b4b,var(--surface2)); border:1px solid rgba(129,140,248,0.2); text-align:center; }
-  .layer-players::before { background:linear-gradient(90deg,#a78bfa,var(--indigo)); }
-  .layer-players .layer-title { color:#c4b5fd; }
-  .tap-row { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
-  .tap-row span { background:rgba(129,140,248,0.06); border:1px solid rgba(129,140,248,0.15); padding:6px 12px; border-radius:8px; font-size:0.78rem; color:#e0e7ff; }
+  /* Ship */
+  .journey-ship {
+    position:absolute; left:20px; top:0; z-index:2;
+    pointer-events:none; will-change:transform;
+    filter:drop-shadow(0 2px 8px rgba(212,160,74,0.3));
+  }
 
-  /* Security */
-  .sec-wrap { max-width:860px; margin:0 auto; padding:40px 24px; }
-  .sec-card { background:linear-gradient(135deg,#042f1c,#0a1f1a); border:1px solid rgba(16,185,129,0.25); border-radius:18px; padding:30px; position:relative; overflow:hidden; }
-  .sec-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#10b981,#34d399,#6ee7b7); }
-  .sec-card h2 { font-size:1.3rem; color:#6ee7b7; margin-bottom:16px; }
-  .sec-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-  .sec-i { display:flex; gap:8px; align-items:flex-start; }
-  .sec-i span { font-size:1rem; flex-shrink:0; }
-  .sec-i strong { font-size:0.85rem; color:#a7f3d0; display:block; }
-  .sec-i p { font-size:0.75rem; color:var(--text-muted); margin-top:2px; line-height:1.4; }
+  /* Warm, varied accents */
+  .chapter[data-accent="warm"]    { --accent:#e0976a; --accent-dim:rgba(224,151,106,0.15); }
+  .chapter[data-accent="amber"]   { --accent:#e2b340; --accent-dim:rgba(226,179,64,0.15); }
+  .chapter[data-accent="emerald"] { --accent:#34d399; --accent-dim:rgba(52,211,153,0.15); }
+  .chapter[data-accent="gold"]    { --accent:#d4a04a; --accent-dim:rgba(212,160,74,0.15); }
 
-  /* CTA */
-  .cta-wrap { max-width:700px; margin:0 auto; padding:20px 24px 50px; }
-  .cta-card { background:linear-gradient(135deg,#1a1033,var(--surface2)); border:1px solid rgba(99,102,241,0.3); border-radius:18px; padding:36px; text-align:center; position:relative; overflow:hidden; }
-  .cta-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--indigo),var(--purple),var(--pink)); }
-  .cta-card h2 { font-size:1.4rem; color:#c4b5fd; margin-bottom:6px; }
-  .cta-card p { color:var(--text-dim); font-size:0.9rem; margin-bottom:20px; }
+  .chapter { position:relative; padding:0 0 100px; }
 
+  .chapter-node { position:absolute; left:-46px; top:8px; width:10px; height:10px; border-radius:50%; background:rgba(200,200,200,0.1); border:1.5px solid rgba(200,200,200,0.25); transition:all 0.5s ease; }
+  .chapter-node.active { background:var(--accent); border-color:var(--accent); box-shadow:0 0 12px var(--accent-dim); }
+
+  .chapter-content { opacity:0; transform:translateY(30px); }
+
+  .chapter-label { font-size:0.65rem; text-transform:uppercase; letter-spacing:0.2em; color:rgba(200,200,200,0.3); font-weight:600; display:block; margin-bottom:8px; font-family:'SF Mono','Fira Code',monospace; }
+
+  .chapter-title { font-size:clamp(2rem,5.5vw,3.2rem); font-weight:800; color:#f0f0f0; line-height:1.15; margin-bottom:16px; letter-spacing:-0.5px; }
+
+  .chapter-analogy { font-size:clamp(0.95rem,2.5vw,1.1rem); color:var(--accent); margin-bottom:20px; line-height:1.6; font-weight:500; }
+
+  .chapter-desc { font-size:0.9rem; color:var(--text-dim); max-width:520px; line-height:1.9; }
+
+  /* ═══ CREW — editorial list ═══ */
+  .crew-section { max-width:780px; margin:0 auto; padding:60px 24px 80px; }
+
+  .crew-heading { font-size:clamp(2rem,5vw,3rem); font-weight:800; color:#f0f0f0; letter-spacing:-0.5px; margin-bottom:8px; }
+  .crew-sub { color:var(--text-muted); font-size:0.9rem; margin-bottom:48px; line-height:1.6; }
+
+  .crew-list { display:flex; flex-direction:column; gap:36px; }
+
+  .crew-group { }
+  .group-tag { display:block; font-size:0.6rem; text-transform:uppercase; letter-spacing:0.25em; color:rgba(200,200,200,0.3); font-weight:600; margin-bottom:12px; font-family:'SF Mono','Fira Code',monospace; }
+
+  .crew-entry { display:flex; align-items:baseline; gap:16px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.04); transition:border-color 0.3s; }
+  .crew-entry:hover { border-bottom-color:rgba(255,255,255,0.12); }
+  .crew-entry:last-child { border-bottom:none; }
+
+  .entry-name { font-size:clamp(1.1rem,3vw,1.4rem); font-weight:700; color:#e8e8e8; flex-shrink:0; min-width:180px; letter-spacing:-0.3px; }
+  .entry-role { font-size:0.85rem; color:var(--text-muted); }
+
+  /* ═══ CTA ═══ */
+  .final-cta { text-align:center; padding:100px 24px 60px; position:relative; max-width:600px; margin:0 auto; }
+  .cta-glow { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse 60% 50% at 50% 40%,rgba(212,160,74,0.05) 0%,transparent 70%); }
+  .final-cta h2 { font-size:clamp(1.8rem,5vw,2.6rem); font-weight:800; color:#f0f0f0; position:relative; letter-spacing:-0.5px; }
+  .final-cta p { color:var(--text-dim); font-size:0.92rem; margin:12px 0 28px; position:relative; }
+  .final-cta .btn { position:relative; }
+
+  /* ═══ RESPONSIVE ═══ */
   @media(max-width:768px){
-    .layer{padding:12px 10px;border-radius:10px;text-align:center}
-    .layer-title{font-size:0.65rem} .layer-subtitle{font-size:0.72rem;margin-bottom:8px}
-    .fa{padding:2px 0} .fl-line{height:12px} .fl-label{font-size:0.58rem;padding:2px 7px} .fl-tri{border-left-width:5px;border-right-width:5px;border-top-width:6px}
-    .flow-container{padding:8px 12px 30px}
-    .app-grid{grid-template-columns:repeat(3,1fr);gap:4px}
-    .ac{padding:6px 4px} .ai img{width:20px;height:20px} .an{font-size:0.68rem} .ar{font-size:0.56rem}
-    .search-row{gap:8px} .si{padding:7px 10px}
-    .vpn-badge{font-size:0.62rem;padding:3px 8px} .vpn-row{gap:6px} .vc{padding:7px 10px;font-size:0.75rem}
-    .shield-row{gap:3px} .st{font-size:0.58rem;padding:2px 5px}
-    .vault-row span,.tap-row span{padding:4px 8px;font-size:0.7rem}
-    .sec-grid{grid-template-columns:1fr} .sec-card{padding:20px 14px}
-    .cta-card{padding:24px 16px} .cta-card h2{font-size:1.2rem}
+    .journey-wrap { padding:60px 20px 20px; }
+    .journey-path { display:none; }
+    .journey-ship { display:none; }
+    .chapter-node { position:static; width:8px; height:8px; margin-bottom:12px; }
+    .chapter { padding-bottom:60px; }
+    .chapter-title { font-size:1.8rem; }
+    .crew-heading { font-size:1.8rem; }
+    .entry-name { min-width:auto; font-size:1rem; }
+    .crew-entry { flex-direction:column; gap:2px; }
+    .final-cta { padding:60px 20px 40px; }
   }
   @media(max-width:480px){
-    .search-row{flex-direction:column;gap:4px} .sp{transform:rotate(90deg);font-size:0.8rem}
-    .vpn-row{flex-direction:column} .layer{padding:10px 8px}
+    .journey-wrap { padding:40px 16px 16px; }
+    .chapter { padding-bottom:50px; }
+    .chapter-title { font-size:1.5rem; }
+  }
+
+  /* ═══ REDUCED MOTION ═══ */
+  @media(prefers-reduced-motion:reduce){
+    #chartRoute { stroke-dashoffset:0 !important; }
+    .chapter-content { opacity:1 !important; transform:none !important; }
+    .chapter-node { background:var(--accent) !important; border-color:var(--accent) !important; }
+    .hook-word { opacity:1 !important; transform:none !important; }
+    .hero h1 { animation:none !important; background-position:0% 50%; }
+    .journey-ship { display:none !important; }
+    .particle { opacity:0.3 !important; }
   }
 </style>
 
 <script>
+  import Lenis from 'lenis';
+  import 'lenis/dist/lenis.css';
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
-  gsap.registerPlugin(ScrollTrigger);
+  import { SplitText } from 'gsap/SplitText';
+  import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
+  import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
+  import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
+  import { Physics2DPlugin } from 'gsap/Physics2DPlugin';
+  import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin';
 
-  gsap.utils.toArray<HTMLElement>('.fl').forEach(el => {
-    gsap.to(el, { opacity:1, y:0, duration:0.8, ease:'power3.out',
-      scrollTrigger: { trigger:el, start:'top 85%' }
+  gsap.registerPlugin(
+    ScrollTrigger, SplitText, DrawSVGPlugin,
+    MorphSVGPlugin, MotionPathPlugin,
+    Physics2DPlugin, ScrambleTextPlugin
+  );
+
+  // ═══ Lenis smooth scroll ═══
+  const lenis = new Lenis();
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+  gsap.ticker.lagSmoothing(0);
+
+  const mm = gsap.matchMedia();
+
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+
+    // ═══ PARTICLES (Physics2D) ═══
+    const particleContainer = document.getElementById('particles');
+    if (particleContainer) {
+      const colors = ['rgba(212,160,74,0.3)', 'rgba(224,151,106,0.25)', 'rgba(125,211,252,0.15)', 'rgba(100,116,139,0.2)', 'rgba(52,211,153,0.15)'];
+      const isMobile = window.innerWidth < 768;
+      const count = isMobile ? 8 : 18;
+
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = 2 + Math.random() * 4;
+        p.style.width = size + 'px';
+        p.style.height = size + 'px';
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        p.style.left = (10 + Math.random() * 80) + '%';
+        p.style.top = (20 + Math.random() * 60) + '%';
+        p.style.opacity = '0';
+        particleContainer.appendChild(p);
+
+        // Fade in
+        gsap.to(p, { opacity: 1, duration: 1, delay: Math.random() * 2 });
+
+        // Physics2D: float upward with drift
+        gsap.to(p, {
+          physics2D: {
+            velocity: 20 + Math.random() * 40,
+            angle: -90 + (Math.random() - 0.5) * 60,
+            gravity: 0,
+          },
+          duration: 15 + Math.random() * 20,
+          repeat: -1,
+          onRepeat: function() {
+            // Reset position when particle drifts too far
+            gsap.set(p, {
+              x: 0, y: 0,
+              left: (10 + Math.random() * 80) + '%',
+              top: (50 + Math.random() * 40) + '%',
+            });
+          }
+        });
+      }
+    }
+
+    // ═══ Hero hook word-by-word reveal ═══
+    gsap.to('.hook-word', {
+      opacity: 1,
+      y: 0,
+      duration: 0.5,
+      stagger: 0.08,
+      ease: 'power3.out',
+      delay: 0.5,
     });
-  });
 
-  gsap.utils.toArray<HTMLElement>('.fa').forEach(el => {
-    gsap.from(el, { opacity:0, scaleY:0, duration:0.4, ease:'power2.out',
-      scrollTrigger: { trigger:el, start:'top 90%' }
+    // ═══ MORPHING WAVES (MorphSVG) ═══
+    const waveA = document.getElementById('waveA');
+    const waveB = document.getElementById('waveB');
+    const waveC = document.getElementById('waveC');
+    if (waveA && waveB && waveC) {
+      const waveTl = gsap.timeline({ repeat: -1 });
+      waveTl
+        .to(waveA, { morphSVG: waveB, duration: 4, ease: 'sine.inOut' })
+        .to(waveA, { morphSVG: waveC, duration: 4, ease: 'sine.inOut' })
+        .to(waveA, { morphSVG: waveA, duration: 4, ease: 'sine.inOut' });
+    }
+
+    // ═══ DRAWSVG — Chart route reveals on scroll ═══
+    const chartRoute = document.getElementById('chartRoute');
+    if (chartRoute) {
+      gsap.fromTo(chartRoute,
+        { drawSVG: '0%' },
+        {
+          drawSVG: '100%',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '#journeyWrap',
+            start: 'top 70%',
+            end: 'bottom 30%',
+            scrub: 0.5,
+          }
+        }
+      );
+    }
+
+    // ═══ MOTIONPATH — Ship sails along the chart route ═══
+    const ship = document.getElementById('journeyShip');
+    const journeyWrap = document.getElementById('journeyWrap');
+    if (ship && chartRoute && journeyWrap) {
+      gsap.set(ship, { xPercent: -50, yPercent: -50 });
+      gsap.to(ship, {
+        motionPath: {
+          path: chartRoute,
+          align: chartRoute,
+          alignOrigin: [0.5, 0.5],
+          autoRotate: 90,
+        },
+        ease: 'none',
+        scrollTrigger: {
+          trigger: journeyWrap,
+          start: 'top 70%',
+          end: 'bottom 30%',
+          scrub: 0.5,
+        }
+      });
+    }
+
+    // ═══ SVG Node activation ═══
+    gsap.utils.toArray<SVGCircleElement>('.chart-node').forEach((node, i) => {
+      const chapters = document.querySelectorAll('.chapter');
+      if (chapters[i]) {
+        ScrollTrigger.create({
+          trigger: chapters[i],
+          start: 'top 60%',
+          end: 'bottom 40%',
+          onEnter: () => node.classList.add('active'),
+          onLeaveBack: () => node.classList.remove('active'),
+        });
+      }
     });
-  });
 
-  gsap.from('.sec-card', { opacity:0, y:30, duration:0.7, ease:'power3.out',
-    scrollTrigger: { trigger:'.sec-card', start:'top 82%' }
-  });
+    // ═══ Chapter entrances with ScrambleText + SplitText ═══
+    gsap.utils.toArray<HTMLElement>('.chapter').forEach(chapter => {
+      const content = chapter.querySelector('.chapter-content') as HTMLElement;
+      const node = chapter.querySelector('.chapter-node') as HTMLElement;
+      const title = chapter.querySelector('.chapter-title') as HTMLElement;
+      const analogy = chapter.querySelector('.chapter-analogy') as HTMLElement;
+      const desc = chapter.querySelector('.chapter-desc') as HTMLElement;
+      const label = chapter.querySelector('.chapter-label') as HTMLElement;
 
-  gsap.from('.cta-card', { opacity:0, y:30, duration:0.7, ease:'power3.out',
-    scrollTrigger: { trigger:'.cta-card', start:'top 85%' }
+      // SplitText on title
+      const split = new SplitText(title, { type: 'chars' });
+
+      const tl = gsap.timeline({
+        scrollTrigger: { trigger: chapter, start: 'top 72%' }
+      });
+
+      // Make content visible, then animate in sequence
+      tl.to(content, { opacity: 1, y: 0, duration: 0.01 })
+        // ScrambleText on chapter label
+        .to(label, {
+          scrambleText: {
+            text: label.dataset.final || label.textContent || '',
+            chars: '&#9875;*&#9876;&#9760;+&#9618;&#8226;',
+            revealDelay: 0.3,
+            speed: 0.6,
+          },
+          duration: 0.8,
+        })
+        // SplitText character reveal on title
+        .from(split.chars, {
+          opacity: 0,
+          y: 40,
+          rotateX: -40,
+          duration: 0.6,
+          stagger: 0.03,
+          ease: 'power3.out',
+        }, '-=0.4')
+        .from(analogy, { opacity: 0, y: 15, duration: 0.5, ease: 'power2.out' }, '-=0.3')
+        .from(desc, { opacity: 0, y: 15, duration: 0.5, ease: 'power2.out' }, '-=0.3');
+
+      // HTML node glow
+      ScrollTrigger.create({
+        trigger: chapter,
+        start: 'top 60%',
+        end: 'bottom 40%',
+        onEnter: () => node.classList.add('active'),
+        onLeaveBack: () => node.classList.remove('active'),
+      });
+    });
+
+    // ═══ Crew heading SplitText ═══
+    const crewSplit = new SplitText('.crew-heading', { type: 'chars' });
+    gsap.from(crewSplit.chars, {
+      opacity: 0,
+      y: 30,
+      rotateX: -30,
+      duration: 0.5,
+      stagger: 0.04,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: '.crew-heading', start: 'top 80%' }
+    });
+
+    // ═══ Crew entries stagger per group ═══
+    gsap.utils.toArray<HTMLElement>('.crew-group').forEach(group => {
+      gsap.from(group.querySelectorAll('.crew-entry'), {
+        opacity: 0,
+        x: -20,
+        duration: 0.4,
+        stagger: 0.06,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: group, start: 'top 85%' }
+      });
+    });
+
+    // ═══ CTA SplitText ═══
+    const ctaSplit = new SplitText('.final-cta h2', { type: 'words' });
+    gsap.from(ctaSplit.words, {
+      opacity: 0,
+      y: 20,
+      duration: 0.5,
+      stagger: 0.1,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: '.final-cta', start: 'top 80%' }
+    });
+
+    gsap.from('.final-cta p, .final-cta .btn', {
+      opacity: 0,
+      y: 15,
+      duration: 0.5,
+      stagger: 0.1,
+      ease: 'power2.out',
+      scrollTrigger: { trigger: '.final-cta', start: 'top 75%' }
+    });
+
   });
 </script>
