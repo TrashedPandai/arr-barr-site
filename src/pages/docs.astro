@@ -1178,9 +1178,18 @@ import Base from '../layouts/Base.astro';
     .docs-fab { display:flex; }
     .docs-main { padding:24px 16px 60px; }
     .stat-grid { grid-template-columns:repeat(3,1fr); }
-    .pipe-spine { left:20px; transform:none; }
-    .pipe-card { width:calc(100% - 48px); margin-left:48px !important; margin-right:0 !important; }
-    .pc-marker { left:-36px !important; right:auto !important; }
+    .pipe-spine { display:none; }
+    .pipe-journey { padding:8px 0 20px; }
+    .pipe-card {
+      width:100%; margin-left:0 !important; margin-right:0 !important;
+      margin-bottom:12px; padding:16px 18px;
+      border-left:3px solid rgba(var(--sr),0.3);
+    }
+    .pipe-card.pc-active { border-left-color:rgba(var(--sr),0.6); }
+    .pc-marker { display:none; }
+    .pc-header h3 { font-size:0.95rem; }
+    .pc-summary { font-size:0.8rem; }
+    .pc-detail { font-size:0.75rem; }
     .ts-flow { flex-direction:column; }
     .ts-flow-arrow { width:2px; height:14px; margin:4px auto; }
     .ts-flow-arrow::after { right:auto; left:-3px; top:auto; bottom:0; border:4px solid transparent; border-top-color:var(--border-h); border-left-color:transparent; }
@@ -1311,20 +1320,24 @@ import Base from '../layouts/Base.astro';
     start: 'top 75%',
     once: true,
     onEnter: () => {
+      const isMobile = window.innerWidth <= 900;
       gsap.from('.pipe-card', {
         opacity: 0,
-        x: (i: number) => i % 2 === 0 ? -30 : 30,
-        duration: 0.6,
-        stagger: 0.12,
+        x: isMobile ? 0 : ((i: number) => i % 2 === 0 ? -30 : 30),
+        y: isMobile ? 15 : 0,
+        duration: 0.5,
+        stagger: 0.1,
         ease: 'power3.out'
       });
-      gsap.from('.pc-marker', {
-        scale: 0,
-        duration: 0.4,
-        stagger: 0.12,
-        ease: 'back.out(2)',
-        delay: 0.15
-      });
+      if (!isMobile) {
+        gsap.from('.pc-marker', {
+          scale: 0,
+          duration: 0.4,
+          stagger: 0.12,
+          ease: 'back.out(2)',
+          delay: 0.15
+        });
+      }
     }
   });
 
