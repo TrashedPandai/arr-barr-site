@@ -57,20 +57,28 @@ import Terminal from '../components/Terminal.astro';
     <circle class="chart-node" cx="30" cy="850" r="5" data-chapter="3"/>
   </svg>
 
-  <!-- Ship that sails along the path -->
+  <!-- Ship — overhead/bird's eye view sailing down the map -->
   <div class="journey-ship" id="journeyShip">
-    <svg viewBox="0 0 32 32" width="28" height="28">
-      <g fill="#d4a04a">
-        <!-- Hull -->
-        <path d="M4,24 Q6,28 16,28 Q26,28 28,24 L24,20 L8,20 Z" opacity="0.9"/>
-        <!-- Mast -->
-        <rect x="15" y="6" width="2" height="16" opacity="0.7"/>
-        <!-- Sail -->
-        <path d="M17,8 L17,18 L26,18 Q22,13 17,8 Z" opacity="0.8"/>
-        <path d="M15,8 L15,16 L8,16 Q11,12 15,8 Z" opacity="0.6"/>
-        <!-- Flag -->
-        <path d="M16,4 L16,8 L20,6 Z" fill="#e0976a"/>
-      </g>
+    <svg viewBox="0 0 40 52" width="36" height="46">
+      <!-- Hull — dark narrow vessel from above -->
+      <path d="M20,3 C22,8 24.5,16 25,24 C25.3,30 24,37 20,43 C16,37 14.7,30 15,24 C15.5,16 18,8 20,3 Z" fill="#5a3e0e" opacity="0.65"/>
+      <path d="M20,5 C21.5,9 23.5,16 24,23 C24.2,28 23.2,35 20,41 C16.8,35 15.8,28 16,23 C16.5,16 18.5,9 20,5 Z" fill="#6b4c12" opacity="0.55"/>
+      <!-- Mast line running bow to stern -->
+      <line x1="20" y1="8" x2="20" y2="36" stroke="rgba(160,120,40,0.35)" stroke-width="0.7"/>
+      <!-- Yard arms (horizontal crossbars the sails hang from) -->
+      <line x1="10" y1="15" x2="30" y2="15" stroke="rgba(140,100,30,0.3)" stroke-width="0.6"/>
+      <line x1="12" y1="25" x2="28" y2="25" stroke="rgba(140,100,30,0.25)" stroke-width="0.5"/>
+      <!-- Main sail — canvas bowed backward (toward stern) by wind from bow -->
+      <path d="M10,15 L20,15 L20,25 C16,24 12,22 10,15 Z" fill="rgba(220,225,235,0.2)" stroke="rgba(220,225,235,0.08)" stroke-width="0.3"/>
+      <path d="M30,15 L20,15 L20,25 C24,24 28,22 30,15 Z" fill="rgba(220,225,235,0.12)" stroke="rgba(220,225,235,0.06)" stroke-width="0.3"/>
+      <!-- Lower sail — same wind direction, bowed sternward -->
+      <path d="M12,25 L20,25 L20,33 C17,32 14,30 12,25 Z" fill="rgba(220,225,235,0.15)" stroke="rgba(220,225,235,0.06)" stroke-width="0.3"/>
+      <path d="M28,25 L20,25 L20,33 C23,32 26,30 28,25 Z" fill="rgba(220,225,235,0.09)" stroke="rgba(220,225,235,0.05)" stroke-width="0.3"/>
+      <!-- Mast top -->
+      <circle cx="20" cy="8" r="1" fill="rgba(212,160,74,0.4)"/>
+      <!-- Wake -->
+      <path d="M17,43 C19,46 21,46 23,43" fill="none" stroke="rgba(200,210,225,0.1)" stroke-width="0.5"/>
+      <path d="M15,46 C18,49 22,49 25,46" fill="none" stroke="rgba(200,210,225,0.06)" stroke-width="0.4"/>
     </svg>
   </div>
 
@@ -78,9 +86,9 @@ import Terminal from '../components/Terminal.astro';
     <div class="chapter-node"></div>
     <div class="chapter-content">
       <span class="chapter-label" data-final="01">01</span>
-      <h3 class="chapter-title split-title">Two taps and an impulse</h3>
-      <p class="chapter-analogy">Search. Request. Walk away.</p>
-      <p class="chapter-desc">Your friend had a thought. Two taps later, it's an order. Jellyseerr routes it to the right crew member &mdash; Radarr for movies, Sonarr for TV, Lidarr for music. They'll never touch the backend. They don't need to.</p>
+      <h3 class="chapter-title split-title">What is this thing?</h3>
+      <p class="chapter-analogy">Your own Netflix, Spotify, Kindle, and Audible &mdash; combined.</p>
+      <p class="chapter-desc">arr-barr is a personal media server that runs on hardware you own. Movies, TV shows, music, books, audiobooks, even games &mdash; all in one place, streaming to any device in your house. No monthly subscriptions. No content that disappears. No region locks. Just your library, forever.</p>
     </div>
   </div>
 
@@ -88,9 +96,9 @@ import Terminal from '../components/Terminal.astro';
     <div class="chapter-node"></div>
     <div class="chapter-content">
       <span class="chapter-label" data-final="02">02</span>
-      <h3 class="chapter-title split-title">The sweep</h3>
-      <p class="chapter-analogy">One search. Twelve sources. The best result wins.</p>
-      <p class="chapter-desc">Prowlarr searches every indexer in parallel. FlareSolverr slips past Cloudflare guards. Custom formats score every result &mdash; HDR, Atmos, proper encoding. The highest score wins.</p>
+      <h3 class="chapter-title split-title">How it gets there</h3>
+      <p class="chapter-analogy">You search. The crew handles everything else.</p>
+      <p class="chapter-desc">Open the request page, search for a movie, and tap request. That's your only job. Behind the scenes, 15 services spring into action &mdash; searching a dozen sources in parallel, scoring every result for quality, and picking the best one automatically. No hunting, no comparing, no guessing.</p>
     </div>
   </div>
 
@@ -98,9 +106,9 @@ import Terminal from '../components/Terminal.astro';
     <div class="chapter-node"></div>
     <div class="chapter-content">
       <span class="chapter-label" data-final="03">03</span>
-      <h3 class="chapter-title split-title">The tunnel</h3>
-      <p class="chapter-analogy">Every download encrypted. No exceptions.</p>
-      <p class="chapter-desc">A WireGuard VPN tunnel wraps every download. If the tunnel drops, traffic stops &mdash; kill switch. Your ISP sees noise. Transmission handles torrents, SABnzbd handles Usenet. Both locked inside.</p>
+      <h3 class="chapter-title split-title">Private by default</h3>
+      <p class="chapter-analogy">Built-in protection. The crew's got your back. Nothing to worry about.</p>
+      <p class="chapter-desc">Every download is wrapped in military-grade encryption through a VPN tunnel that's always on. If the connection ever hiccups, a kill switch instantly blocks all traffic &mdash; your real identity is never exposed, not even for a millisecond. Your ISP sees nothing. It just works.</p>
     </div>
   </div>
 
@@ -109,8 +117,8 @@ import Terminal from '../components/Terminal.astro';
     <div class="chapter-content">
       <span class="chapter-label" data-final="04">04</span>
       <h3 class="chapter-title split-title">Press play</h3>
-      <p class="chapter-analogy">Your library. No subscriptions. No removals. Yours.</p>
-      <p class="chapter-desc">Download completes. Hardlinked into the library &mdash; same file, two paths, zero wasted space. Renamed, artwork added, subtitles matched. It shows up in Jellyfin. Hit play.</p>
+      <p class="chapter-analogy">Request it. Forget about it. It'll be there when you're ready.</p>
+      <p class="chapter-desc">Request something before bed, wake up to a fully organized library entry &mdash; proper name, cover art, subtitles, all handled. It shows up in Jellyfin ready to stream on your TV, phone, tablet, or browser. Share with family and friends. No extra accounts, no per-screen limits, no ads. Your media, your rules.</p>
     </div>
   </div>
 </div>
@@ -158,41 +166,41 @@ import Terminal from '../components/Terminal.astro';
   <div class="crew-list">
     <div class="crew-group">
       <span class="group-tag">Requests</span>
-      <div class="crew-entry"><span class="entry-name">Jellyseerr</span><span class="entry-role">Search, click, done.</span></div>
+      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/Fallenbagel/jellyseerr/main/public/logo_full.svg" alt="" loading="lazy"/><span class="entry-name">Jellyseerr</span><span class="entry-role">Search, click, done.</span><a class="entry-link" href="https://github.com/Fallenbagel/jellyseerr" target="_blank" rel="noopener">repo</a></div>
     </div>
 
     <div class="crew-group">
       <span class="group-tag">Automation</span>
-      <div class="crew-entry"><span class="entry-name">Radarr</span><span class="entry-role">Movies, handled.</span></div>
-      <div class="crew-entry"><span class="entry-name">Sonarr</span><span class="entry-role">Every episode, on time.</span></div>
-      <div class="crew-entry"><span class="entry-name">Lidarr</span><span class="entry-role">Albums in, organized.</span></div>
-      <div class="crew-entry"><span class="entry-name">LazyLibrarian</span><span class="entry-role">Books and audiobooks, sorted.</span></div>
-      <div class="crew-entry"><span class="entry-name">QuestArr</span><span class="entry-role">Games, cataloged.</span></div>
+      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/Radarr/Radarr/develop/Logo/128.png" alt="" loading="lazy"/><span class="entry-name">Radarr</span><span class="entry-role">Movies, handled.</span><a class="entry-link" href="https://radarr.video" target="_blank" rel="noopener">site</a></div>
+      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/Sonarr/Sonarr/develop/Logo/128.png" alt="" loading="lazy"/><span class="entry-name">Sonarr</span><span class="entry-role">Every episode, on time.</span><a class="entry-link" href="https://sonarr.tv" target="_blank" rel="noopener">site</a></div>
+      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/Lidarr/Lidarr/develop/Logo/128.png" alt="" loading="lazy"/><span class="entry-name">Lidarr</span><span class="entry-role">Albums in, organized.</span><a class="entry-link" href="https://lidarr.audio" target="_blank" rel="noopener">site</a></div>
+      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/lazylibrarian-icon.png" alt="" loading="lazy"/><span class="entry-name">LazyLibrarian</span><span class="entry-role">Books and audiobooks, sorted.</span><a class="entry-link" href="https://gitlab.com/LazyLibrarian/LazyLibrarian" target="_blank" rel="noopener">repo</a></div>
+      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/Doezer/QuestArr/main/public/logo192.png" alt="" loading="lazy"/><span class="entry-name">QuestArr</span><span class="entry-role">Games, cataloged.</span><a class="entry-link" href="https://github.com/Doezer/QuestArr" target="_blank" rel="noopener">repo</a></div>
     </div>
 
     <div class="crew-group">
       <span class="group-tag">Search</span>
-      <div class="crew-entry"><span class="entry-name">Prowlarr</span><span class="entry-role">Twelve indexers, one search.</span></div>
-      <div class="crew-entry"><span class="entry-name">FlareSolverr</span><span class="entry-role">Gets past the bouncers.</span></div>
+      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/128.png" alt="" loading="lazy"/><span class="entry-name">Prowlarr</span><span class="entry-role">Twelve indexers, one search.</span><a class="entry-link" href="https://prowlarr.com" target="_blank" rel="noopener">site</a></div>
+      <div class="crew-entry"><span class="entry-emoji">&#x1F6E1;&#xFE0F;</span><span class="entry-name">FlareSolverr</span><span class="entry-role">Gets past the bouncers.</span><a class="entry-link" href="https://github.com/FlareSolverr/FlareSolverr" target="_blank" rel="noopener">repo</a></div>
     </div>
 
     <div class="crew-group">
       <span class="group-tag">Downloads</span>
-      <div class="crew-entry"><span class="entry-name">Gluetun</span><span class="entry-role">VPN tunnel. Always on.</span></div>
-      <div class="crew-entry"><span class="entry-name">Transmission</span><span class="entry-role">Torrents, through the tunnel.</span></div>
-      <div class="crew-entry"><span class="entry-name">SABnzbd</span><span class="entry-role">Usenet, through the tunnel.</span></div>
+      <div class="crew-entry"><span class="entry-emoji">&#x1F512;</span><span class="entry-name">Gluetun</span><span class="entry-role">VPN tunnel. Always on.</span><a class="entry-link" href="https://github.com/qdm12/gluetun" target="_blank" rel="noopener">repo</a></div>
+      <div class="crew-entry"><span class="entry-emoji">&#x1F300;</span><span class="entry-name">Transmission</span><span class="entry-role">Torrents, through the tunnel.</span><a class="entry-link" href="https://transmissionbt.com" target="_blank" rel="noopener">site</a></div>
+      <div class="crew-entry"><span class="entry-emoji">&#x26A1;</span><span class="entry-name">SABnzbd</span><span class="entry-role">Usenet, through the tunnel.</span><a class="entry-link" href="https://sabnzbd.org" target="_blank" rel="noopener">site</a></div>
     </div>
 
     <div class="crew-group">
       <span class="group-tag">Streaming</span>
-      <div class="crew-entry"><span class="entry-name">Jellyfin</span><span class="entry-role">Your library, any screen.</span></div>
-      <div class="crew-entry"><span class="entry-name">Bazarr</span><span class="entry-role">Subtitles, automatic.</span></div>
+      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/jellyfin/jellyfin-ux/master/branding/SVG/icon-transparent.svg" alt="" loading="lazy"/><span class="entry-name">Jellyfin</span><span class="entry-role">Your library, any screen.</span><a class="entry-link" href="https://jellyfin.org" target="_blank" rel="noopener">site</a></div>
+      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/morpheus65535/bazarr/master/frontend/public/images/logo64.png" alt="" loading="lazy"/><span class="entry-name">Bazarr</span><span class="entry-role">Subtitles, automatic.</span><a class="entry-link" href="https://www.bazarr.media" target="_blank" rel="noopener">site</a></div>
     </div>
 
     <div class="crew-group">
       <span class="group-tag">Reading</span>
-      <div class="crew-entry"><span class="entry-name">Kavita</span><span class="entry-role">Ebooks in the browser.</span></div>
-      <div class="crew-entry"><span class="entry-name">Audiobookshelf</span><span class="entry-role">Audiobooks with progress sync.</span></div>
+      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/Kareadita/Kavita/develop/Logo/kavita.svg" alt="" loading="lazy"/><span class="entry-name">Kavita</span><span class="entry-role">Ebooks in the browser.</span><a class="entry-link" href="https://www.kavitareader.com" target="_blank" rel="noopener">site</a></div>
+      <div class="crew-entry"><img class="entry-icon" src="https://raw.githubusercontent.com/advplyr/audiobookshelf/master/client/static/Logo.png" alt="" loading="lazy"/><span class="entry-name">Audiobookshelf</span><span class="entry-role">Audiobooks with progress sync.</span><a class="entry-link" href="https://www.audiobookshelf.org" target="_blank" rel="noopener">site</a></div>
     </div>
   </div>
 </section>
@@ -322,23 +330,33 @@ import Terminal from '../components/Terminal.astro';
   .crew-group { }
   .group-tag { display:block; font-size:0.6rem; text-transform:uppercase; letter-spacing:0.25em; color:rgba(200,200,200,0.3); font-weight:600; margin-bottom:12px; font-family:'SF Mono','Fira Code',monospace; }
 
-  .crew-entry { display:flex; align-items:baseline; gap:16px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.04); transition:border-color 0.3s; }
+  .crew-entry { display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.04); transition:border-color 0.3s; }
   .crew-entry:hover { border-bottom-color:rgba(255,255,255,0.12); }
   .crew-entry:last-child { border-bottom:none; }
 
-  .entry-name { font-size:clamp(1.1rem,3vw,1.4rem); font-weight:700; color:#e8e8e8; flex-shrink:0; min-width:180px; letter-spacing:-0.3px; }
-  .entry-role { font-size:0.85rem; color:var(--text-muted); }
+  .entry-icon { width:22px; height:22px; border-radius:5px; flex-shrink:0; object-fit:contain; opacity:0.8; }
+  .entry-emoji { width:22px; font-size:1rem; text-align:center; flex-shrink:0; line-height:1; }
+  .entry-name { font-size:clamp(1.1rem,3vw,1.4rem); font-weight:700; color:#e8e8e8; flex-shrink:0; min-width:160px; letter-spacing:-0.3px; }
+  .entry-role { font-size:0.85rem; color:var(--text-muted); flex:1; }
+  .entry-link {
+    font-size:0.72rem; color:var(--text-muted); text-decoration:none;
+    opacity:0; transition:opacity 0.2s; flex-shrink:0;
+    padding:2px 8px; border:1px solid rgba(255,255,255,0.08);
+    border-radius:4px;
+  }
+  .crew-entry:hover .entry-link { opacity:1; }
+  .entry-link:hover { color:var(--sky); border-color:rgba(125,211,252,0.2); }
 
   /* ═══ SHORE GROUND (warm "on land" background) ═══ */
   .shore-ground {
+    margin-top:-2px;
     background:linear-gradient(180deg,
-      #2a2719 0%,        /* continuous from beach bottom — same warm sand */
-      #282517 8%,        /* still obviously sand */
-      #252215 20%,       /* slightly dimming */
-      #201e12 40%,       /* warm dark sand */
-      #1a1810 60%,       /* gradual cooldown */
-      #14120e 80%,
-      #0f0e0c 100%       /* fade to near-black */
+      #2a2719 0%,
+      #252215 12%,
+      #201e12 30%,
+      #1a1910 50%,
+      #16160f 75%,
+      #13140e 100%
     );
   }
 
@@ -351,21 +369,18 @@ import Terminal from '../components/Terminal.astro';
 
   /* ═══ GRASS ZONE ═══ */
   .grass-zone {
-    position:relative; width:100%; height:120px; overflow:hidden;
+    position:relative; width:100%; height:50px; overflow:hidden;
+    margin-top:-2px;
     background:linear-gradient(180deg,
-      #0f0e0c 0%,
-      #111208 10%,
-      #151a0c 25%,
-      #1a2210 40%,
-      #1e2a12 55%,
-      #223014 70%,
-      #253416 85%,
-      #283818 100%
+      #13140e 0%,
+      #14150e 40%,
+      #15160f 70%,
+      #161710 100%
     );
   }
   .grass-zone::after {
     content:''; position:absolute; inset:0;
-    filter:url(#grassNoise); opacity:0.04;
+    filter:url(#grassNoise); opacity:0.02;
     pointer-events:none;
   }
   .grass-noise { position:absolute; }
@@ -390,7 +405,9 @@ import Terminal from '../components/Terminal.astro';
     .chapter-title { font-size:1.8rem; }
     .crew-heading { font-size:1.8rem; }
     .entry-name { min-width:auto; font-size:1rem; }
-    .crew-entry { flex-direction:column; gap:2px; }
+    .crew-entry { flex-wrap:wrap; gap:6px; }
+    .entry-link { opacity:1; }
+    .entry-role { min-width:100%; padding-left:34px; }
     .final-cta { padding:60px 20px 40px; }
     .beach-shore { height:200px; }
   }
@@ -705,7 +722,7 @@ import Terminal from '../components/Terminal.astro';
           path: chartRoute,
           align: chartRoute,
           alignOrigin: [0.5, 0.5],
-          autoRotate: 90,
+          autoRotate: 270,
           end: 0.93,
         },
         ease: 'none',
