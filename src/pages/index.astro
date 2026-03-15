@@ -7,191 +7,71 @@ import Terminal from '../components/Terminal.astro';
 
 <section class="hero">
   <div class="hero-glow"></div>
+  <!-- Particles container -->
+  <div class="particles" id="particles" aria-hidden="true"></div>
   <h1>arr-barr</h1>
   <div class="hero-tag">Every crew needs a port</div>
   <Terminal />
-
-  <!-- Fisherman in boat with parrot and pirate flag -->
-  <div class="fisherman" id="fisherman" aria-hidden="true">
-    <svg class="fisherman-svg" viewBox="0 0 160 100" width="140" height="88">
-      <g id="boatGroup">
-        <!-- Boat hull -->
-        <path d="M20,78 Q25,90 80,92 Q135,90 140,78 L130,70 L30,70 Z" fill="#1a2744" opacity="0.85"/>
-        <path d="M35,70 L125,70" stroke="#2a3a5a" stroke-width="0.8" opacity="0.5"/>
-        <!-- Boat interior line -->
-        <path d="M40,74 L120,74" stroke="#2a3a5a" stroke-width="0.5" opacity="0.3"/>
-
-        <!-- Pirate flag pole at stern -->
-        <line x1="125" y1="70" x2="125" y2="38" stroke="#3a4a6a" stroke-width="1.5" stroke-linecap="round"/>
-        <!-- Pirate flag -->
-        <g transform="translate(125,38)">
-          <rect x="0" y="0" width="22" height="16" rx="1" fill="#1a1a2e" opacity="0.85"/>
-          <!-- Skull -->
-          <ellipse cx="11" cy="6" rx="4" ry="3.5" fill="#c8c8c8" opacity="0.7"/>
-          <circle cx="9" cy="5.5" r="1" fill="#1a1a2e"/>
-          <circle cx="13" cy="5.5" r="1" fill="#1a1a2e"/>
-          <line x1="10" y1="8" x2="12" y2="8" stroke="#1a1a2e" stroke-width="0.5"/>
-          <!-- Crossbones -->
-          <line x1="6" y1="11" x2="16" y2="14" stroke="#c8c8c8" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
-          <line x1="6" y1="14" x2="16" y2="11" stroke="#c8c8c8" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
-        </g>
-
-        <!-- Fisherman body sitting -->
-        <ellipse cx="65" cy="66" rx="12" ry="8" fill="#1a2744" opacity="0.9"/>
-        <!-- Legs -->
-        <path d="M58,70 L55,76 M72,70 L75,76" stroke="#1a2744" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
-        <!-- Torso -->
-        <rect x="60" y="54" width="10" height="14" rx="3" fill="#1a2744" opacity="0.85"/>
-        <!-- Head -->
-        <circle cx="65" cy="48" r="6" fill="#1a2744" opacity="0.9"/>
-        <!-- Hat brim -->
-        <ellipse cx="65" cy="44" rx="10" ry="2.5" fill="#1a2744" opacity="0.9"/>
-        <!-- Hat top -->
-        <rect x="58" y="36" width="14" height="9" rx="3" fill="#1a2744" opacity="0.9"/>
-
-        <!-- Parrot on shoulder -->
-        <g transform="translate(52,42)">
-          <!-- Parrot body -->
-          <ellipse cx="0" cy="0" rx="3.5" ry="5" fill="#1a5040" opacity="0.8" transform="rotate(-10)"/>
-          <!-- Parrot head -->
-          <circle cx="-1" cy="-5" r="2.5" fill="#1a5040" opacity="0.85"/>
-          <!-- Beak -->
-          <path d="M-3.5,-5.5 L-6,-4.5 L-3,-4" fill="#c4842a" opacity="0.9"/>
-          <!-- Eye -->
-          <circle cx="-1.5" cy="-5.8" r="0.6" fill="#c8c8c8" opacity="0.7"/>
-          <!-- Tail feathers -->
-          <path d="M1,4 L3,10 M0,4 L1,11 M-1,3 L-1,9" stroke="#1a5040" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
-          <!-- Wing detail -->
-          <path d="M1,-1 Q4,0 3,3" fill="none" stroke="#0f3a2e" stroke-width="0.8" opacity="0.6"/>
-        </g>
-
-        <!-- Arm holding rod -->
-        <line x1="72" y1="56" x2="82" y2="46" stroke="#1a2744" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>
-
-        <!-- Fishing rod -->
-        <g id="fishingRod">
-          <line x1="82" y1="46" x2="105" y2="24" stroke="#3a4a6a" stroke-width="2" stroke-linecap="round"/>
-          <line x1="105" y1="24" x2="115" y2="16" stroke="#3a4a6a" stroke-width="1.5" stroke-linecap="round"/>
-          <line x1="115" y1="16" x2="120" y2="12" stroke="#3a4a6a" stroke-width="1" stroke-linecap="round"/>
-          <!-- Rod tip guide -->
-          <circle cx="120" cy="12" r="1" fill="#5a6a8a" opacity="0.7"/>
-        </g>
-      </g>
-    </svg>
+  <p class="hero-hook">
+    <span class="hook-word">Your</span>
+    <span class="hook-word">friend</span>
+    <span class="hook-word">clicks</span>
+    <span class="hook-word"><strong>Request.</strong></span>
+    <span class="hook-word">Here's</span>
+    <span class="hook-word">what</span>
+    <span class="hook-word">happens</span>
+    <span class="hook-word">next.</span>
+  </p>
+  <div class="hero-cta">
+    <a href="/guide" class="btn btn-primary">Read the Guide</a>
+    <a href="/architecture" class="btn btn-ghost">Explore the Stack</a>
   </div>
-
-  <!-- Rod-to-line connector (thin line from rod tip to journey path top) -->
-  <svg class="rod-connector" id="rodConnector" viewBox="0 0 10 200" preserveAspectRatio="none" aria-hidden="true">
-    <line id="rodLine" x1="5" y1="0" x2="5" y2="200" stroke="#5a6a8a" stroke-width="0.8" stroke-opacity="0.4"/>
-  </svg>
-
   <!-- Morphing wave divider -->
   <div class="wave-divider hero-wave-morph">
     <svg viewBox="0 0 1200 80" preserveAspectRatio="none" class="wave-svg">
-      <path id="waveA" d="M0,40 C150,65 350,15 600,40 C850,65 1050,15 1200,40 L1200,80 L0,80 Z" fill="#0a1a3a"/>
-      <path id="waveB" d="M0,50 C200,20 400,70 600,35 C800,10 1000,60 1200,45 L1200,80 L0,80 Z" fill="#0a1a3a" visibility="hidden"/>
-      <path id="waveC" d="M0,30 C100,55 300,25 500,50 C700,75 900,20 1200,35 L1200,80 L0,80 Z" fill="#0a1a3a" visibility="hidden"/>
+      <path id="waveA" d="M0,40 C150,65 350,15 600,40 C850,65 1050,15 1200,40 L1200,80 L0,80 Z" fill="#0a0e1a"/>
+      <path id="waveB" d="M0,50 C200,20 400,70 600,35 C800,10 1000,60 1200,45 L1200,80 L0,80 Z" fill="#0a0e1a" visibility="hidden"/>
+      <path id="waveC" d="M0,30 C100,55 300,25 500,50 C700,75 900,20 1200,35 L1200,80 L0,80 Z" fill="#0a0e1a" visibility="hidden"/>
     </svg>
   </div>
 </section>
 
-<!-- JOURNEY (Underwater) -->
-<div class="journey-ocean" id="journeyOcean">
-  <!-- Sea life — full viewport width, outside the max-width container -->
-  <div class="sea-life" aria-hidden="true">
-    <!-- Jellyfish 1 -->
-    <svg class="sea-creature jellyfish jellyfish-1" viewBox="0 0 30 45" width="32" height="48">
-      <ellipse cx="15" cy="12" rx="12" ry="10" fill="rgba(180,140,255,0.1)" stroke="rgba(180,140,255,0.18)" stroke-width="0.5"/>
-      <ellipse cx="15" cy="14" rx="8" ry="5" fill="rgba(180,140,255,0.05)"/>
-      <path d="M6,18 Q8,30 5,42" fill="none" stroke="rgba(180,140,255,0.12)" stroke-width="0.8" stroke-linecap="round"/>
-      <path d="M11,20 Q13,34 10,44" fill="none" stroke="rgba(180,140,255,0.1)" stroke-width="0.8" stroke-linecap="round"/>
-      <path d="M19,20 Q17,34 20,44" fill="none" stroke="rgba(180,140,255,0.1)" stroke-width="0.8" stroke-linecap="round"/>
-      <path d="M24,18 Q22,30 25,42" fill="none" stroke="rgba(180,140,255,0.12)" stroke-width="0.8" stroke-linecap="round"/>
-    </svg>
-
-    <!-- Fish school (3 fish) -->
-    <div class="fish-school-wrap fish-school">
-      <svg class="sea-creature fish" viewBox="0 0 24 12" width="22" height="11">
-        <path d="M2,6 Q8,0 18,3 L22,6 L18,9 Q8,12 2,6Z" fill="rgba(100,200,220,0.08)" stroke="rgba(100,200,220,0.14)" stroke-width="0.5"/>
-        <circle cx="16" cy="5" r="0.8" fill="rgba(100,200,220,0.18)"/>
-        <path d="M0,6 L3,3.5 L3,8.5Z" fill="rgba(100,200,220,0.06)"/>
-      </svg>
-      <svg class="sea-creature fish" viewBox="0 0 24 12" width="18" height="9" style="margin-left:-4px;margin-top:8px;">
-        <path d="M2,6 Q8,0 18,3 L22,6 L18,9 Q8,12 2,6Z" fill="rgba(100,200,220,0.06)" stroke="rgba(100,200,220,0.12)" stroke-width="0.5"/>
-        <circle cx="16" cy="5" r="0.8" fill="rgba(100,200,220,0.15)"/>
-        <path d="M0,6 L3,3.5 L3,8.5Z" fill="rgba(100,200,220,0.05)"/>
-      </svg>
-      <svg class="sea-creature fish" viewBox="0 0 24 12" width="16" height="8" style="margin-left:6px;margin-top:-4px;">
-        <path d="M2,6 Q8,0 18,3 L22,6 L18,9 Q8,12 2,6Z" fill="rgba(100,200,220,0.07)" stroke="rgba(100,200,220,0.12)" stroke-width="0.5"/>
-        <circle cx="16" cy="5" r="0.8" fill="rgba(100,200,220,0.15)"/>
-        <path d="M0,6 L3,3.5 L3,8.5Z" fill="rgba(100,200,220,0.05)"/>
-      </svg>
-    </div>
-
-    <!-- Jellyfish 2 -->
-    <svg class="sea-creature jellyfish jellyfish-2" viewBox="0 0 26 40" width="26" height="40">
-      <ellipse cx="13" cy="10" rx="10" ry="8" fill="rgba(200,160,255,0.08)" stroke="rgba(200,160,255,0.15)" stroke-width="0.5"/>
-      <path d="M5,15 Q7,26 4,36" fill="none" stroke="rgba(200,160,255,0.1)" stroke-width="0.7" stroke-linecap="round"/>
-      <path d="M10,17 Q11,28 9,38" fill="none" stroke="rgba(200,160,255,0.08)" stroke-width="0.7" stroke-linecap="round"/>
-      <path d="M16,17 Q15,28 17,38" fill="none" stroke="rgba(200,160,255,0.08)" stroke-width="0.7" stroke-linecap="round"/>
-      <path d="M21,15 Q19,26 22,36" fill="none" stroke="rgba(200,160,255,0.1)" stroke-width="0.7" stroke-linecap="round"/>
-    </svg>
-
-    <!-- Larger single fish -->
-    <svg class="sea-creature fish fish-single" viewBox="0 0 36 18" width="34" height="17">
-      <path d="M3,9 Q10,0 28,4 L34,9 L28,14 Q10,18 3,9Z" fill="rgba(80,180,200,0.07)" stroke="rgba(80,180,200,0.12)" stroke-width="0.5"/>
-      <circle cx="25" cy="7.5" r="1.2" fill="rgba(80,180,200,0.15)"/>
-      <path d="M0,9 L5,5.5 L5,12.5Z" fill="rgba(80,180,200,0.05)"/>
-      <!-- Fin -->
-      <path d="M15,4 Q17,0 20,3" fill="none" stroke="rgba(80,180,200,0.1)" stroke-width="0.5"/>
-    </svg>
-
-    <!-- Seaweed cluster 1 -->
-    <svg class="sea-creature seaweed seaweed-1" viewBox="0 0 24 90" width="18" height="90">
-      <path d="M12,90 C10,70 16,58 12,42 C8,26 14,14 12,2" fill="none" stroke="rgba(52,211,153,0.1)" stroke-width="2.5" stroke-linecap="round"/>
-      <path d="M16,90 C18,72 12,62 16,46 C20,30 14,18 16,6" fill="none" stroke="rgba(52,211,153,0.07)" stroke-width="2" stroke-linecap="round"/>
-      <path d="M8,90 C6,75 10,65 8,52 C6,38 10,28 8,18" fill="none" stroke="rgba(52,211,153,0.06)" stroke-width="1.5" stroke-linecap="round"/>
-    </svg>
-
-    <!-- Seaweed cluster 2 -->
-    <svg class="sea-creature seaweed seaweed-2" viewBox="0 0 20 80" width="15" height="80">
-      <path d="M10,80 C8,60 14,50 10,35 C6,20 12,10 10,0" fill="none" stroke="rgba(52,211,153,0.08)" stroke-width="2" stroke-linecap="round"/>
-      <path d="M14,80 C16,65 10,55 14,40 C18,25 12,15 14,5" fill="none" stroke="rgba(52,211,153,0.06)" stroke-width="1.5" stroke-linecap="round"/>
-    </svg>
-
-    <!-- Starfish -->
-    <svg class="sea-creature starfish starfish-1" viewBox="0 0 24 24" width="20" height="20">
-      <path d="M12,0 L14,9 L24,9 L16,15 L19,24 L12,18 L5,24 L8,15 L0,9 L10,9Z" fill="rgba(224,151,106,0.08)" stroke="rgba(224,151,106,0.12)" stroke-width="0.5"/>
-    </svg>
-  </div>
-
-  <div class="journey-wrap" id="journeyWrap">
-  <!-- Bubble container (populated by JS) -->
-  <div class="bubbles-container" id="bubblesContainer" aria-hidden="true"></div>
-
-  <!-- SVG Fishing Line Path -->
+<!-- JOURNEY -->
+<div class="journey-wrap" id="journeyWrap">
+  <!-- SVG Nautical Chart Path -->
   <svg class="journey-path" id="journeyPath" viewBox="0 0 60 1000" preserveAspectRatio="none" aria-hidden="true">
     <path
       id="chartRoute"
       d="M 30,0 C 45,60 15,120 30,180 C 45,240 10,300 30,360 C 50,420 15,480 30,540 C 45,600 10,660 30,720 C 50,780 15,840 30,900 C 45,940 30,970 30,1000"
       fill="none"
-      stroke="#5a6a8a"
-      stroke-width="1"
-      stroke-opacity="0.5"
+      stroke="#d4a04a"
+      stroke-width="1.5"
+      stroke-opacity="0.4"
       stroke-linecap="round"
     />
-    <!-- Chapter nodes -->
+    <!-- Chapter nodes as SVG circles -->
     <circle class="chart-node" cx="30" cy="100" r="5" data-chapter="0"/>
     <circle class="chart-node" cx="30" cy="350" r="5" data-chapter="1"/>
     <circle class="chart-node" cx="30" cy="600" r="5" data-chapter="2"/>
     <circle class="chart-node" cx="30" cy="850" r="5" data-chapter="3"/>
-    <!-- Fishing hook at path end -->
-    <g id="fishingHook" class="fishing-hook">
-      <line x1="0" y1="-8" x2="0" y2="4" stroke="#8a8a8a" stroke-width="1.5"/>
-      <path d="M0,4 C0,14 -10,17 -10,11 C-10,7 -6,5 0,4" fill="none" stroke="#8a8a8a" stroke-width="1.5" stroke-linecap="round"/>
-      <line x1="-10" y1="11" x2="-7" y2="8" stroke="#8a8a8a" stroke-width="1"/>
-    </g>
   </svg>
+
+  <!-- Ship that sails along the path -->
+  <div class="journey-ship" id="journeyShip">
+    <svg viewBox="0 0 32 32" width="28" height="28">
+      <g fill="#d4a04a">
+        <!-- Hull -->
+        <path d="M4,24 Q6,28 16,28 Q26,28 28,24 L24,20 L8,20 Z" opacity="0.9"/>
+        <!-- Mast -->
+        <rect x="15" y="6" width="2" height="16" opacity="0.7"/>
+        <!-- Sail -->
+        <path d="M17,8 L17,18 L26,18 Q22,13 17,8 Z" opacity="0.8"/>
+        <path d="M15,8 L15,16 L8,16 Q11,12 15,8 Z" opacity="0.6"/>
+        <!-- Flag -->
+        <path d="M16,4 L16,8 L20,6 Z" fill="#e0976a"/>
+      </g>
+    </svg>
+  </div>
 
   <div class="chapter" data-accent="warm">
     <div class="chapter-node"></div>
@@ -232,37 +112,7 @@ import Terminal from '../components/Terminal.astro';
       <p class="chapter-desc">Download completes. Hardlinked into the library &mdash; same file, two paths, zero wasted space. Renamed, artwork added, subtitles matched. It shows up in Jellyfin. Hit play.</p>
     </div>
   </div>
-
-  <!-- Treasure chest at the bottom -->
-  <div class="treasure-zone" id="treasureZone">
-    <div class="sand-bed"></div>
-    <div class="treasure-glow" id="treasureGlow"></div>
-    <svg class="treasure-chest" id="treasureChest" viewBox="0 0 60 50" width="56" height="47" aria-hidden="true">
-      <defs>
-        <filter id="chestGlow">
-          <feGaussianBlur stdDeviation="3" result="glow"/>
-          <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-      </defs>
-      <!-- Chest body -->
-      <rect x="5" y="22" width="50" height="26" rx="3" fill="#8B6914" opacity="0.7"/>
-      <!-- Chest lid (will morph open) -->
-      <path id="chestLid" d="M5,22 Q5,10 30,10 Q55,10 55,22 Z" fill="#A07818" opacity="0.7"/>
-      <!-- Lock plate -->
-      <rect x="24" y="18" width="12" height="10" rx="2" fill="#d4a04a" opacity="0.5"/>
-      <!-- Keyhole -->
-      <circle cx="30" cy="22" r="1.8" fill="#0a0e1a" opacity="0.6"/>
-      <rect x="29.2" y="22" width="1.6" height="3.5" fill="#0a0e1a" opacity="0.6"/>
-      <!-- Metal bands -->
-      <rect x="5" y="30" width="50" height="1.5" fill="#d4a04a" opacity="0.25"/>
-      <rect x="5" y="40" width="50" height="1.5" fill="#d4a04a" opacity="0.25"/>
-      <!-- Vertical bands -->
-      <rect x="14" y="22" width="1.5" height="26" fill="#d4a04a" opacity="0.15"/>
-      <rect x="44" y="22" width="1.5" height="26" fill="#d4a04a" opacity="0.15"/>
-    </svg>
-  </div>
-</div><!-- /journey-wrap -->
-</div><!-- /journey-ocean -->
+</div>
 
 <!-- Wave divider between journey and crew -->
 <div class="wave-divider journey-wave-morph">
@@ -271,7 +121,7 @@ import Terminal from '../components/Terminal.astro';
   </svg>
 </div>
 
-<!-- CREW -->
+<!-- CREW — editorial layout -->
 <section class="crew-section">
   <h2 class="crew-heading split-title">The Crew</h2>
   <p class="crew-sub">Fifteen services. Each one does exactly one thing, extremely well.</p>
@@ -329,82 +179,53 @@ import Terminal from '../components/Terminal.astro';
 </Base>
 
 <style>
-  /* ═══ HERO — Moonlit Sky ═══ */
-  .hero {
-    text-align:center; padding:100px 20px 120px; position:relative; overflow:hidden;
-    background:linear-gradient(180deg, #0a1530 0%, #0f1f45 30%, #132a55 60%, #0a1a40 100%);
-  }
-  .hero-glow {
-    position:absolute; inset:0; pointer-events:none;
-    background:
-      radial-gradient(ellipse 30% 40% at 70% 12%, rgba(200,220,255,0.08) 0%, transparent 70%),
-      radial-gradient(ellipse 50% 50% at 50% 20%, rgba(100,140,200,0.1) 0%, transparent 70%),
-      radial-gradient(ellipse 40% 30% at 30% 80%, rgba(56,100,180,0.06) 0%, transparent 60%);
-  }
+  /* ═══ HERO ═══ */
+  .hero { text-align:center; padding:100px 20px 0; background:linear-gradient(180deg,#060d1f 0%,#0a1228 40%,var(--bg) 100%); position:relative; overflow:hidden; }
+  .hero-glow { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse 70% 50% at 50% 10%,rgba(56,100,180,0.14) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 25% 70%,rgba(99,102,241,0.06) 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 75% 70%,rgba(45,212,191,0.05) 0%,transparent 60%); }
   .hero h1 { font-size:clamp(2.8rem,8vw,4.2rem); font-weight:800; background:linear-gradient(135deg,#7aa2f7,var(--indigo),var(--purple),#c084fc); background-size:300% 300%; animation:grad 8s ease infinite; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; position:relative; letter-spacing:-1px; }
   @keyframes grad{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
   .hero-tag { font-size:0.82rem; color:rgba(125,211,252,0.5); letter-spacing:5px; text-transform:uppercase; margin-top:6px; font-weight:500; position:relative; }
 
-  /* ═══ FISHERMAN + BOAT ═══ */
-  .fisherman {
-    position:absolute; bottom:100px; left:calc(50% - 340px); z-index:3;
-    pointer-events:none; will-change:transform;
-  }
-  .rod-connector {
-    position:absolute; bottom:-1px; left:calc(50% - 230px); width:10px; height:80px;
-    pointer-events:none; z-index:1; opacity:0;
-  }
+  .hero-hook { font-size:clamp(1rem,2.5vw,1.2rem); color:var(--text-dim); margin:28px auto 0; max-width:480px; position:relative; line-height:1.7; }
+  .hero-hook strong { color:var(--text); }
+  .hook-word { display:inline-block; opacity:0; transform:translateY(8px); }
 
-  /* ═══ WAVE DIVIDERS ═══ */
+  .hero-cta { display:flex; gap:12px; justify-content:center; margin-top:28px; flex-wrap:wrap; position:relative; }
+
+  /* ═══ PARTICLES ═══ */
+  .particles { position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:0; }
+  .particle { position:absolute; border-radius:50%; will-change:transform,opacity; pointer-events:none; }
+
+  /* ═══ WAVE DIVIDERS (MorphSVG) ═══ */
   .wave-divider { position:relative; width:100%; height:80px; overflow:hidden; z-index:2; }
   .hero-wave-morph { position:absolute; bottom:-1px; left:0; right:0; height:80px; }
   .wave-svg { display:block; width:100%; height:100%; }
   .wave-flip { transform:scaleY(-1); }
   .journey-wave-morph { margin-top:-1px; }
 
-  /* ═══ JOURNEY — Underwater ═══ */
-  .journey-ocean {
-    position:relative; overflow:clip;
-    background:linear-gradient(180deg, #0a1a3a 0%, #071530 25%, #050e20 50%, #030a18 75%, #020610 100%);
-  }
-  .journey-wrap {
-    position:relative; max-width:780px; margin:0 auto; padding:100px 24px 40px 80px;
-  }
+  @media(max-width:768px){ .hero{padding:70px 16px 0} }
+  @media(max-width:480px){ .hero h1{font-size:2rem} .hero{padding:60px 14px 0} }
 
-  /* Bubbles */
-  .bubbles-container { position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:0; }
-  .bubble {
-    position:absolute; border-radius:50%;
-    background:radial-gradient(circle at 30% 30%, rgba(150,200,255,0.25), rgba(100,180,255,0.04));
-    border:0.5px solid rgba(150,200,255,0.12);
-    will-change:transform,opacity; pointer-events:none;
-  }
+  /* ═══ JOURNEY ═══ */
+  .journey-wrap { position:relative; max-width:780px; margin:0 auto; padding:100px 24px 40px 80px; }
 
-  /* Sea life — positioned relative to journey-ocean (full viewport width) */
-  .sea-life {
-    position:absolute; top:0; right:0; width:30%; height:100%;
-    pointer-events:none; z-index:1; overflow:visible;
-  }
-  .sea-creature { position:absolute; pointer-events:none; will-change:transform; }
-  .jellyfish-1 { top:12%; right:5%; }
-  .jellyfish-2 { top:52%; right:15%; }
-  .fish-school { top:28%; right:8%; }
-  .fish-single { top:42%; right:3%; }
-  .seaweed-1 { bottom:28%; right:2%; }
-  .seaweed-2 { bottom:8%; right:5%; }
-  .starfish-1 { bottom:10%; right:12%; }
-  .fish-school-wrap { display:flex; flex-wrap:wrap; width:60px; }
-
-  /* Fishing line path */
+  /* SVG Chart Path */
   .journey-path {
     position:absolute; left:20px; top:0; width:60px; height:100%;
     pointer-events:none; z-index:1;
   }
+  #chartRoute { stroke-dasharray:4 6; }
   .chart-node { fill:rgba(200,200,200,0.1); stroke:rgba(200,200,200,0.25); stroke-width:1.5; transition:all 0.5s; }
   .chart-node.active { fill:var(--gold); stroke:var(--gold); filter:drop-shadow(0 0 6px rgba(212,160,74,0.5)); }
-  .fishing-hook { opacity:0; }
 
-  /* Chapter styles */
+  /* Ship */
+  .journey-ship {
+    position:absolute; left:20px; top:0; z-index:2;
+    pointer-events:none; will-change:transform;
+    filter:drop-shadow(0 2px 8px rgba(212,160,74,0.3));
+  }
+
+  /* Warm, varied accents */
   .chapter[data-accent="warm"]    { --accent:#e0976a; --accent-dim:rgba(224,151,106,0.15); }
   .chapter[data-accent="amber"]   { --accent:#e2b340; --accent-dim:rgba(226,179,64,0.15); }
   .chapter[data-accent="emerald"] { --accent:#34d399; --accent-dim:rgba(52,211,153,0.15); }
@@ -425,33 +246,21 @@ import Terminal from '../components/Terminal.astro';
 
   .chapter-desc { font-size:0.9rem; color:var(--text-dim); max-width:520px; line-height:1.9; }
 
-  /* ═══ TREASURE CHEST ═══ */
-  .treasure-zone {
-    position:relative; display:flex; flex-direction:column; align-items:center;
-    padding:60px 0 40px; margin-top:20px;
-  }
-  .sand-bed {
-    position:absolute; bottom:0; left:-40px; right:-40px; height:50px;
-    background:linear-gradient(180deg, transparent 0%, rgba(194,154,80,0.06) 40%, rgba(194,154,80,0.1) 100%);
-    border-radius:0 0 4px 4px;
-  }
-  .treasure-chest { position:relative; z-index:1; opacity:0; will-change:transform,filter; }
-  .treasure-glow {
-    position:absolute; width:100px; height:50px; z-index:0;
-    background:radial-gradient(ellipse, rgba(212,160,74,0.4) 0%, transparent 70%);
-    opacity:0; top:50%; left:50%; transform:translate(-50%,-50%) scale(0.5);
-    pointer-events:none;
-  }
-
-  /* ═══ CREW ═══ */
+  /* ═══ CREW — editorial list ═══ */
   .crew-section { max-width:780px; margin:0 auto; padding:60px 24px 80px; }
+
   .crew-heading { font-size:clamp(2rem,5vw,3rem); font-weight:800; color:#f0f0f0; letter-spacing:-0.5px; margin-bottom:8px; }
   .crew-sub { color:var(--text-muted); font-size:0.9rem; margin-bottom:48px; line-height:1.6; }
+
   .crew-list { display:flex; flex-direction:column; gap:36px; }
+
+  .crew-group { }
   .group-tag { display:block; font-size:0.6rem; text-transform:uppercase; letter-spacing:0.25em; color:rgba(200,200,200,0.3); font-weight:600; margin-bottom:12px; font-family:'SF Mono','Fira Code',monospace; }
+
   .crew-entry { display:flex; align-items:baseline; gap:16px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.04); transition:border-color 0.3s; }
   .crew-entry:hover { border-bottom-color:rgba(255,255,255,0.12); }
   .crew-entry:last-child { border-bottom:none; }
+
   .entry-name { font-size:clamp(1.1rem,3vw,1.4rem); font-weight:700; color:#e8e8e8; flex-shrink:0; min-width:180px; letter-spacing:-0.3px; }
   .entry-role { font-size:0.85rem; color:var(--text-muted); }
 
@@ -462,40 +271,23 @@ import Terminal from '../components/Terminal.astro';
   .final-cta p { color:var(--text-dim); font-size:0.92rem; margin:12px 0 28px; position:relative; }
   .final-cta .btn { position:relative; }
 
-  /* ═══ RESPONSIVE — Tablet ═══ */
-  @media(max-width:1024px){
-    .fisherman { left:calc(50% - 280px); transform:scale(0.75); transform-origin:bottom left; }
-    .rod-connector { left:calc(50% - 195px); }
-    .sea-life { width:25%; }
-    .jellyfish-2, .fish-single { display:none; }
-    .journey-wrap { padding:80px 24px 40px 65px; }
-  }
-
-  /* ═══ RESPONSIVE — Mobile ═══ */
+  /* ═══ RESPONSIVE ═══ */
   @media(max-width:768px){
-    .hero { padding:70px 16px 80px; }
-    .fisherman { display:none; }
-    .rod-connector { display:none; }
     .journey-wrap { padding:60px 20px 20px; }
     .journey-path { display:none; }
-    .sea-life { display:none; }
+    .journey-ship { display:none; }
     .chapter-node { position:static; width:8px; height:8px; margin-bottom:12px; }
     .chapter { padding-bottom:60px; }
     .chapter-title { font-size:1.8rem; }
-    .treasure-zone { padding:40px 0 30px; }
     .crew-heading { font-size:1.8rem; }
     .entry-name { min-width:auto; font-size:1rem; }
     .crew-entry { flex-direction:column; gap:2px; }
     .final-cta { padding:60px 20px 40px; }
   }
   @media(max-width:480px){
-    .hero { padding:60px 14px 60px; }
-    .hero h1 { font-size:2rem; }
     .journey-wrap { padding:40px 16px 16px; }
     .chapter { padding-bottom:50px; }
     .chapter-title { font-size:1.5rem; }
-    .jellyfish-1 { display:none; }
-    .seaweed-1 { display:none; }
   }
 
   /* ═══ REDUCED MOTION ═══ */
@@ -503,13 +295,10 @@ import Terminal from '../components/Terminal.astro';
     #chartRoute { stroke-dashoffset:0 !important; }
     .chapter-content { opacity:1 !important; transform:none !important; }
     .chapter-node { background:var(--accent) !important; border-color:var(--accent) !important; }
+    .hook-word { opacity:1 !important; transform:none !important; }
     .hero h1 { animation:none !important; background-position:0% 50%; }
-    .fishing-hook { opacity:1 !important; }
-    .fisherman { opacity:0.8 !important; }
-    .bubble { opacity:0.15 !important; }
-    .sea-creature { opacity:0.5 !important; }
-    .treasure-chest { opacity:0.7 !important; filter:drop-shadow(0 0 8px rgba(212,160,74,0.3)) !important; }
-    .treasure-glow { opacity:0.2 !important; }
+    .journey-ship { display:none !important; }
+    .particle { opacity:0.3 !important; }
   }
 </style>
 
@@ -541,23 +330,60 @@ import Terminal from '../components/Terminal.astro';
 
   mm.add('(prefers-reduced-motion: no-preference)', () => {
 
-    const isMobile = window.innerWidth < 768;
-    const isTablet = window.innerWidth >= 768 && window.innerWidth <= 1024;
+    // ═══ PARTICLES (Physics2D) ═══
+    const particleContainer = document.getElementById('particles');
+    if (particleContainer) {
+      const colors = ['rgba(212,160,74,0.3)', 'rgba(224,151,106,0.25)', 'rgba(125,211,252,0.15)', 'rgba(100,116,139,0.2)', 'rgba(52,211,153,0.15)'];
+      const isMobile = window.innerWidth < 768;
+      const count = isMobile ? 8 : 18;
 
-    // ═══ BOAT SWAY ═══
-    const boatGroup = document.getElementById('boatGroup');
-    if (boatGroup && !isMobile) {
-      gsap.to(boatGroup, {
-        rotation: 2,
-        transformOrigin: '80px 92px',
-        duration: 4,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-      });
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = 2 + Math.random() * 4;
+        p.style.width = size + 'px';
+        p.style.height = size + 'px';
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        p.style.left = (10 + Math.random() * 80) + '%';
+        p.style.top = (20 + Math.random() * 60) + '%';
+        p.style.opacity = '0';
+        particleContainer.appendChild(p);
+
+        // Fade in
+        gsap.to(p, { opacity: 1, duration: 1, delay: Math.random() * 2 });
+
+        // Physics2D: float upward with drift
+        gsap.to(p, {
+          physics2D: {
+            velocity: 20 + Math.random() * 40,
+            angle: -90 + (Math.random() - 0.5) * 60,
+            gravity: 0,
+          },
+          duration: 15 + Math.random() * 20,
+          repeat: -1,
+          onRepeat: function() {
+            // Reset position when particle drifts too far
+            gsap.set(p, {
+              x: 0, y: 0,
+              left: (10 + Math.random() * 80) + '%',
+              top: (50 + Math.random() * 40) + '%',
+            });
+          }
+        });
+      }
     }
 
-    // ═══ MORPHING WAVES ═══
+    // ═══ Hero hook word-by-word reveal ═══
+    gsap.to('.hook-word', {
+      opacity: 1,
+      y: 0,
+      duration: 0.5,
+      stagger: 0.08,
+      ease: 'power3.out',
+      delay: 0.5,
+    });
+
+    // ═══ MORPHING WAVES (MorphSVG) ═══
     const waveA = document.getElementById('waveA');
     const waveB = document.getElementById('waveB');
     const waveC = document.getElementById('waveC');
@@ -569,114 +395,7 @@ import Terminal from '../components/Terminal.astro';
         .to(waveA, { morphSVG: waveA, duration: 4, ease: 'sine.inOut' });
     }
 
-    // ═══ ROD CONNECTOR — fade in as user starts scrolling ═══
-    const rodConnector = document.getElementById('rodConnector');
-    if (rodConnector && !isMobile) {
-      gsap.to(rodConnector, {
-        opacity: 0.6,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '.hero',
-          start: 'top top',
-          end: '+=150',
-          scrub: 0.3,
-        }
-      });
-    }
-
-    // ═══ BUBBLES (underwater) ═══
-    const bubbleContainer = document.getElementById('bubblesContainer');
-    if (bubbleContainer) {
-      const bubbleCount = isMobile ? 12 : (isTablet ? 25 : 45);
-      interface BubbleData {
-        el: HTMLDivElement;
-        baseY: number;
-        scattered: boolean;
-      }
-      const bubbles: BubbleData[] = [];
-
-      for (let i = 0; i < bubbleCount; i++) {
-        const b = document.createElement('div');
-        b.className = 'bubble';
-        const size = isMobile ? (2 + Math.random() * 5) : (3 + Math.random() * 8);
-        b.style.width = size + 'px';
-        b.style.height = size + 'px';
-        b.style.left = (5 + Math.random() * 90) + '%';
-        const baseY = 5 + Math.random() * 90;
-        b.style.top = baseY + '%';
-        b.style.opacity = String(0.12 + Math.random() * 0.2);
-        bubbleContainer.appendChild(b);
-
-        const data: BubbleData = { el: b, baseY, scattered: false };
-        bubbles.push(data);
-
-        // Gentle float
-        gsap.to(b, {
-          y: -(15 + Math.random() * 40),
-          x: (Math.random() - 0.5) * 30,
-          duration: 6 + Math.random() * 10,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-          delay: Math.random() * 4,
-        });
-      }
-
-      // ═══ BUBBLE SCATTER on hook proximity (desktop/tablet only) ═══
-      if (!isMobile) {
-        const scatterRadius = isTablet ? 6 : 8;
-        gsap.to({ v: 0 }, {
-          v: 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '#journeyWrap',
-            start: 'top 70%',
-            end: 'bottom 30%',
-            scrub: 0.5,
-            onUpdate: (self) => {
-              const hookY = self.progress * 100;
-              bubbles.forEach(bd => {
-                const dist = Math.abs(hookY - bd.baseY);
-                if (dist < scatterRadius && !bd.scattered) {
-                  bd.scattered = true;
-                  gsap.to(bd.el, {
-                    physics2D: {
-                      velocity: 60 + Math.random() * 80,
-                      angle: (Math.random() > 0.5 ? -1 : 1) * (50 + Math.random() * 70),
-                      gravity: -15,
-                    },
-                    opacity: 0,
-                    duration: 1.5 + Math.random() * 2,
-                    onComplete: () => {
-                      const newY = 5 + Math.random() * 90;
-                      gsap.set(bd.el, {
-                        x: 0, y: 0,
-                        opacity: 0.12 + Math.random() * 0.2,
-                        left: (5 + Math.random() * 90) + '%',
-                        top: newY + '%',
-                      });
-                      bd.baseY = newY;
-                      bd.scattered = false;
-                      // Restart gentle float
-                      gsap.to(bd.el, {
-                        y: -(15 + Math.random() * 40),
-                        x: (Math.random() - 0.5) * 30,
-                        duration: 6 + Math.random() * 10,
-                        repeat: -1,
-                        yoyo: true,
-                        ease: 'sine.inOut',
-                      });
-                    }
-                  });
-                }
-              });
-            }
-          }
-        });
-      }
-    }
-
-    // ═══ DRAWSVG — Fishing line reveals on scroll ═══
+    // ═══ DRAWSVG — Chart route reveals on scroll ═══
     const chartRoute = document.getElementById('chartRoute');
     if (chartRoute) {
       gsap.fromTo(chartRoute,
@@ -694,33 +413,21 @@ import Terminal from '../components/Terminal.astro';
       );
     }
 
-    // ═══ MOTIONPATH — Fishing hook follows the line ═══
-    const hook = document.getElementById('fishingHook');
-    if (hook && chartRoute && !isMobile) {
-      gsap.set(hook, { opacity: 0 });
-
-      // Fade hook in when line starts
-      gsap.to(hook, {
-        opacity: 1,
-        duration: 0.3,
-        scrollTrigger: {
-          trigger: '#journeyWrap',
-          start: 'top 68%',
-          toggleActions: 'play none none reverse',
-        }
-      });
-
-      // Hook follows the path
-      gsap.to(hook, {
+    // ═══ MOTIONPATH — Ship sails along the chart route ═══
+    const ship = document.getElementById('journeyShip');
+    const journeyWrap = document.getElementById('journeyWrap');
+    if (ship && chartRoute && journeyWrap) {
+      gsap.set(ship, { xPercent: -50, yPercent: -50 });
+      gsap.to(ship, {
         motionPath: {
           path: chartRoute,
           align: chartRoute,
-          alignOrigin: [0.5, 0],
+          alignOrigin: [0.5, 0.5],
           autoRotate: 90,
         },
         ease: 'none',
         scrollTrigger: {
-          trigger: '#journeyWrap',
+          trigger: journeyWrap,
           start: 'top 70%',
           end: 'bottom 30%',
           scrub: 0.5,
@@ -742,75 +449,6 @@ import Terminal from '../components/Terminal.astro';
       }
     });
 
-    // ═══ SEA LIFE ANIMATIONS ═══
-    if (!isMobile) {
-      // Jellyfish bob
-      gsap.utils.toArray<HTMLElement>('.jellyfish').forEach((jf, i) => {
-        gsap.to(jf, {
-          y: -18 + Math.random() * 8,
-          x: (Math.random() - 0.5) * 12,
-          rotation: (Math.random() - 0.5) * 4,
-          duration: 4 + Math.random() * 3,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-          delay: i * 1.2,
-        });
-      });
-
-      // Fish drift horizontally
-      gsap.utils.toArray<HTMLElement>('.fish-school-wrap, .fish-single').forEach((f, i) => {
-        const startX = i % 2 === 0 ? 40 : -40;
-        gsap.fromTo(f,
-          { x: startX },
-          {
-            x: -startX,
-            duration: 12 + Math.random() * 8,
-            repeat: -1,
-            yoyo: true,
-            ease: 'sine.inOut',
-            delay: i * 2,
-          }
-        );
-      });
-
-      // Seaweed sway
-      gsap.utils.toArray<HTMLElement>('.seaweed').forEach((sw, i) => {
-        gsap.to(sw, {
-          rotation: 4,
-          transformOrigin: 'bottom center',
-          duration: 3 + Math.random() * 2,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-          delay: i * 0.6,
-        });
-      });
-
-      // Starfish subtle pulse
-      gsap.to('.starfish', {
-        opacity: 0.6,
-        duration: 3,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-      });
-
-      // Gentle parallax scroll on sea creatures
-      gsap.utils.toArray<HTMLElement>('.sea-creature').forEach((creature, i) => {
-        gsap.to(creature, {
-          y: -(15 + i * 5),
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '#journeyOcean',
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 2,
-          }
-        });
-      });
-    }
-
     // ═══ Chapter entrances with ScrambleText + SplitText ═══
     gsap.utils.toArray<HTMLElement>('.chapter').forEach(chapter => {
       const content = chapter.querySelector('.chapter-content') as HTMLElement;
@@ -820,13 +458,16 @@ import Terminal from '../components/Terminal.astro';
       const desc = chapter.querySelector('.chapter-desc') as HTMLElement;
       const label = chapter.querySelector('.chapter-label') as HTMLElement;
 
+      // SplitText on title
       const split = new SplitText(title, { type: 'chars' });
 
       const tl = gsap.timeline({
         scrollTrigger: { trigger: chapter, start: 'top 72%' }
       });
 
+      // Make content visible, then animate in sequence
       tl.to(content, { opacity: 1, y: 0, duration: 0.01 })
+        // ScrambleText on chapter label
         .to(label, {
           scrambleText: {
             text: label.dataset.final || label.textContent || '',
@@ -836,6 +477,7 @@ import Terminal from '../components/Terminal.astro';
           },
           duration: 0.8,
         })
+        // SplitText character reveal on title
         .from(split.chars, {
           opacity: 0,
           y: 40,
@@ -847,6 +489,7 @@ import Terminal from '../components/Terminal.astro';
         .from(analogy, { opacity: 0, y: 15, duration: 0.5, ease: 'power2.out' }, '-=0.3')
         .from(desc, { opacity: 0, y: 15, duration: 0.5, ease: 'power2.out' }, '-=0.3');
 
+      // HTML node glow
       ScrollTrigger.create({
         trigger: chapter,
         start: 'top 60%',
@@ -855,44 +498,6 @@ import Terminal from '../components/Terminal.astro';
         onLeaveBack: () => node.classList.remove('active'),
       });
     });
-
-    // ═══ TREASURE CHEST REVEAL ═══
-    const chest = document.getElementById('treasureChest');
-    const chestGlow = document.getElementById('treasureGlow');
-    const chestLid = document.getElementById('chestLid');
-    if (chest) {
-      const chestTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: '#treasureZone',
-          start: 'top 80%',
-          end: 'top 40%',
-          scrub: 0.5,
-        }
-      });
-
-      chestTl
-        .to(chest, { opacity: 1, y: 0, duration: 1 })
-        .to(chest, {
-          filter: 'url(#chestGlow) drop-shadow(0 0 12px rgba(212,160,74,0.5))',
-          duration: 1,
-        }, '-=0.5');
-
-      if (chestGlow) {
-        chestTl.to(chestGlow, {
-          opacity: 0.5,
-          scale: 1.2,
-          duration: 1,
-        }, '-=0.8');
-      }
-
-      // Lid opens on mobile without MorphSVG, with MorphSVG on desktop
-      if (chestLid && !isMobile) {
-        chestTl.to(chestLid, {
-          morphSVG: 'M5,22 Q5,0 30,-2 Q55,0 55,22 Z',
-          duration: 1,
-        }, '-=0.6');
-      }
-    }
 
     // ═══ Crew heading SplitText ═══
     const crewSplit = new SplitText('.crew-heading', { type: 'chars' });
