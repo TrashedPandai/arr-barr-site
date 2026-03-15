@@ -500,21 +500,86 @@ import Base from '../layouts/Base.astro';
     <!-- ═══ TROUBLESHOOTING ═══ -->
     <section id="troubleshoot" class="ds">
       <h2>Troubleshooting</h2>
-      <div class="ts-grid">
+      <p class="sec-desc">Common issues diagnosed. Click any card for the fix.</p>
+
+      <div class="ts-filters" id="tsFilters">
+        {['all','vpn','downloads','media','permissions'].map((cat, i) => (
+          <button class={`ts-chip ${i === 0 ? 'active' : ''}`} data-cat={cat}>{cat === 'all' ? 'All' : cat.charAt(0).toUpperCase() + cat.slice(1)}</button>
+        ))}
+      </div>
+
+      <div class="ts-cards" id="tsCards">
         {[
-          {q:'Download stuck', a:'Run <code>arr vpn</code>. If tunnel is down, kill switch blocks traffic (by design). Check .env WireGuard creds. <code>arr restart vpn</code> to reconnect.'},
-          {q:'No torrent peers', a:'Check port forwarding: <code>arr vpn</code> should show forwarded port. Set <code>VPN_PORT_FORWARDING=on</code> in .env.'},
-          {q:'Missing usenet articles', a:'DMCA takedowns. Add more providers on different backbones for better completion. SABnzbd auto-cascades through priority tiers.'},
-          {q:'VPN won\'t connect', a:'Check <code>arr logs gluetun</code>. Common: expired WireGuard key, wrong endpoint, server maintenance.'},
-          {q:'Files copied not hardlinked', a:'Separate volume mounts break hardlinks. Must use single <code>-v /data:/data</code> mount. Verify with <code>ls -li</code> (same inode = hardlink).'},
-          {q:'Permission denied on import', a:'Check PUID/PGID in .env matches file ownership. Synology: 1026:100. Run <code>arr doctor</code> for auto-fix.'},
-          {q:'"No compatible streams"', a:'Enable hardware transcoding in Jellyfin &rarr; Playback &rarr; Transcoding. QSV for Intel, VAAPI for others.'},
-          {q:'Subtitles out of sync', a:'Bazarr subsync enabled (thresholds: series 90, movies 70). Re-trigger sync or re-download from different provider.'},
+          {q:'Download stuck', cat:'vpn', sev:'high',
+           symptom:'Downloads show 0 B/s, stuck at same percentage.',
+           cause:'VPN tunnel dropped. Kill switch blocks all download traffic (by design).',
+           cmds:['arr vpn','arr restart vpn'], note:'Also check WireGuard creds in .env', cli:'arr vpn'},
+          {q:'No torrent peers', cat:'vpn', sev:'medium',
+           symptom:'Torrent downloads active but 0 peers connected.',
+           cause:'Port forwarding not active or port changed.',
+           cmds:['arr vpn'], note:'Set VPN_PORT_FORWARDING=on in .env', cli:'arr vpn'},
+          {q:'VPN won\'t connect', cat:'vpn', sev:'high',
+           symptom:'Gluetun container failing to start or restart-looping.',
+           cause:'Expired WireGuard key, wrong endpoint, or server maintenance.',
+           cmds:['arr logs gluetun'], note:'Check .env WireGuard creds match Proton portal', cli:'arr logs'},
+          {q:'Missing usenet articles', cat:'downloads', sev:'medium',
+           symptom:'Incomplete downloads, repair failures in SABnzbd.',
+           cause:'DMCA takedowns removed content from the backbone.',
+           cmds:[], note:'Add providers on different backbones. SABnzbd auto-cascades through priority tiers.', cli:''},
+          {q:'Files copied not hardlinked', cat:'permissions', sev:'high',
+           symptom:'Disk usage doubles after import. Two separate files.',
+           cause:'Separate volume mounts break cross-device hardlinks.',
+           cmds:['ls -li'], note:'Must use single -v /data:/data mount. Same inode = hardlink.', cli:'arr doctor'},
+          {q:'Permission denied on import', cat:'permissions', sev:'high',
+           symptom:'Import fails immediately after download completes.',
+           cause:'PUID/PGID mismatch between container and file ownership.',
+           cmds:['arr doctor'], note:'Synology default: PUID=1026 PGID=100', cli:'arr doctor'},
+          {q:'"No compatible streams"', cat:'media', sev:'medium',
+           symptom:'Jellyfin playback fails with codec error.',
+           cause:'Hardware transcoding not enabled in Jellyfin.',
+           cmds:[], note:'Jellyfin Settings > Playback > Transcoding. QSV for Intel, VAAPI for others.', cli:''},
+          {q:'Subtitles out of sync', cat:'media', sev:'low',
+           symptom:'Audio and subtitle timing don\'t match.',
+           cause:'Subtitle provider timing offset.',
+           cmds:[], note:'Bazarr subsync thresholds: series 90, movies 70. Re-trigger or try different provider.', cli:''},
         ].map(item => (
-          <details class="ts-item">
-            <summary>{item.q}</summary>
-            <p set:html={item.a} />
-          </details>
+          <div class={`ts-card ts-sev-${item.sev}`} data-cat={item.cat}>
+            <div class="ts-card-hd">
+              <div class={`ts-bar ts-bar-${item.sev}`}></div>
+              <div class="ts-card-info">
+                <h4>{item.q}</h4>
+                <span class={`ts-badge ts-badge-${item.cat}`}>{item.cat}</span>
+              </div>
+              <svg class="ts-chev" width="16" height="16" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+            </div>
+            <div class="ts-card-body">
+              <div class="ts-flow">
+                <div class="ts-step ts-step-symptom">
+                  <span class="ts-step-label">Symptom</span>
+                  <p>{item.symptom}</p>
+                </div>
+                <div class="ts-flow-arrow"></div>
+                <div class="ts-step ts-step-cause">
+                  <span class="ts-step-label">Cause</span>
+                  <p>{item.cause}</p>
+                </div>
+                <div class="ts-flow-arrow"></div>
+                <div class="ts-step ts-step-fix">
+                  <span class="ts-step-label">Fix</span>
+                  {item.cmds.length > 0 && (
+                    <div class="ts-term">
+                      <div class="ts-term-bar"><span class="td-r"></span><span class="td-y"></span><span class="td-g"></span></div>
+                      <div class="ts-term-body">
+                        {item.cmds.map(c => <div class="ts-cmd"><span class="ts-prompt">$</span> {c}</div>)}
+                      </div>
+                    </div>
+                  )}
+                  <p class="ts-note">{item.note}</p>
+                </div>
+              </div>
+              {item.cli && <a href="#cli" class="ts-cli-link"><code>{item.cli}</code> in CLI Reference &rarr;</a>}
+            </div>
+          </div>
         ))}
       </div>
     </section>
@@ -675,40 +740,47 @@ import Base from '../layouts/Base.astro';
   .prof-optional { opacity:0.25; transform:scale(0.95); }
   .prof-optional.prof-on { opacity:1; transform:scale(1); background:rgba(244,114,182,0.08); border-color:rgba(244,114,182,0.2); color:#fce7f3; }
 
-  /* ═══ PIPELINE ═══ */
-  .pipe-wrap { display:flex; align-items:flex-start; gap:0; margin:16px 0; position:relative; }
-  .pipe-stage {
-    flex:1; text-align:center; cursor:pointer; padding:14px 8px;
-    border-radius:10px; transition:all 0.25s; position:relative;
+  /* ═══ PIPELINE — Vertical Timeline ═══ */
+  .pipe-journey { position:relative; padding:24px 0 40px; }
+  .pipe-spine {
+    position:absolute; left:50%; top:0; bottom:0; width:40px; height:100%;
+    transform:translateX(-50%); pointer-events:none;
   }
-  .pipe-stage:hover { transform:translateY(-3px); }
-  .pipe-stage.ps-active { transform:translateY(-3px); }
-  .ps-icon { font-size:1.6rem; margin-bottom:4px; }
-  .ps-label { font-size:0.78rem; font-weight:600; color:var(--text-dim); }
-  .ps-detail {
-    font-size:0.75rem; color:var(--text-dim); line-height:1.5;
-    max-height:0; overflow:hidden; opacity:0; transition:all 0.4s ease;
-    margin-top:0; padding:0 4px;
+  .pipe-packet { filter:drop-shadow(0 0 6px currentColor); }
+  .pipe-card {
+    position:relative; width:calc(50% - 36px); margin-bottom:28px;
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:18px 22px; cursor:pointer; transition:all 0.3s ease;
   }
-  .pipe-stage.ps-active .ps-detail { max-height:200px; opacity:1; margin-top:8px; }
-  .ps-connector {
-    position:absolute; right:-4px; top:28px; width:8px; height:2px;
-    display:flex; align-items:center;
+  .pipe-card:hover { transform:translateY(-2px); border-color:rgba(var(--sr),0.3); }
+  .pipe-card.pc-active { border-color:rgba(var(--sr),0.4); box-shadow:0 0 30px rgba(var(--sr),0.08); }
+  .pc-left { margin-right:auto; }
+  .pc-right { margin-left:auto; }
+  .pc-marker {
+    position:absolute; top:22px; width:14px; height:14px; border-radius:50%;
+    background:var(--sc); border:3px solid var(--bg); box-shadow:0 0 0 2px var(--sc);
   }
-  .ps-dot { width:100%; height:100%; background:var(--border-h); }
-
-  .ps-purple { border:1px solid rgba(192,132,252,0.12); }
-  .ps-purple.ps-active { background:rgba(192,132,252,0.06); border-color:rgba(192,132,252,0.25); }
-  .ps-amber { border:1px solid rgba(251,191,36,0.12); }
-  .ps-amber.ps-active { background:rgba(251,191,36,0.06); border-color:rgba(251,191,36,0.25); }
-  .ps-cyan { border:1px solid rgba(34,211,238,0.12); }
-  .ps-cyan.ps-active { background:rgba(34,211,238,0.06); border-color:rgba(34,211,238,0.25); }
-  .ps-green { border:1px solid rgba(16,185,129,0.12); }
-  .ps-green.ps-active { background:rgba(16,185,129,0.06); border-color:rgba(16,185,129,0.25); }
-  .ps-pink { border:1px solid rgba(244,114,182,0.12); }
-  .ps-pink.ps-active { background:rgba(244,114,182,0.06); border-color:rgba(244,114,182,0.25); }
-  .ps-indigo { border:1px solid rgba(99,102,241,0.12); }
-  .ps-indigo.ps-active { background:rgba(99,102,241,0.06); border-color:rgba(99,102,241,0.25); }
+  .pc-left .pc-marker { right:-43px; }
+  .pc-right .pc-marker { left:-43px; }
+  .pc-header { display:flex; align-items:baseline; gap:10px; margin-bottom:6px; }
+  .pc-num { font-size:0.62rem; font-weight:800; color:var(--sc); opacity:0.5; font-family:'SF Mono','Fira Code',monospace; }
+  .pc-header h3 { font-size:1rem; font-weight:700; color:#f1f5f9; margin:0; }
+  .pc-services { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:6px; }
+  .pc-svc {
+    font-size:0.66rem; font-weight:600; padding:2px 8px; border-radius:4px;
+    background:rgba(var(--sr),0.08); border:1px solid rgba(var(--sr),0.15); color:var(--sc);
+  }
+  .pc-summary { font-size:0.82rem; color:var(--text-dim); line-height:1.5; margin:0; }
+  .pc-detail {
+    max-height:0; overflow:hidden; opacity:0;
+    transition:max-height 0.4s ease, opacity 0.3s ease, margin 0.3s ease;
+  }
+  .pc-active .pc-detail { max-height:300px; opacity:1; margin-top:10px; padding-top:10px; border-top:1px solid var(--border); }
+  .pc-row { display:flex; justify-content:space-between; padding:3px 0; font-size:0.78rem; color:var(--text-dim); }
+  .pc-key { color:var(--text-muted); font-weight:500; }
+  .pipe-link { text-align:center; margin-top:8px; }
+  .pipe-link a { font-size:0.78rem; color:var(--sky); text-decoration:none; }
+  .pipe-link a:hover { color:var(--cyan); }
 
   /* ═══ QUALITY ═══ */
   .q-tabs { display:flex; gap:4px; margin-bottom:12px; }
@@ -845,20 +917,78 @@ import Base from '../layouts/Base.astro';
   }
   .us-no strong { color:#fca5a5; }
 
-  /* ═══ TROUBLESHOOT ═══ */
-  .ts-grid { display:flex; flex-direction:column; gap:4px; }
-  .ts-item {
-    background:var(--surface); border:1px solid var(--border); border-radius:6px; overflow:hidden;
+  /* ═══ TROUBLESHOOT — Diagnostic Cards ═══ */
+  .ts-filters { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:14px; }
+  .ts-chip {
+    padding:5px 14px; border-radius:6px; border:1px solid var(--border);
+    background:transparent; color:var(--text-dim); font-size:0.78rem; font-weight:500;
+    cursor:pointer; transition:all 0.2s; font-family:inherit; text-transform:capitalize;
   }
-  .ts-item summary {
-    padding:10px 14px; cursor:pointer; font-size:0.85rem; font-weight:500;
-    color:#e0e6f0; list-style:none; transition:background 0.2s;
+  .ts-chip:hover { border-color:var(--border-h); }
+  .ts-chip.active { background:rgba(99,102,241,0.1); border-color:rgba(99,102,241,0.3); color:var(--indigo); }
+  .ts-cards { display:flex; flex-direction:column; gap:6px; }
+  .ts-card {
+    background:var(--surface); border:1px solid var(--border); border-radius:10px;
+    overflow:hidden; transition:all 0.3s;
   }
-  .ts-item summary:hover { background:rgba(99,102,241,0.03); }
-  .ts-item summary::before { content:'+ '; color:var(--indigo); font-weight:700; font-family:monospace; }
-  .ts-item[open] summary::before { content:'- '; }
-  .ts-item summary::-webkit-details-marker { display:none; }
-  .ts-item p { padding:0 14px 10px; font-size:0.82rem; color:var(--text-dim); line-height:1.6; margin:0; }
+  .ts-card.ts-hidden { display:none; }
+  .ts-card:hover { border-color:var(--border-h); }
+  .ts-card-hd { display:flex; align-items:center; gap:10px; padding:12px 16px; cursor:pointer; }
+  .ts-bar { width:4px; height:24px; border-radius:2px; flex-shrink:0; }
+  .ts-bar-high { background:#f87171; }
+  .ts-bar-medium { background:#fbbf24; }
+  .ts-bar-low { background:#10b981; }
+  .ts-card-info { flex:1; display:flex; align-items:center; gap:8px; }
+  .ts-card-info h4 { font-size:0.88rem; font-weight:600; color:#e0e6f0; margin:0; }
+  .ts-badge {
+    font-size:0.58rem; font-weight:600; text-transform:uppercase; letter-spacing:0.06em;
+    padding:2px 6px; border-radius:3px;
+  }
+  .ts-badge-vpn { background:rgba(16,185,129,0.1); color:var(--emerald); }
+  .ts-badge-downloads { background:rgba(34,211,238,0.1); color:var(--cyan); }
+  .ts-badge-media { background:rgba(99,102,241,0.1); color:var(--indigo); }
+  .ts-badge-permissions { background:rgba(251,191,36,0.1); color:#fbbf24; }
+  .ts-chev { color:var(--text-muted); transition:transform 0.3s; flex-shrink:0; }
+  .ts-card.ts-open .ts-chev { transform:rotate(180deg); }
+  .ts-card-body {
+    max-height:0; overflow:hidden; opacity:0;
+    transition:max-height 0.4s ease, opacity 0.3s ease; padding:0 16px;
+  }
+  .ts-card.ts-open .ts-card-body { max-height:500px; opacity:1; padding:0 16px 16px; }
+  .ts-flow { display:flex; align-items:flex-start; gap:0; }
+  .ts-step { flex:1; padding:10px 12px; border-radius:8px; background:rgba(0,0,0,0.15); }
+  .ts-step-label {
+    font-size:0.6rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em;
+    display:block; margin-bottom:4px;
+  }
+  .ts-step-symptom .ts-step-label { color:#f87171; }
+  .ts-step-cause .ts-step-label { color:#fbbf24; }
+  .ts-step-fix .ts-step-label { color:#10b981; }
+  .ts-step p { font-size:0.78rem; color:var(--text-dim); line-height:1.5; margin:0; }
+  .ts-flow-arrow {
+    width:20px; height:2px; background:var(--border-h); align-self:center;
+    margin:0 4px; flex-shrink:0; position:relative;
+  }
+  .ts-flow-arrow::after {
+    content:''; position:absolute; right:0; top:-3px;
+    border:4px solid transparent; border-left-color:var(--border-h);
+  }
+  .ts-term {
+    margin-top:8px; border-radius:6px; overflow:hidden;
+    border:1px solid rgba(99,102,241,0.12); background:#080c16;
+  }
+  .ts-term-bar { display:flex; gap:4px; padding:4px 8px; background:rgba(15,22,41,0.8); border-bottom:1px solid rgba(30,41,59,0.6); }
+  .td-r,.td-y,.td-g { width:7px; height:7px; border-radius:50%; display:inline-block; }
+  .td-r { background:#f87171; } .td-y { background:#fbbf24; } .td-g { background:#4ade80; }
+  .ts-term-body { padding:8px 10px; }
+  .ts-cmd { font-family:'SF Mono','Fira Code',monospace; font-size:0.75rem; color:var(--cyan); margin-bottom:2px; }
+  .ts-prompt { color:#fbbf24; margin-right:6px; }
+  .ts-note { font-size:0.72rem; color:var(--text-muted); margin-top:6px; }
+  .ts-cli-link {
+    display:inline-flex; align-items:center; gap:4px; margin-top:10px;
+    font-size:0.72rem; color:var(--sky); text-decoration:none;
+  }
+  .ts-cli-link:hover { color:var(--cyan); }
 
   /* ═══ RESPONSIVE ═══ */
   @media(max-width:900px) {
@@ -871,8 +1001,12 @@ import Base from '../layouts/Base.astro';
     .docs-fab { display:flex; }
     .docs-main { padding:24px 16px 60px; }
     .stat-grid { grid-template-columns:repeat(3,1fr); }
-    .pipe-wrap { flex-wrap:wrap; }
-    .pipe-stage { flex:0 0 calc(33.3% - 8px); }
+    .pipe-spine { left:20px; transform:none; }
+    .pipe-card { width:calc(100% - 48px); margin-left:48px !important; margin-right:0 !important; }
+    .pc-marker { left:-36px !important; right:auto !important; }
+    .ts-flow { flex-direction:column; }
+    .ts-flow-arrow { width:2px; height:14px; margin:4px auto; }
+    .ts-flow-arrow::after { right:auto; left:-3px; top:auto; bottom:0; border:4px solid transparent; border-top-color:var(--border-h); border-left-color:transparent; }
     .q-cols { grid-template-columns:1fr; }
     .special-grid { grid-template-columns:1fr; }
     .cli-grid { grid-template-columns:1fr; }
@@ -884,7 +1018,6 @@ import Base from '../layouts/Base.astro';
   }
   @media(max-width:480px) {
     .stat-grid { grid-template-columns:repeat(2,1fr); }
-    .pipe-stage { flex:0 0 calc(50% - 4px); }
   }
 </style>
 
@@ -957,34 +1090,57 @@ import Base from '../layouts/Base.astro';
     node.addEventListener('mouseleave', () => { tip.style.display = 'none'; });
   });
 
-  // ═══ PIPELINE INTERACTION ═══
-  document.querySelectorAll('.pipe-stage').forEach(stage => {
-    stage.addEventListener('click', () => {
-      const wasActive = stage.classList.contains('ps-active');
-      document.querySelectorAll('.pipe-stage').forEach(s => s.classList.remove('ps-active'));
-      if (!wasActive) stage.classList.add('ps-active');
+  // ═══ PIPELINE — Vertical Timeline ═══
+  document.querySelectorAll('.pipe-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const wasActive = card.classList.contains('pc-active');
+      document.querySelectorAll('.pipe-card').forEach(c => c.classList.remove('pc-active'));
+      if (!wasActive) card.classList.add('pc-active');
     });
   });
 
-  // Auto-activate first stage on scroll
   ScrollTrigger.create({
-    trigger: '#pipeWrap',
+    trigger: '#pipeJourney',
     start: 'top 75%',
     once: true,
     onEnter: () => {
-      const stages = document.querySelectorAll('.pipe-stage');
-      let i = 0;
-      const interval = setInterval(() => {
-        stages.forEach(s => s.classList.remove('ps-active'));
-        if (i < stages.length) {
-          stages[i].classList.add('ps-active');
-          i++;
-        } else {
-          clearInterval(interval);
-          setTimeout(() => stages.forEach(s => s.classList.remove('ps-active')), 2000);
-        }
-      }, 600);
+      gsap.from('.pipe-card', {
+        opacity: 0,
+        x: (i: number) => i % 2 === 0 ? -30 : 30,
+        duration: 0.6,
+        stagger: 0.12,
+        ease: 'power3.out'
+      });
+      gsap.from('.pc-marker', {
+        scale: 0,
+        duration: 0.4,
+        stagger: 0.12,
+        ease: 'back.out(2)',
+        delay: 0.15
+      });
     }
+  });
+
+  // ═══ TROUBLESHOOTING — Filters & Expand ═══
+  document.querySelectorAll('.ts-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.ts-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const cat = (btn as HTMLElement).dataset.cat;
+      document.querySelectorAll('.ts-card').forEach(card => {
+        const el = card as HTMLElement;
+        el.classList.toggle('ts-hidden', cat !== 'all' && el.dataset.cat !== cat);
+      });
+    });
+  });
+
+  document.querySelectorAll('.ts-card-hd').forEach(hd => {
+    hd.addEventListener('click', () => {
+      const card = hd.closest('.ts-card')!;
+      const wasOpen = card.classList.contains('ts-open');
+      document.querySelectorAll('.ts-card').forEach(c => c.classList.remove('ts-open'));
+      if (!wasOpen) card.classList.add('ts-open');
+    });
   });
 
   // ═══ QUALITY TABS ═══
