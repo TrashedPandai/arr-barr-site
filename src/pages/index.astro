@@ -12,20 +12,6 @@ import Terminal from '../components/Terminal.astro';
   <h1>arr-barr</h1>
   <div class="hero-tag">Every crew needs a port</div>
   <Terminal />
-  <p class="hero-hook">
-    <span class="hook-word">Your</span>
-    <span class="hook-word">friend</span>
-    <span class="hook-word">clicks</span>
-    <span class="hook-word"><strong>Request.</strong></span>
-    <span class="hook-word">Here's</span>
-    <span class="hook-word">what</span>
-    <span class="hook-word">happens</span>
-    <span class="hook-word">next.</span>
-  </p>
-  <div class="hero-cta">
-    <a href="/guide" class="btn btn-primary">Read the Guide</a>
-    <a href="/architecture" class="btn btn-ghost">Explore the Stack</a>
-  </div>
   <!-- Morphing wave divider -->
   <div class="wave-divider hero-wave-morph">
     <svg viewBox="0 0 1200 80" preserveAspectRatio="none" class="wave-svg">
@@ -180,17 +166,13 @@ import Terminal from '../components/Terminal.astro';
 
 <style>
   /* ═══ HERO ═══ */
-  .hero { text-align:center; padding:100px 20px 0; background:linear-gradient(180deg,#060d1f 0%,#0a1228 40%,var(--bg) 100%); position:relative; overflow:hidden; }
-  .hero-glow { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse 70% 50% at 50% 10%,rgba(56,100,180,0.14) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 25% 70%,rgba(99,102,241,0.06) 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 75% 70%,rgba(45,212,191,0.05) 0%,transparent 60%); }
+  .hero { text-align:center; padding:100px 20px 120px; background:linear-gradient(180deg,#0a1530 0%,#0f1f45 30%,#132a55 60%,#0a0e1a 100%); position:relative; overflow:hidden; }
+  .hero-glow { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse 30% 40% at 70% 15%,rgba(200,220,255,0.08) 0%,transparent 70%),radial-gradient(ellipse 60% 50% at 50% 20%,rgba(100,140,200,0.1) 0%,transparent 70%); }
   .hero h1 { font-size:clamp(2.8rem,8vw,4.2rem); font-weight:800; background:linear-gradient(135deg,#7aa2f7,var(--indigo),var(--purple),#c084fc); background-size:300% 300%; animation:grad 8s ease infinite; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; position:relative; letter-spacing:-1px; }
   @keyframes grad{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
   .hero-tag { font-size:0.82rem; color:rgba(125,211,252,0.5); letter-spacing:5px; text-transform:uppercase; margin-top:6px; font-weight:500; position:relative; }
 
-  .hero-hook { font-size:clamp(1rem,2.5vw,1.2rem); color:var(--text-dim); margin:28px auto 0; max-width:480px; position:relative; line-height:1.7; }
-  .hero-hook strong { color:var(--text); }
-  .hook-word { display:inline-block; opacity:0; transform:translateY(8px); }
 
-  .hero-cta { display:flex; gap:12px; justify-content:center; margin-top:28px; flex-wrap:wrap; position:relative; }
 
   /* ═══ PARTICLES ═══ */
   .particles { position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:0; }
@@ -203,8 +185,8 @@ import Terminal from '../components/Terminal.astro';
   .wave-flip { transform:scaleY(-1); }
   .journey-wave-morph { margin-top:-1px; }
 
-  @media(max-width:768px){ .hero{padding:70px 16px 0} }
-  @media(max-width:480px){ .hero h1{font-size:2rem} .hero{padding:60px 14px 0} }
+  @media(max-width:768px){ .hero{padding:70px 16px 80px} }
+  @media(max-width:480px){ .hero h1{font-size:2rem} .hero{padding:60px 14px 60px} }
 
   /* ═══ JOURNEY ═══ */
   .journey-wrap { position:relative; max-width:780px; margin:0 auto; padding:100px 24px 40px 80px; }
@@ -295,7 +277,6 @@ import Terminal from '../components/Terminal.astro';
     #chartRoute { stroke-dashoffset:0 !important; }
     .chapter-content { opacity:1 !important; transform:none !important; }
     .chapter-node { background:var(--accent) !important; border-color:var(--accent) !important; }
-    .hook-word { opacity:1 !important; transform:none !important; }
     .hero h1 { animation:none !important; background-position:0% 50%; }
     .journey-ship { display:none !important; }
     .particle { opacity:0.3 !important; }
@@ -372,16 +353,6 @@ import Terminal from '../components/Terminal.astro';
         });
       }
     }
-
-    // ═══ Hero hook word-by-word reveal ═══
-    gsap.to('.hook-word', {
-      opacity: 1,
-      y: 0,
-      duration: 0.5,
-      stagger: 0.08,
-      ease: 'power3.out',
-      delay: 0.5,
-    });
 
     // ═══ MORPHING WAVES (MorphSVG) ═══
     const waveA = document.getElementById('waveA');
