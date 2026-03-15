@@ -73,7 +73,7 @@ const groups = [
         <h2 class="group-title">{group.title}</h2>
         <p class="group-subtitle" set:html={group.subtitle} />
       </div>
-      <div class={`service-grid sg-${group.services.length}`}>
+      <div class={`service-grid sg-${group.services.length} grid-no-orphan`}>
         {group.services.map(svc => (
           <div class="service-card">
             <div class="svc-icon">

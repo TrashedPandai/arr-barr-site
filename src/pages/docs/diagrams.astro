@@ -230,7 +230,7 @@ import Base from '../../layouts/Base.astro';
           </div>
           <div class="zone zone-bridge">
             <div class="zone-label">Zone 2 &mdash; Docker Bridge</div>
-            <div class="zone-nodes zone-nodes-grid">
+            <div class="zone-nodes zone-nodes-grid grid-no-orphan">
               <div class="zn zn-bridge">Radarr<span>:7878</span></div>
               <div class="zn zn-bridge">Sonarr<span>:8989</span></div>
               <div class="zn zn-bridge">Lidarr<span>:8686</span></div>
@@ -378,7 +378,7 @@ import Base from '../../layouts/Base.astro';
       <!-- Search vs Download -->
       <h3 id="search-vs-download">Search vs Download Traffic</h3>
       <div class="dg-wrap">
-        <div class="split-compare">
+        <div class="split-compare grid-no-orphan">
           <div class="split-col split-cyan">
             <div class="split-head">Search Traffic &mdash; Direct, no VPN</div>
             <div class="split-items">
@@ -405,7 +405,7 @@ import Base from '../../layouts/Base.astro';
             <div class="ia-arrow ia-arrow-left">with FlareSolverr &darr;</div>
             <div class="ia-arrow ia-arrow-right">API key auth &darr;</div>
           </div>
-          <div class="ia-groups">
+          <div class="ia-groups grid-no-orphan">
             <div class="ia-group ia-torrent">
               <div class="ia-group-label">8 Torrent Indexers</div>
               <div class="ia-chips">
@@ -692,7 +692,7 @@ import Base from '../../layouts/Base.astro';
       <div class="dg-wrap">
         <div class="cmd-map">
           <div class="cmd-hub"><code>arr</code> <span>command</span></div>
-          <div class="cmd-fan">
+          <div class="cmd-fan grid-no-orphan">
             {[
               {cmd:'setup', desc:'First-time wizard', color:'cyan'},
               {cmd:'start', desc:'Start all services', color:'green'},

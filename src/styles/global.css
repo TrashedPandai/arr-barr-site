@@ -136,6 +136,13 @@ footer {
   background: linear-gradient(180deg, #161710 0%, #171811 50%, #181912 100%);
 }
 
+/* ═══ Grid straggler fix ═══
+   Add .grid-no-orphan to any 2-column grid so the last item
+   spans full width when it would otherwise sit alone. */
+.grid-no-orphan > :last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
 /* ═══ Responsive ═══ */
 @media (max-width: 768px) {
   .section-header { padding: 30px 16px 6px; }

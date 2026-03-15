@@ -60,7 +60,7 @@ import Base from '../layouts/Base.astro';
         </button>
       </div>
 
-      <div class="stat-grid">
+      <div class="stat-grid grid-no-orphan">
         <div class="stat"><div class="stat-val" data-count="15">0</div><div class="stat-label">Services</div></div>
         <div class="stat"><div class="stat-val" data-count="12">0</div><div class="stat-label">Indexers</div></div>
         <div class="stat"><div class="stat-val" data-count="48">0</div><div class="stat-label">Custom Formats</div></div>
@@ -177,7 +177,7 @@ import Base from '../layouts/Base.astro';
         <div class="tm-connector"></div>
         <div class="tm-zone tm-bridge">
           <div class="tm-zone-label">Docker Bridge</div>
-          <div class="tm-grid">
+          <div class="tm-grid grid-no-orphan">
             <div class="tm-node" data-info="Movie search, download, organize. 48 custom formats. TRaSH HD Bluray + WEB guide.">
               <span class="tm-name">Radarr</span><span class="tm-sub">Movies :7878</span>
             </div>
@@ -501,7 +501,7 @@ import Base from '../layouts/Base.astro';
           <div class="cli-prompt">$ arr <span class="cli-cursor"></span></div>
         </div>
       </div>
-      <div class="cli-grid" id="cliGrid">
+      <div class="cli-grid grid-no-orphan" id="cliGrid">
         {[
           {cmd:'setup', alias:'', desc:'First-time wizard: install, env, dirs, templates, pull images', cat:'setup'},
           {cmd:'start', alias:'', desc:'Start all services', cat:'lifecycle'},
@@ -569,7 +569,7 @@ import Base from '../layouts/Base.astro';
         <div class="uf-arrow">&darr;</div>
         <div class="uf-step"><code>docker compose up -d</code><span>recreates only changed containers</span></div>
       </div>
-      <div class="update-safe">
+      <div class="update-safe grid-no-orphan">
         <div class="us-yes"><strong>Updated:</strong> compose.yaml, CLI scripts, templates, Docker images</div>
         <div class="us-no"><strong>Never touched:</strong> .env, service configs/databases, media files</div>
       </div>
@@ -812,7 +812,6 @@ import Base from '../layouts/Base.astro';
     .tm-node-hero .tm-name { font-size:1.1rem; font-weight:700; color:#c4b5fd; }
 
     .tm-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
-    .tm-grid .tm-node:last-child:nth-child(odd) { grid-column:1 / -1; }
 
     .tm-kill {
       display:flex; align-items:center; justify-content:center; gap:8px;

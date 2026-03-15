@@ -157,7 +157,7 @@ const optional = [
     <h2>Usenet Deep Dive</h2>
     <p class="usenet-intro">Usenet is the second download source in the stack. It works differently from torrents — here's how the costs break down and what you actually need.</p>
 
-    <div class="usenet-concepts">
+    <div class="usenet-concepts grid-no-orphan">
       {usenetConcepts.map(c => (
         <div class={`uc-card uc-${c.color}`}>
           <div class="uc-icon">{c.icon}</div>
@@ -226,7 +226,7 @@ const optional = [
   <section class="hw-section gs">
     <h2>Hardware</h2>
     <p class="hw-intro">One-time cost. Use what you have or buy something dedicated.</p>
-    <div class="hw-grid">
+    <div class="hw-grid grid-no-orphan">
       {hardware.map(hw => (
         <div class="hw-card">
           <div class="hw-top">
@@ -243,7 +243,7 @@ const optional = [
   <!-- Optional -->
   <section class="opt-section gs">
     <h2>Optional Add-ons</h2>
-    <div class="opt-grid">
+    <div class="opt-grid grid-no-orphan">
       {optional.map(opt => (
         <div class="opt-card">
           <div class="opt-top">
