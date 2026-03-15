@@ -1320,16 +1320,14 @@ import Base from '../layouts/Base.astro';
     start: 'top 75%',
     once: true,
     onEnter: () => {
-      const isMobile = window.innerWidth <= 900;
-      gsap.from('.pipe-card', {
-        opacity: 0,
-        x: isMobile ? 0 : ((i: number) => i % 2 === 0 ? -30 : 30),
-        y: isMobile ? 15 : 0,
-        duration: 0.5,
-        stagger: 0.1,
-        ease: 'power3.out'
-      });
-      if (!isMobile) {
+      if (window.innerWidth > 900) {
+        gsap.from('.pipe-card', {
+          opacity: 0,
+          x: (i: number) => i % 2 === 0 ? -30 : 30,
+          duration: 0.6,
+          stagger: 0.12,
+          ease: 'power3.out'
+        });
         gsap.from('.pc-marker', {
           scale: 0,
           duration: 0.4,
