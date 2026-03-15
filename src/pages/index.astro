@@ -222,7 +222,7 @@ import Terminal from '../components/Terminal.astro';
   .hero-glow { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse 30% 40% at 70% 15%,rgba(200,220,255,0.08) 0%,transparent 70%),radial-gradient(ellipse 60% 50% at 50% 20%,rgba(100,140,200,0.1) 0%,transparent 70%); }
   .hero h1 { font-size:clamp(2.8rem,8vw,4.2rem); font-weight:800; background:linear-gradient(135deg,#7aa2f7,var(--indigo),var(--purple),#c084fc); background-size:300% 300%; animation:grad 8s ease infinite; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; position:relative; letter-spacing:-1px; }
   @keyframes grad{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-  .hero-tag { font-size:0.88rem; color:rgba(125,211,252,0.55); letter-spacing:4px; text-transform:uppercase; margin-top:10px; font-weight:500; position:relative; min-height:1.4em; }
+  .hero-tag { font-size:0.88rem; color:rgba(125,211,252,0.55); letter-spacing:4px; text-transform:uppercase; margin-top:10px; font-weight:500; position:relative; min-height:1.4em; white-space:nowrap; }
 
 
 
@@ -372,6 +372,7 @@ import Terminal from '../components/Terminal.astro';
 
   /* ═══ RESPONSIVE ═══ */
   @media(max-width:768px){
+    .hero-tag { font-size:0.7rem; letter-spacing:2px; }
     .journey-wrap { padding:60px 20px 20px; }
     /* Path moves to right-center, behind text for depth */
     .journey-path {
@@ -394,6 +395,7 @@ import Terminal from '../components/Terminal.astro';
     .beach-shore { height:200px; }
   }
   @media(max-width:480px){
+    .hero-tag { font-size:clamp(0.5rem, 2.8vw, 0.7rem); letter-spacing:1px; }
     .journey-wrap { padding:40px 16px 16px; }
     .chapter { padding-bottom:50px; }
     .chapter-title { font-size:1.5rem; }
