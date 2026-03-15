@@ -7,6 +7,10 @@ import Terminal from '../components/Terminal.astro';
 
 <section class="hero">
   <div class="hero-glow"></div>
+  <!-- Starfield -->
+  <div class="starfield" id="starfield" aria-hidden="true">
+    <svg class="constellations" id="constellations" aria-hidden="true"></svg>
+  </div>
   <!-- Particles container -->
   <div class="particles" id="particles" aria-hidden="true"></div>
   <h1>arr-barr</h1>
@@ -174,6 +178,15 @@ import Terminal from '../components/Terminal.astro';
 
 
 
+  /* ═══ STARFIELD ═══ */
+  .starfield { position:absolute; inset:0; bottom:30%; pointer-events:none; overflow:hidden; z-index:0; }
+  .star { position:absolute; border-radius:50%; background:rgba(220,230,255,0.5); }
+  .star--warm { background:rgba(255,220,180,0.4); }
+  .star--cool { background:rgba(180,200,255,0.45); }
+  .constellations { position:absolute; inset:0; width:100%; height:100%; }
+  .constellation-line { stroke:rgba(200,215,255,0.06); stroke-width:0.5; fill:none; }
+  .constellation-star { fill:rgba(220,230,255,0.55); }
+
   /* ═══ PARTICLES ═══ */
   .particles { position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:0; }
   .particle { position:absolute; border-radius:50%; will-change:transform,opacity; pointer-events:none; }
@@ -280,6 +293,7 @@ import Terminal from '../components/Terminal.astro';
     .hero h1 { animation:none !important; background-position:0% 50%; }
     .journey-ship { display:none !important; }
     .particle { opacity:0.3 !important; }
+    .star { opacity:0.3 !important; }
   }
 </style>
 
@@ -310,6 +324,75 @@ import Terminal from '../components/Terminal.astro';
   const mm = gsap.matchMedia();
 
   mm.add('(prefers-reduced-motion: no-preference)', () => {
+
+    // ═══ STARFIELD ═══
+    const starfield = document.getElementById('starfield');
+    const constellationsSvg = document.getElementById('constellations');
+    if (starfield) {
+      const isMob = window.innerWidth < 768;
+      const starCount = isMob ? 35 : 80;
+
+      for (let i = 0; i < starCount; i++) {
+        const s = document.createElement('div');
+        const size = 1 + Math.random() * 2;
+        const variant = Math.random();
+        const color = variant < 0.15 ? 'rgba(255,220,180,0.9)' : variant < 0.3 ? 'rgba(180,200,255,0.9)' : 'rgba(220,230,255,0.9)';
+        s.style.position = 'absolute';
+        s.style.borderRadius = '50%';
+        s.style.background = color;
+        s.style.width = size + 'px';
+        s.style.height = size + 'px';
+        s.style.left = (2 + Math.random() * 96) + '%';
+        s.style.top = (2 + Math.random() * 96) + '%';
+        const baseOpacity = 0.15 + Math.random() * 0.45;
+        s.style.opacity = baseOpacity.toString();
+        starfield.appendChild(s);
+
+        // Subtle twinkle on ~40% of stars
+        if (Math.random() < 0.4) {
+          gsap.to(s, {
+            opacity: baseOpacity * 0.25,
+            duration: 3 + Math.random() * 5,
+            ease: 'sine.inOut',
+            yoyo: true,
+            repeat: -1,
+            delay: Math.random() * 12,
+          });
+        }
+      }
+
+      // Constellations — desktop only
+      if (constellationsSvg && !isMob) {
+        const patterns = [
+          [[12, 8], [18, 14], [10, 18], [12, 8]],
+          [[72, 6], [78, 12], [85, 9]],
+          [[25, 35], [28, 42], [33, 36], [37, 43], [41, 37]],
+          [[48, 10], [54, 6], [61, 8], [65, 14]],
+        ];
+        const svgNS = 'http://www.w3.org/2000/svg';
+        patterns.forEach(pts => {
+          for (let i = 0; i < pts.length - 1; i++) {
+            const line = document.createElementNS(svgNS, 'line');
+            line.setAttribute('x1', pts[i][0] + '%');
+            line.setAttribute('y1', pts[i][1] + '%');
+            line.setAttribute('x2', pts[i + 1][0] + '%');
+            line.setAttribute('y2', pts[i + 1][1] + '%');
+            line.setAttribute('stroke', 'rgba(200,215,255,0.06)');
+            line.setAttribute('stroke-width', '0.5');
+            line.setAttribute('fill', 'none');
+            constellationsSvg.appendChild(line);
+          }
+          pts.forEach(([cx, cy]) => {
+            const dot = document.createElementNS(svgNS, 'circle');
+            dot.setAttribute('cx', cx + '%');
+            dot.setAttribute('cy', cy + '%');
+            dot.setAttribute('r', '1.5');
+            dot.setAttribute('fill', 'rgba(220,230,255,0.55)');
+            constellationsSvg.appendChild(dot);
+          });
+        });
+      }
+    }
 
     // ═══ PARTICLES (Physics2D) ═══
     const particleContainer = document.getElementById('particles');
