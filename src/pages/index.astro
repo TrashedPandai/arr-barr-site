@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import Terminal from '../components/Terminal.astro';
 ---
 
-<Base title="arr-barr — Every Crew Needs a Port">
+<Base title="arr-barr — Haul's in. Barr's open.">
 
 <section class="hero">
   <div class="hero-glow"></div>
@@ -14,7 +14,7 @@ import Terminal from '../components/Terminal.astro';
   <!-- Particles container -->
   <div class="particles" id="particles" aria-hidden="true"></div>
   <h1>arr-barr</h1>
-  <div class="hero-tag">Every crew needs a port</div>
+  <div class="hero-tag" id="heroTag" aria-live="polite"></div>
   <Terminal />
   <!-- Morphing wave divider -->
   <div class="wave-divider hero-wave-morph">
@@ -170,11 +170,11 @@ import Terminal from '../components/Terminal.astro';
 
 <style>
   /* ═══ HERO ═══ */
-  .hero { text-align:center; padding:100px 20px 120px; background:linear-gradient(180deg,#0a1530 0%,#0f1f45 30%,#132a55 60%,#0a0e1a 100%); position:relative; overflow:hidden; }
+  .hero { text-align:center; padding:80px 20px 120px; background:linear-gradient(180deg,#0a1530 0%,#0f1f45 30%,#132a55 60%,#0a0e1a 100%); position:relative; overflow:hidden; }
   .hero-glow { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse 30% 40% at 70% 15%,rgba(200,220,255,0.08) 0%,transparent 70%),radial-gradient(ellipse 60% 50% at 50% 20%,rgba(100,140,200,0.1) 0%,transparent 70%); }
   .hero h1 { font-size:clamp(2.8rem,8vw,4.2rem); font-weight:800; background:linear-gradient(135deg,#7aa2f7,var(--indigo),var(--purple),#c084fc); background-size:300% 300%; animation:grad 8s ease infinite; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; position:relative; letter-spacing:-1px; }
   @keyframes grad{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-  .hero-tag { font-size:0.82rem; color:rgba(125,211,252,0.5); letter-spacing:5px; text-transform:uppercase; margin-top:6px; font-weight:500; position:relative; }
+  .hero-tag { font-size:0.88rem; color:rgba(125,211,252,0.55); letter-spacing:4px; text-transform:uppercase; margin-top:10px; font-weight:500; position:relative; min-height:1.4em; }
 
 
 
@@ -320,8 +320,45 @@ import Terminal from '../components/Terminal.astro';
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add((time) => { lenis.raf(time * 1000); });
   gsap.ticker.lagSmoothing(0);
+  // Expose for nav helm scroll-to-top
+  (window as any).__lenis = lenis;
 
   const mm = gsap.matchMedia();
+
+  // ═══ ROTATING TAGLINES (ScrambleText) ═══
+  const heroTag = document.getElementById('heroTag');
+  if (heroTag) {
+    const taglines = [
+      'The open sea doesn\'t ask for a subscription',
+      'Every file, a treasure. Every stream, yours',
+      'Your ship. Your treasure. Your rules',
+      'Built for crews who share the spoils',
+      'Sail all day. Stream all night',
+      'Haul\'s in. Barr\'s open',
+      'The bounty plays itself',
+      'Self-served. Self-hosted. Self-poured',
+      'Every crew needs a port',
+    ];
+    let tagIdx = Math.floor(Math.random() * taglines.length);
+    heroTag.textContent = taglines[tagIdx];
+
+    function cycleTagline() {
+      let next = Math.floor(Math.random() * taglines.length);
+      while (next === tagIdx && taglines.length > 1) next = Math.floor(Math.random() * taglines.length);
+      tagIdx = next;
+      gsap.to(heroTag, {
+        scrambleText: {
+          text: taglines[tagIdx],
+          chars: '&#9875;*&#9876;&#9760;+&#8226;~',
+          revealDelay: 0.4,
+          speed: 0.5,
+        },
+        duration: 1.2,
+        ease: 'none',
+      });
+    }
+    setInterval(cycleTagline, 7000);
+  }
 
   mm.add('(prefers-reduced-motion: no-preference)', () => {
 

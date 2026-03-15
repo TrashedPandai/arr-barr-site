@@ -6,7 +6,7 @@ interface Props {
 
 import '../styles/global.css';
 
-const { title = 'arr-barr', description = 'Every crew needs a port' } = Astro.props;
+const { title = 'arr-barr', description = 'Haul\'s in. Barr\'s open.' } = Astro.props;
 const currentPath = Astro.url.pathname;
 ---
 
@@ -25,7 +25,49 @@ const currentPath = Astro.url.pathname;
 
 <nav id="nav">
   <div class="nav-inner">
-    <a href="/" class="nav-brand">arr-barr</a>
+    <button class="nav-brand" id="helmBtn" aria-label="Scroll to top">
+      <svg class="nav-logo" id="helmSvg" viewBox="0 0 40 40" width="30" height="30" aria-hidden="true">
+        <defs>
+          <linearGradient id="navGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#c8a050"/>
+            <stop offset="50%" stop-color="#8b6914"/>
+            <stop offset="100%" stop-color="#a07828"/>
+          </linearGradient>
+          <linearGradient id="hubGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#d4a04a"/>
+            <stop offset="100%" stop-color="#6b4c12"/>
+          </linearGradient>
+        </defs>
+        <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Outer ring — thick worn wood -->
+          <circle cx="20" cy="20" r="16" stroke="#8b6914" stroke-width="2.5"/>
+          <circle cx="20" cy="20" r="16" stroke="url(#navGrad)" stroke-width="1.8" opacity="0.7"/>
+          <!-- Inner hub ring -->
+          <circle cx="20" cy="20" r="5.5" stroke="#8b6914" stroke-width="2"/>
+          <circle cx="20" cy="20" r="5.5" stroke="#c8a050" stroke-width="1" opacity="0.5"/>
+          <!-- Center brass cap -->
+          <circle cx="20" cy="20" r="2.5" fill="url(#hubGrad)" stroke="#6b4c12" stroke-width="0.5"/>
+          <!-- 8 spokes — tapered, wood-grain feel -->
+          <!-- Cardinal spokes (thicker) -->
+          <line x1="20" y1="4" x2="20" y2="14.5" stroke="#8b6914" stroke-width="2.2"/>
+          <line x1="20" y1="25.5" x2="20" y2="36" stroke="#8b6914" stroke-width="2.2"/>
+          <line x1="4" y1="20" x2="14.5" y2="20" stroke="#8b6914" stroke-width="2.2"/>
+          <line x1="25.5" y1="20" x2="36" y2="20" stroke="#8b6914" stroke-width="2.2"/>
+          <!-- Diagonal spokes (thinner) -->
+          <line x1="8.7" y1="8.7" x2="16" y2="16" stroke="#8b6914" stroke-width="1.6"/>
+          <line x1="24" y1="24" x2="31.3" y2="31.3" stroke="#8b6914" stroke-width="1.6"/>
+          <line x1="31.3" y1="8.7" x2="24" y2="16" stroke="#8b6914" stroke-width="1.6"/>
+          <line x1="16" y1="24" x2="8.7" y2="31.3" stroke="#8b6914" stroke-width="1.6"/>
+          <!-- Handle pegs at cardinal ends -->
+          <circle cx="20" cy="3.2" r="2.2" fill="#a07828" stroke="#6b4c12" stroke-width="0.6"/>
+          <circle cx="20" cy="36.8" r="2.2" fill="#a07828" stroke="#6b4c12" stroke-width="0.6"/>
+          <circle cx="3.2" cy="20" r="2.2" fill="#a07828" stroke="#6b4c12" stroke-width="0.6"/>
+          <circle cx="36.8" cy="20" r="2.2" fill="#a07828" stroke="#6b4c12" stroke-width="0.6"/>
+          <!-- Wood grain highlight on outer ring -->
+          <circle cx="20" cy="20" r="16" stroke="rgba(212,180,100,0.15)" stroke-width="0.5" stroke-dasharray="3 8"/>
+        </g>
+      </svg>
+    </button>
     <button class="hamburger" id="hamburger" aria-label="Menu">&#9776;</button>
     <div class="nav-links" id="navLinks">
       <a href="/" class:list={["nav-link", { active: currentPath === "/" }]}>Home</a>
@@ -44,7 +86,7 @@ const currentPath = Astro.url.pathname;
 
 <footer>
   <p>arr-barr &mdash; Pandai Technologies</p>
-  <p class="mt-1" style="font-size:0.72rem;">Open source. Self-hosted. Every crew needs a port.</p>
+  <p class="mt-1" style="font-size:0.72rem;">Open source. Self-hosted. Self-poured.</p>
 </footer>
 
 <style>
@@ -63,12 +105,14 @@ const currentPath = Astro.url.pathname;
     padding: 0 24px; height: 56px;
   }
   .nav-brand {
-    font-weight: 800; font-size: 1.1rem;
-    background: linear-gradient(135deg, var(--indigo), var(--purple));
-    -webkit-background-clip: text; background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-decoration: none; cursor: pointer;
+    background: none; border: none; cursor: pointer;
+    display: flex; align-items: center;
+    padding: 4px;
+    transition: opacity 0.2s;
   }
+  .nav-brand:hover { opacity: 0.9; }
+  .nav-brand:hover .nav-logo { filter: drop-shadow(0 0 6px rgba(212,160,74,0.5)); }
+  .nav-logo { display: block; transition: filter 0.3s; }
   .nav-links { display: flex; gap: 4px; }
   .nav-link {
     padding: 7px 16px; border-radius: 8px;
@@ -101,6 +145,58 @@ const currentPath = Astro.url.pathname;
   window.addEventListener('scroll', () => {
     document.getElementById('nav')?.classList.toggle('scrolled', window.scrollY > 10);
   });
+
+  // Helm — scroll-synced clockwise rotation + click to reel back
+  const helmBtn = document.getElementById('helmBtn');
+  const helmSvg = document.getElementById('helmSvg');
+  if (helmBtn && helmSvg) {
+    let reeling = false;
+    let scrollRotation = 0;
+
+    // Scroll-synced: rotate clockwise as user scrolls down
+    window.addEventListener('scroll', () => {
+      if (reeling) return;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+      // Full page scroll = ~3 full rotations
+      scrollRotation = progress * 1080;
+      helmSvg.style.transform = `rotate(${scrollRotation}deg)`;
+    }, { passive: true });
+
+    // Click: reel back (counter-clockwise spin to top)
+    helmBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (window.scrollY < 10) return;
+      reeling = true;
+
+      const scrollDist = window.scrollY;
+      const duration = Math.min(Math.max(scrollDist / 1500, 0.8), 3);
+      // Spin back past 0 for the reeling effect
+      const targetRotation = -(Math.max(2, Math.ceil(scrollDist / 800)) * 360);
+
+      helmSvg.style.transition = `transform ${duration}s cubic-bezier(0.22,1,0.36,1)`;
+      helmSvg.style.transform = `rotate(${targetRotation}deg)`;
+
+      // Scroll to top via Lenis if available
+      const lenis = (window as any).__lenis;
+      if (lenis) {
+        lenis.scrollTo(0, { duration: duration });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // Reset after reel completes
+      setTimeout(() => {
+        reeling = false;
+        helmSvg.style.transition = 'none';
+        helmSvg.style.transform = 'rotate(0deg)';
+        // Re-enable smooth transition after reset
+        requestAnimationFrame(() => {
+          helmSvg.style.transition = '';
+        });
+      }, duration * 1000 + 200);
+    });
+  }
 
   // Mobile menu
   document.getElementById('hamburger')?.addEventListener('click', () => {
