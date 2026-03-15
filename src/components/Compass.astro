@@ -1,0 +1,566 @@
+<!-- Precision Nautical Compass Rose -->
+<div class="compass-wrap" id="compassWrap">
+  <svg id="compassSvg" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+    <!-- Outer atmospheric glow -->
+    <defs>
+      <radialGradient id="compassGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="rgba(99,102,241,0.06)"/>
+        <stop offset="60%" stop-color="rgba(99,102,241,0.02)"/>
+        <stop offset="100%" stop-color="transparent"/>
+      </radialGradient>
+      <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="rgba(129,140,248,0.15)"/>
+        <stop offset="100%" stop-color="transparent"/>
+      </radialGradient>
+      <filter id="softGlow">
+        <feGaussianBlur stdDeviation="2" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+
+    <circle cx="400" cy="400" r="398" fill="url(#compassGlow)"/>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- OUTER BEZEL — triple ring with degrees -->
+    <!-- ═══════════════════════════════════════ -->
+    <g id="bezelOuter">
+      <circle cx="400" cy="400" r="390" stroke="rgba(99,102,241,0.08)" stroke-width="0.5"/>
+      <circle cx="400" cy="400" r="380" stroke="rgba(99,102,241,0.14)" stroke-width="1.2"/>
+      <circle cx="400" cy="400" r="370" stroke="rgba(99,102,241,0.10)" stroke-width="0.6"/>
+      <circle cx="400" cy="400" r="368" stroke="rgba(99,102,241,0.06)" stroke-width="0.3"/>
+    </g>
+
+    <!-- Degree tick marks — 360 of them -->
+    <g id="degreeTicks">
+      <!-- Every 1° — tiny dots -->
+      {Array.from({length: 360}, (_, i) => {
+        const angle = (i * Math.PI) / 180;
+        const skip = i % 5 === 0;
+        if (skip) return null;
+        const x = 400 + 375 * Math.sin(angle);
+        const y = 400 - 375 * Math.cos(angle);
+        return <circle cx={x} cy={y} r="0.6" fill="rgba(99,102,241,0.08)" class="tick-1"/>;
+      })}
+      <!-- Every 5° — short ticks -->
+      {Array.from({length: 72}, (_, i) => {
+        const deg = i * 5;
+        const skip = deg % 10 === 0;
+        if (skip) return null;
+        const a = (deg * Math.PI) / 180;
+        const x1 = 400 + 370 * Math.sin(a);
+        const y1 = 400 - 370 * Math.cos(a);
+        const x2 = 400 + 378 * Math.sin(a);
+        const y2 = 400 - 378 * Math.cos(a);
+        return <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="rgba(99,102,241,0.10)" stroke-width="0.5" class="tick-5"/>;
+      })}
+      <!-- Every 10° — medium ticks -->
+      {Array.from({length: 36}, (_, i) => {
+        const deg = i * 10;
+        const skip = deg % 30 === 0;
+        if (skip) return null;
+        const a = (deg * Math.PI) / 180;
+        const x1 = 400 + 368 * Math.sin(a);
+        const y1 = 400 - 368 * Math.cos(a);
+        const x2 = 400 + 380 * Math.sin(a);
+        const y2 = 400 - 380 * Math.cos(a);
+        return <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="rgba(99,102,241,0.14)" stroke-width="0.7" class="tick-10"/>;
+      })}
+      <!-- Every 30° — long ticks -->
+      {Array.from({length: 12}, (_, i) => {
+        const deg = i * 30;
+        const skip = deg % 90 === 0;
+        if (skip) return null;
+        const a = (deg * Math.PI) / 180;
+        const x1 = 400 + 365 * Math.sin(a);
+        const y1 = 400 - 365 * Math.cos(a);
+        const x2 = 400 + 382 * Math.sin(a);
+        const y2 = 400 - 382 * Math.cos(a);
+        return <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="rgba(99,102,241,0.18)" stroke-width="1" class="tick-30"/>;
+      })}
+      <!-- Every 90° — cardinal ticks (tallest) -->
+      {[0, 90, 180, 270].map(deg => {
+        const a = (deg * Math.PI) / 180;
+        const x1 = 400 + 362 * Math.sin(a);
+        const y1 = 400 - 362 * Math.cos(a);
+        const x2 = 400 + 385 * Math.sin(a);
+        const y2 = 400 - 385 * Math.cos(a);
+        return <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="rgba(99,102,241,0.25)" stroke-width="1.5" class="tick-90"/>;
+      })}
+    </g>
+
+    <!-- Degree numbers at 30° intervals -->
+    <g id="degreeLabels">
+      {[0,30,60,90,120,150,180,210,240,270,300,330].map(deg => {
+        const a = (deg * Math.PI) / 180;
+        const x = 400 + 355 * Math.sin(a);
+        const y = 400 - 355 * Math.cos(a);
+        return (
+          <text
+            x={x} y={y}
+            text-anchor="middle"
+            dominant-baseline="central"
+            fill="rgba(99,102,241,0.16)"
+            font-size="8"
+            font-family="Inter, sans-serif"
+            font-weight="300"
+            transform={`rotate(${deg}, ${x}, ${y})`}
+          >{deg.toString().padStart(3, '0')}</text>
+        );
+      })}
+    </g>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- INNER BEZEL — second ring system       -->
+    <!-- ═══════════════════════════════════════ -->
+    <g id="bezelInner">
+      <circle cx="400" cy="400" r="340" stroke="rgba(99,102,241,0.10)" stroke-width="0.8"/>
+      <circle cx="400" cy="400" r="335" stroke="rgba(99,102,241,0.06)" stroke-width="0.4"/>
+    </g>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- CROSS LINES — axes through center      -->
+    <!-- ═══════════════════════════════════════ -->
+    <g id="crossLines">
+      <!-- Cardinal axes -->
+      <line x1="400" y1="60" x2="400" y2="740" stroke="rgba(99,102,241,0.06)" stroke-width="0.4" class="axis-line"/>
+      <line x1="60" y1="400" x2="740" y2="400" stroke="rgba(99,102,241,0.06)" stroke-width="0.4" class="axis-line"/>
+      <!-- Intercardinal axes — dashed -->
+      <line x1="160" y1="160" x2="640" y2="640" stroke="rgba(99,102,241,0.04)" stroke-width="0.3" stroke-dasharray="6 10" class="axis-line"/>
+      <line x1="640" y1="160" x2="160" y2="640" stroke="rgba(99,102,241,0.04)" stroke-width="0.3" stroke-dasharray="6 10" class="axis-line"/>
+    </g>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 32-POINT STAR — the compass rose       -->
+    <!-- ═══════════════════════════════════════ -->
+
+    <!-- Tertiary points (every 11.25°) — smallest, most numerous -->
+    <g id="tertiaryPoints">
+      {[11.25, 33.75, 56.25, 78.75, 101.25, 123.75, 146.25, 168.75,
+        191.25, 213.75, 236.25, 258.75, 281.25, 303.75, 326.25, 348.75].map(deg => {
+        const a = (deg * Math.PI) / 180;
+        const cos = Math.cos(a);
+        const sin = Math.sin(a);
+        // Thin needle from r=60 to r=140
+        const ix = 400 + 60 * sin;
+        const iy = 400 - 60 * cos;
+        const ox = 400 + 140 * sin;
+        const oy = 400 - 140 * cos;
+        const lx = 400 + 80 * Math.sin(a - 0.04);
+        const ly = 400 - 80 * Math.cos(a - 0.04);
+        const rx = 400 + 80 * Math.sin(a + 0.04);
+        const ry = 400 - 80 * Math.cos(a + 0.04);
+        return (
+          <polygon
+            points={`${ox},${oy} ${lx},${ly} ${ix},${iy} ${rx},${ry}`}
+            fill="rgba(99,102,241,0.04)"
+            stroke="rgba(99,102,241,0.06)"
+            stroke-width="0.3"
+            class="point-16"
+          />
+        );
+      })}
+    </g>
+
+    <!-- Secondary intercardinal points (NNE, ENE, etc.) — 8 mid-size spires -->
+    <g id="secondaryPoints">
+      {[22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5].map(deg => {
+        const a = (deg * Math.PI) / 180;
+        const sin = Math.sin(a);
+        const cos = Math.cos(a);
+        const tipR = 210;
+        const baseR = 55;
+        const wingR = 120;
+        const wingSpread = 0.06;
+        return (
+          <polygon
+            points={`${400 + tipR * sin},${400 - tipR * cos} ${400 + wingR * Math.sin(a - wingSpread)},${400 - wingR * Math.cos(a - wingSpread)} ${400 + baseR * sin},${400 - baseR * cos} ${400 + wingR * Math.sin(a + wingSpread)},${400 - wingR * Math.cos(a + wingSpread)}`}
+            fill="rgba(99,102,241,0.05)"
+            stroke="rgba(99,102,241,0.09)"
+            stroke-width="0.4"
+            stroke-linejoin="round"
+            class="point-8"
+          />
+        );
+      })}
+    </g>
+
+    <!-- Intercardinal points (NE, SE, SW, NW) — 4 prominent spires -->
+    <g id="intercardinalPoints">
+      {[45, 135, 225, 315].map(deg => {
+        const a = (deg * Math.PI) / 180;
+        const sin = Math.sin(a);
+        const cos = Math.cos(a);
+        const tipR = 280;
+        const baseR = 45;
+        const wingR = 160;
+        const wingSpread = 0.07;
+        return (
+          <g class="point-4">
+            <!-- Dark half -->
+            <polygon
+              points={`${400 + tipR * sin},${400 - tipR * cos} ${400 + wingR * Math.sin(a - wingSpread)},${400 - wingR * Math.cos(a - wingSpread)} ${400 + baseR * sin},${400 - baseR * cos}`}
+              fill="rgba(99,102,241,0.07)"
+              stroke="rgba(99,102,241,0.12)"
+              stroke-width="0.5"
+              stroke-linejoin="round"
+            />
+            <!-- Light half -->
+            <polygon
+              points={`${400 + tipR * sin},${400 - tipR * cos} ${400 + wingR * Math.sin(a + wingSpread)},${400 - wingR * Math.cos(a + wingSpread)} ${400 + baseR * sin},${400 - baseR * cos}`}
+              fill="rgba(99,102,241,0.10)"
+              stroke="rgba(99,102,241,0.12)"
+              stroke-width="0.5"
+              stroke-linejoin="round"
+            />
+          </g>
+        );
+      })}
+    </g>
+
+    <!-- Cardinal points (N, E, S, W) — 4 dominant spires with dual-tone -->
+    <g id="cardinalPoints">
+      {[0, 90, 180, 270].map((deg, i) => {
+        const a = (deg * Math.PI) / 180;
+        const sin = Math.sin(a);
+        const cos = Math.cos(a);
+        const tipR = 330;
+        const baseR = 40;
+        const wingR = 180;
+        const wingSpread = 0.09;
+        const fillDark = "rgba(99,102,241,0.08)";
+        const fillLight = "rgba(99,102,241,0.13)";
+        const strokeColor = "rgba(99,102,241,0.15)";
+        return (
+          <g class="point-cardinal">
+            <!-- Dark half -->
+            <polygon
+              points={`${400 + tipR * sin},${400 - tipR * cos} ${400 + wingR * Math.sin(a - wingSpread)},${400 - wingR * Math.cos(a - wingSpread)} ${400 + baseR * sin},${400 - baseR * cos}`}
+              fill={fillDark}
+              stroke={strokeColor}
+              stroke-width="0.6"
+              stroke-linejoin="round"
+            />
+            <!-- Light half -->
+            <polygon
+              points={`${400 + tipR * sin},${400 - tipR * cos} ${400 + wingR * Math.sin(a + wingSpread)},${400 - wingR * Math.cos(a + wingSpread)} ${400 + baseR * sin},${400 - baseR * cos}`}
+              fill={fillLight}
+              stroke={strokeColor}
+              stroke-width="0.6"
+              stroke-linejoin="round"
+            />
+          </g>
+        );
+      })}
+    </g>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- INNER DETAIL RINGS                     -->
+    <!-- ═══════════════════════════════════════ -->
+    <g id="innerRings">
+      <circle cx="400" cy="400" r="280" stroke="rgba(99,102,241,0.06)" stroke-width="0.4"/>
+      <circle cx="400" cy="400" r="210" stroke="rgba(99,102,241,0.05)" stroke-width="0.3" stroke-dasharray="2 4"/>
+      <circle cx="400" cy="400" r="140" stroke="rgba(99,102,241,0.07)" stroke-width="0.5"/>
+      <circle cx="400" cy="400" r="60" stroke="rgba(99,102,241,0.08)" stroke-width="0.5"/>
+    </g>
+
+    <!-- Small decorative dots on inner ring -->
+    <g id="innerDots">
+      {Array.from({length: 24}, (_, i) => {
+        const deg = i * 15;
+        const a = (deg * Math.PI) / 180;
+        const x = 400 + 280 * Math.sin(a);
+        const y = 400 - 280 * Math.cos(a);
+        const r = deg % 90 === 0 ? 2 : deg % 45 === 0 ? 1.5 : 1;
+        return <circle cx={x} cy={y} r={r} fill="rgba(99,102,241,0.08)" class="inner-dot"/>;
+      })}
+    </g>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- CARDINAL LABELS                        -->
+    <!-- ═══════════════════════════════════════ -->
+    <g id="cardinalLabels">
+      <!-- N — top -->
+      <text x="400" y="32" text-anchor="middle" dominant-baseline="central"
+        fill="rgba(129,140,248,0.30)" font-size="36" font-family="'Cinzel Decorative', 'Playfair Display SC', Georgia, serif"
+        font-weight="700" letter-spacing="3" filter="url(#softGlow)" class="label-cardinal">N</text>
+      <!-- S — bottom -->
+      <text x="400" y="768" text-anchor="middle" dominant-baseline="central"
+        fill="rgba(129,140,248,0.30)" font-size="36" font-family="'Cinzel Decorative', 'Playfair Display SC', Georgia, serif"
+        font-weight="700" letter-spacing="3" filter="url(#softGlow)" class="label-cardinal">S</text>
+      <!-- E — right, using Cinzel (non-decorative) for cleaner E glyph -->
+      <text x="768" y="400" text-anchor="middle" dominant-baseline="central"
+        fill="rgba(129,140,248,0.30)" font-size="36" font-family="'Cinzel', 'Playfair Display SC', Georgia, serif"
+        font-weight="700" letter-spacing="3" filter="url(#softGlow)" class="label-cardinal">E</text>
+      <!-- W — left -->
+      <text x="32" y="400" text-anchor="middle" dominant-baseline="central"
+        fill="rgba(129,140,248,0.30)" font-size="36" font-family="'Cinzel Decorative', 'Playfair Display SC', Georgia, serif"
+        font-weight="700" letter-spacing="3" filter="url(#softGlow)" class="label-cardinal">W</text>
+    </g>
+
+    <!-- Intercardinal labels -->
+    <g id="intercardinalLabels">
+      {[
+        [45, "NE"], [135, "SE"], [225, "SW"], [315, "NW"]
+      ].map(([deg, label]) => {
+        const a = ((deg as number) * Math.PI) / 180;
+        const x = 400 + 310 * Math.sin(a);
+        const y = 400 - 310 * Math.cos(a);
+        return (
+          <text x={x} y={y} text-anchor="middle" dominant-baseline="central"
+            fill="rgba(99,102,241,0.12)" font-size="11" font-family="Georgia, 'Times New Roman', serif"
+            font-weight="400" transform={`rotate(${deg}, ${x}, ${y})`}
+            class="label-intercardinal">{label}</text>
+        );
+      })}
+    </g>
+
+    <!-- Secondary intercardinal labels -->
+    <g id="secondaryLabels">
+      {[
+        [22.5, "NNE"], [67.5, "ENE"], [112.5, "ESE"], [157.5, "SSE"],
+        [202.5, "SSW"], [247.5, "WSW"], [292.5, "WNW"], [337.5, "NNW"]
+      ].map(([deg, label]) => {
+        const a = ((deg as number) * Math.PI) / 180;
+        const x = 400 + 300 * Math.sin(a);
+        const y = 400 - 300 * Math.cos(a);
+        return (
+          <text x={x} y={y} text-anchor="middle" dominant-baseline="central"
+            fill="rgba(99,102,241,0.07)" font-size="6.5" font-family="Inter, sans-serif"
+            font-weight="300" letter-spacing="0.5"
+            transform={`rotate(${deg}, ${x}, ${y})`}
+            class="label-secondary">{label}</text>
+        );
+      })}
+    </g>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- CENTER HUB                             -->
+    <!-- ═══════════════════════════════════════ -->
+    <g id="centerHub">
+      <circle cx="400" cy="400" r="30" fill="url(#centerGlow)" opacity="0.5"/>
+      <circle cx="400" cy="400" r="18" stroke="rgba(99,102,241,0.12)" stroke-width="0.6" fill="none"/>
+      <circle cx="400" cy="400" r="12" stroke="rgba(99,102,241,0.16)" stroke-width="0.8" fill="rgba(99,102,241,0.03)"/>
+      <circle cx="400" cy="400" r="5" fill="rgba(129,140,248,0.20)" stroke="rgba(129,140,248,0.28)" stroke-width="0.6"/>
+      <circle cx="400" cy="400" r="1.5" fill="rgba(129,140,248,0.35)"/>
+    </g>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- DECORATIVE ARC SEGMENTS                -->
+    <!-- ═══════════════════════════════════════ -->
+    <g id="arcSegments">
+      <!-- Thin arcs between bezel rings — partial coverage for visual interest -->
+      <path d="M 400 15 A 385 385 0 0 1 560 30"
+        stroke="rgba(99,102,241,0.05)" stroke-width="0.4" fill="none" class="arc-deco"/>
+      <path d="M 240 30 A 385 385 0 0 1 400 15"
+        stroke="rgba(99,102,241,0.05)" stroke-width="0.4" fill="none" class="arc-deco"/>
+      <path d="M 785 400 A 385 385 0 0 1 770 560"
+        stroke="rgba(99,102,241,0.04)" stroke-width="0.4" fill="none" class="arc-deco"/>
+      <path d="M 770 240 A 385 385 0 0 1 785 400"
+        stroke="rgba(99,102,241,0.04)" stroke-width="0.4" fill="none" class="arc-deco"/>
+    </g>
+
+  </svg>
+</div>
+
+<style>
+  .compass-wrap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(92vw, 720px);
+    height: min(92vw, 720px);
+    transform: translate(-50%, -52%);
+    pointer-events: none;
+    animation: compassSpin 180s linear infinite;
+    opacity: 0;
+  }
+  .compass-wrap svg {
+    width: 100%;
+    height: 100%;
+  }
+  @keyframes compassSpin {
+    to { transform: translate(-50%, -52%) rotate(360deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .compass-wrap { animation: none; }
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+
+  const wrap = document.getElementById('compassWrap');
+  if (!wrap) throw new Error('Compass wrapper not found');
+
+  const mm = gsap.matchMedia();
+
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    const tl = gsap.timeline({ delay: 0.3 });
+
+    // 1. Fade in the whole compass
+    tl.to(wrap, { opacity: 1, duration: 1.2, ease: 'power2.out' });
+
+    // 2. Bezel rings scale in from center
+    // svgOrigin uses absolute SVG viewBox coordinates (no getBBox() offset added),
+    // which is correct for elements whose geometry is centred on 400,400.
+    tl.from('#bezelOuter circle, #bezelInner circle', {
+      scale: 0,
+      svgOrigin: '400 400',
+      duration: 1.4,
+      ease: 'power3.out',
+      stagger: 0.08,
+    }, '-=0.8');
+
+    // 3. Inner rings
+    tl.from('#innerRings circle', {
+      scale: 0,
+      svgOrigin: '400 400',
+      duration: 1,
+      ease: 'power2.out',
+      stagger: 0.1,
+    }, '-=1.0');
+
+    // 4. Cross lines extend from center
+    tl.from('.axis-line', {
+      scaleX: 0,
+      scaleY: 0,
+      svgOrigin: '400 400',
+      duration: 0.8,
+      ease: 'power2.out',
+      stagger: 0.05,
+    }, '-=0.7');
+
+    // 5–8. Compass rose bloom — all points grow outward from center in
+    // coordinated waves. Cardinal points lead, then each tier follows,
+    // creating a starburst that radiates outward.
+
+    // 5. Cardinal points — the anchors arrive first, slow and authoritative
+    tl.from('.point-cardinal', {
+      scale: 0,
+      opacity: 0,
+      svgOrigin: '400 400',
+      duration: 1.8,
+      ease: 'power4.out',
+      stagger: { each: 0.15, from: 'edges' },
+    }, '-=0.3');
+
+    // 6. Intercardinal points bloom between the cardinals
+    tl.from('.point-4', {
+      scale: 0,
+      opacity: 0,
+      svgOrigin: '400 400',
+      duration: 1.2,
+      ease: 'power3.out',
+      stagger: { each: 0.08, from: 'center' },
+    }, '-=1.2');
+
+    // 7. Secondary points fill the gaps
+    tl.from('.point-8', {
+      scale: 0,
+      opacity: 0,
+      svgOrigin: '400 400',
+      duration: 0.9,
+      ease: 'power2.out',
+      stagger: { each: 0.04, from: 'center' },
+    }, '-=0.8');
+
+    // 8. Tertiary points — final shimmer completing the full 32-point star
+    tl.from('.point-16', {
+      scale: 0,
+      opacity: 0,
+      svgOrigin: '400 400',
+      duration: 0.7,
+      ease: 'power2.out',
+      stagger: { each: 0.02, from: 'random' },
+    }, '-=0.5');
+
+    // 9. Degree ticks scatter in
+    tl.from('.tick-90', {
+      opacity: 0,
+      scale: 0,
+      svgOrigin: '400 400',
+      duration: 0.5,
+      stagger: 0.04,
+    }, '-=0.6');
+
+    tl.from('.tick-30', {
+      opacity: 0,
+      duration: 0.4,
+      stagger: 0.03,
+    }, '-=0.3');
+
+    tl.from('.tick-10, .tick-5', {
+      opacity: 0,
+      duration: 0.3,
+      stagger: { each: 0.01, from: 'random' },
+    }, '-=0.2');
+
+    // 10. Inner dots — each dot scales from its own centre.
+    // 'center' resolves correctly on <circle> elements because getBBox() for a
+    // circle is a tight 1:1 box and adding bounds.x/y to "50% 50%" lands on the
+    // circle's own cx/cy. Using svgOrigin per-element is cleaner and explicit.
+    tl.from('.inner-dot', {
+      scale: 0,
+      opacity: 0,
+      svgOrigin: '400 400',
+      duration: 0.4,
+      ease: 'power2.out',
+      stagger: { each: 0.02, from: 'random' },
+    }, '-=0.3');
+
+    // 11. Cardinal labels fade in — <text> elements at the compass edges.
+    // Scale from each label's own visual centre using "50% 50%" percentage form.
+    // For <text> getBBox() returns the tight text bounding box, so 50%/50% is correct.
+    tl.from('.label-cardinal', {
+      opacity: 0,
+      scale: 0.5,
+      transformOrigin: '50% 50%',
+      duration: 0.8,
+      ease: 'power3.out',
+      stagger: 0.06,
+    }, '-=0.3');
+
+    // 12. Intercardinal + secondary labels
+    tl.from('.label-intercardinal', {
+      opacity: 0,
+      duration: 0.5,
+      stagger: 0.04,
+    }, '-=0.4');
+
+    tl.from('.label-secondary', {
+      opacity: 0,
+      duration: 0.4,
+      stagger: { each: 0.02, from: 'random' },
+    }, '-=0.3');
+
+    // 13. Degree numbers
+    tl.from('#degreeLabels text', {
+      opacity: 0,
+      duration: 0.4,
+      stagger: 0.03,
+    }, '-=0.3');
+
+    // 14. Center hub circles all share cx/cy = 400,400.
+    tl.from('#centerHub circle', {
+      scale: 0,
+      opacity: 0,
+      svgOrigin: '400 400',
+      duration: 0.6,
+      ease: 'power2.out',
+      stagger: 0.06,
+    }, '-=0.5');
+
+    // 16. Decorative arcs
+    tl.from('.arc-deco', {
+      opacity: 0,
+      duration: 0.5,
+      stagger: 0.05,
+    }, '-=0.3');
+  });
+
+  // Reduced motion — just show it
+  mm.add('(prefers-reduced-motion: reduce)', () => {
+    gsap.set(wrap, { opacity: 1 });
+  });
+</script>

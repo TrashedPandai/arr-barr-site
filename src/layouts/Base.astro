@@ -1,0 +1,109 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+import '../styles/global.css';
+
+const { title = 'arr-barr', description = 'Every crew needs a port' } = Astro.props;
+const currentPath = Astro.url.pathname;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content={description}>
+  <title>{title}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Cinzel+Decorative:wght@400;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">arr-barr</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu">&#9776;</button>
+    <div class="nav-links" id="navLinks">
+      <a href="/" class:list={["nav-link", { active: currentPath === "/" }]}>Home</a>
+      <a href="/guide" class:list={["nav-link", { active: currentPath === "/guide" || currentPath === "/guide/" }]}>Read the Guide</a>
+      <a href="/architecture" class:list={["nav-link", { active: currentPath === "/architecture" || currentPath === "/architecture/" }]}>Below Deck</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <slot />
+</main>
+
+<footer>
+  <p>arr-barr &mdash; Pandai Technologies</p>
+  <p class="mt-1" style="font-size:0.72rem;">Open source. Self-hosted. Every crew needs a port.</p>
+</footer>
+
+<style>
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(10, 14, 26, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(30,41,59,0.6);
+    transition: box-shadow 0.3s;
+  }
+  nav.scrolled { box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
+
+  .nav-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; height: 56px;
+  }
+  .nav-brand {
+    font-weight: 800; font-size: 1.1rem;
+    background: linear-gradient(135deg, var(--indigo), var(--purple));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-decoration: none; cursor: pointer;
+  }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-link {
+    padding: 7px 16px; border-radius: 8px;
+    color: var(--text-dim); font-size: 0.88rem; font-weight: 500;
+    text-decoration: none; transition: all 0.2s;
+  }
+  .nav-link:hover { color: var(--text); background: var(--surface); }
+  .nav-link.active { color: var(--indigo); background: rgba(99,102,241,0.1); }
+  .hamburger {
+    display: none; background: none; border: none;
+    color: var(--text); font-size: 1.4rem; cursor: pointer; padding: 6px;
+  }
+
+  main { padding-top: 56px; min-height: 100vh; }
+
+  @media (max-width: 640px) {
+    .nav-links {
+      display: none; flex-direction: column;
+      position: absolute; top: 56px; left: 0; right: 0;
+      background: #080c16; border-bottom: 1px solid var(--border);
+      padding: 8px;
+    }
+    .nav-links.open { display: flex; }
+    .hamburger { display: block; }
+  }
+</style>
+
+<script>
+  // Nav scroll effect
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav')?.classList.toggle('scrolled', window.scrollY > 10);
+  });
+
+  // Mobile menu
+  document.getElementById('hamburger')?.addEventListener('click', () => {
+    document.getElementById('navLinks')?.classList.toggle('open');
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,232 @@
+---
+import Base from '../layouts/Base.astro';
+import Compass from '../components/Compass.astro';
+import Terminal from '../components/Terminal.astro';
+---
+
+<Base title="arr-barr — Every Crew Needs a Port">
+
+<section class="hero">
+  <div class="hero-glow"></div>
+  <Compass />
+
+  <div class="hero-side left">
+    <svg viewBox="0 0 20 300" preserveAspectRatio="none" fill="none">
+      <line x1="10" y1="0" x2="10" y2="300" stroke="rgba(99,102,241,0.16)" stroke-width="0.5"/>
+      <circle cx="10" cy="30" r="2" fill="rgba(99,102,241,0.11)"/>
+      <circle cx="10" cy="150" r="2.5" stroke="rgba(99,102,241,0.11)" stroke-width="0.5"/>
+      <circle cx="10" cy="150" r="1" fill="rgba(99,102,241,0.13)"/>
+      <circle cx="10" cy="270" r="2" fill="rgba(99,102,241,0.11)"/>
+      <rect x="8" y="110" width="4" height="4" transform="rotate(45 10 112)" fill="rgba(99,102,241,0.16)"/>
+      <rect x="8" y="190" width="4" height="4" transform="rotate(45 10 192)" fill="rgba(99,102,241,0.16)"/>
+    </svg>
+  </div>
+  <div class="hero-side right">
+    <svg viewBox="0 0 20 300" preserveAspectRatio="none" fill="none">
+      <line x1="10" y1="0" x2="10" y2="300" stroke="rgba(99,102,241,0.16)" stroke-width="0.5"/>
+      <circle cx="10" cy="30" r="2" fill="rgba(99,102,241,0.11)"/>
+      <circle cx="10" cy="150" r="2.5" stroke="rgba(99,102,241,0.11)" stroke-width="0.5"/>
+      <circle cx="10" cy="150" r="1" fill="rgba(99,102,241,0.13)"/>
+      <circle cx="10" cy="270" r="2" fill="rgba(99,102,241,0.11)"/>
+      <rect x="8" y="110" width="4" height="4" transform="rotate(45 10 112)" fill="rgba(99,102,241,0.16)"/>
+      <rect x="8" y="190" width="4" height="4" transform="rotate(45 10 192)" fill="rgba(99,102,241,0.16)"/>
+    </svg>
+  </div>
+
+  <h1>arr-barr</h1>
+  <div class="hero-tag">Every crew needs a port</div>
+  <Terminal />
+  <div class="hero-cta">
+    <a href="/guide" class="btn btn-primary">Read the Guide</a>
+    <a href="/architecture" class="btn btn-ghost">Explore the Stack</a>
+  </div>
+  <div class="hero-wave"><svg viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,30 C150,50 350,10 600,30 C850,50 1050,10 1200,30 L1200,60 L0,60 Z" fill="#0a0e1a" opacity="0.7"/><path d="M0,35 C200,55 400,15 600,35 C800,55 1000,15 1200,35 L1200,60 L0,60 Z" fill="#0a0e1a"/></svg></div>
+</section>
+
+<!-- FLOW -->
+<div class="section-header">
+  <h2 class="section-title">How the Barr Runs</h2>
+  <p class="section-desc">Every member of the crew has a role. Together, they form an automated pipeline &mdash; zero manual work.</p>
+</div>
+
+<div class="flow-container">
+  <div class="flow-diagram">
+    <div class="layer layer-request fl"><div class="layer-title">The Notice Board</div><div class="layer-subtitle">Post what you're looking for</div><div class="request-app"><span class="ri">&#x1F3AC;</span><div><div class="rn">Jellyseerr</div><div class="rd">Browse &bull; Request &bull; Track</div></div></div></div>
+    <div class="fa"><div class="fl-line"></div><div class="fl-label">Sends the order to the right crew member</div><div class="fl-line"></div><div class="fl-tri"></div></div>
+    <div class="layer layer-brains fl"><div class="layer-title">The Crew</div><div class="layer-subtitle">Each runs one part of the operation</div><div class="app-grid"><div class="ac"><div class="ai"><img src="https://raw.githubusercontent.com/Radarr/Radarr/develop/Logo/128.png" alt="Radarr" loading="lazy"></div><div class="an">Radarr</div><div class="ar">Movies</div></div><div class="ac"><div class="ai"><img src="https://raw.githubusercontent.com/Sonarr/Sonarr/develop/Logo/128.png" alt="Sonarr" loading="lazy"></div><div class="an">Sonarr</div><div class="ar">TV Shows</div></div><div class="ac"><div class="ai"><img src="https://raw.githubusercontent.com/Lidarr/Lidarr/develop/Logo/128.png" alt="Lidarr" loading="lazy"></div><div class="an">Lidarr</div><div class="ar">Music</div></div><div class="ac"><div class="ai"><img src="https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/lazylibrarian-icon.png" alt="LazyLib" loading="lazy"></div><div class="an">LazyLibrarian</div><div class="ar">Books</div></div><div class="ac"><div class="ai"><img src="https://raw.githubusercontent.com/morpheus65535/bazarr/master/frontend/public/images/logo64.png" alt="Bazarr" loading="lazy"></div><div class="an">Bazarr</div><div class="ar">Subtitles</div></div><div class="ac"><div class="ai"><img src="https://raw.githubusercontent.com/Doezer/QuestArr/main/public/logo192.png" alt="QuestArr" loading="lazy"></div><div class="an">QuestArr</div><div class="ar">Games</div></div></div></div>
+    <div class="fa"><div class="fl-line"></div><div class="fl-label">"Search every port for this"</div><div class="fl-line"></div><div class="fl-tri"></div></div>
+    <div class="layer layer-search fl"><div class="layer-title">The Scouts</div><div class="layer-subtitle">12 sources searched in parallel</div><div class="search-row"><div class="si"><span>&#x1F50D;</span><div class="sn">Prowlarr</div></div><div class="sp">+</div><div class="si"><span>&#x1F6E1;&#xFE0F;</span><div class="sn">FlareSolverr</div></div></div></div>
+    <div class="fa"><div class="fl-line"></div><div class="fl-label">Best cargo located &mdash; bring it in</div><div class="fl-line"></div><div class="fl-tri"></div></div>
+    <div class="layer layer-vpn fl"><div class="vpn-badge"><div class="vdot"></div>Tunnel Active &mdash; Encrypted</div><div class="layer-title">&#x1F512; The Smuggler's Tunnel</div><div class="layer-subtitle">All downloads through WireGuard VPN. Kill switch active.</div><div class="vpn-row"><div class="vc"><span>&#x26A1;</span><strong>SABnzbd</strong> Usenet</div><div class="vc"><span>&#x1F300;</span><strong>Transmission</strong> Torrents</div></div><div class="shield-row"><span class="st">&#x1F512; WireGuard</span><span class="st">&#x1F6AB; Kill Switch</span><span class="st">&#x1F6E1;&#xFE0F; IP Hidden</span><span class="st">&#x1F517; Hardlinks</span></div></div>
+    <div class="fa"><div class="fl-line"></div><div class="fl-label">Cargo sorted &amp; stowed</div><div class="fl-line"></div><div class="fl-tri"></div></div>
+    <div class="layer layer-storage fl"><div class="layer-title">The Vault</div><div class="layer-subtitle">Sorted with proper names, artwork, metadata</div><div class="vault-row"><span>&#x1F3AC; Movies</span><span>&#x1F4FA; TV</span><span>&#x1F3B5; Music</span><span>&#x1F4D6; Books</span><span>&#x1F3A7; Audio</span><span>&#x1F3AE; Games</span></div></div>
+    <div class="fa"><div class="fl-line"></div><div class="fl-label">Served up to the taproom</div><div class="fl-line"></div><div class="fl-tri"></div></div>
+    <div class="layer layer-players fl"><div class="layer-title">The Taproom</div><div class="layer-subtitle">Pull up a chair. Your server, no subscriptions.</div><div class="tap-row"><span>&#x1F4FA; Jellyfin</span><span>&#x1F4D6; Kavita</span><span>&#x1F3A7; Audiobookshelf</span><span>&#x1F3AE; GameVault</span></div></div>
+  </div>
+</div>
+
+<!-- Security -->
+<div class="sec-wrap">
+  <div class="sec-card">
+    <h2>&#x1F512; Covering Your Tracks</h2>
+    <div class="sec-grid">
+      <div class="sec-i"><span>&#x2705;</span><div><strong>VPN Kill Switch</strong><p>VPN drops, all traffic blocked instantly.</p></div></div>
+      <div class="sec-i"><span>&#x2705;</span><div><strong>WireGuard Encryption</strong><p>Your ISP sees encrypted data. Nothing more.</p></div></div>
+      <div class="sec-i"><span>&#x2705;</span><div><strong>Network Isolation</strong><p>Only downloads use VPN. Streaming stays fast.</p></div></div>
+      <div class="sec-i"><span>&#x2705;</span><div><strong>Zero-Waste Hardlinks</strong><p>50 GB file uses 50 GB, not 100 GB.</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-wrap">
+  <div class="cta-card">
+    <h2>&#x1F680; Ready to Join the Crew?</h2>
+    <p>Everything you need is in the repo.</p>
+    <a href="/guide" class="btn btn-primary">Read the Guide</a>
+  </div>
+</div>
+
+</Base>
+
+<style>
+  .hero { text-align:center; padding:100px 20px 80px; background:linear-gradient(180deg,#060d1f 0%,#0a1228 40%,var(--bg) 100%); position:relative; overflow:hidden; }
+  .hero-glow { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse 70% 50% at 50% 10%,rgba(56,100,180,0.14) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 25% 70%,rgba(99,102,241,0.06) 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 75% 70%,rgba(45,212,191,0.05) 0%,transparent 60%); }
+  .hero h1 { font-size:clamp(2.8rem,8vw,4.2rem); font-weight:800; background:linear-gradient(135deg,#7aa2f7,var(--indigo),var(--purple),#c084fc); background-size:300% 300%; animation:grad 8s ease infinite; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; position:relative; letter-spacing:-1px; }
+  @keyframes grad{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  .hero-tag { font-size:0.82rem; color:rgba(125,211,252,0.5); letter-spacing:5px; text-transform:uppercase; margin-top:6px; font-weight:500; position:relative; }
+  .hero-cta { display:flex; gap:12px; justify-content:center; margin-top:32px; flex-wrap:wrap; position:relative; }
+  .hero-wave { position:absolute; bottom:-2px; left:0; width:100%; height:60px; overflow:hidden; }
+  .hero-wave svg { position:absolute; bottom:0; width:200%; height:100%; animation:waveDrift 10s linear infinite; }
+  @keyframes waveDrift{to{transform:translateX(-50%)}}
+  .hero-side { position:absolute; top:15%; bottom:15%; width:30px; pointer-events:none; }
+  .hero-side.left { left:24px; } .hero-side.right { right:24px; }
+  .hero-side svg { width:100%; height:100%; }
+  @media(max-width:768px){ .hero-side{display:none} .hero{padding:70px 16px 60px} }
+  @media(max-width:480px){ .hero h1{font-size:2rem} .hero{padding:60px 14px 50px} }
+
+  /* Flow */
+  .flow-container { max-width:960px; margin:0 auto; padding:20px 24px 60px; }
+  .flow-diagram { display:flex; flex-direction:column; align-items:center; }
+  .fa { display:flex; flex-direction:column; align-items:center; padding:5px 0; }
+  .fl-line { width:3px; height:24px; background:linear-gradient(180deg,#475569,#334155); }
+  .fl-label { font-size:0.68rem; color:#e2e8f0; font-weight:500; letter-spacing:0.04em; text-transform:uppercase; padding:3px 12px; background:#334155; border-radius:12px; border:1px solid #475569; text-align:center; }
+  .fl-tri { width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-top:8px solid #475569; }
+  .fl { opacity:0; transform:translateY(30px); }
+
+  /* Layers */
+  .layer { width:100%; max-width:840px; border-radius:14px; padding:22px; position:relative; overflow:hidden; }
+  .layer::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+  .layer-title { font-size:0.75rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:2px; }
+  .layer-subtitle { font-size:0.82rem; color:var(--text-dim); margin-bottom:14px; }
+
+  .layer-request { background:linear-gradient(135deg,#1a1a2e,var(--surface2)); border:1px solid rgba(124,58,237,0.25); text-align:center; max-width:440px; }
+  .layer-request::before { background:linear-gradient(90deg,#a78bfa,#7c3aed); }
+  .layer-request .layer-title { color:#c4b5fd; }
+  .request-app { display:inline-flex; align-items:center; gap:10px; background:rgba(124,58,237,0.1); border:1px solid rgba(124,58,237,0.22); padding:10px 20px; border-radius:10px; }
+  .ri { font-size:1.3rem; } .rn { font-weight:600; color:#c4b5fd; font-size:0.95rem; } .rd { font-size:0.72rem; color:var(--text-dim); }
+
+  .layer-brains { background:linear-gradient(135deg,#0f172a,var(--surface2)); border:1px solid rgba(14,165,233,0.2); }
+  .layer-brains::before { background:linear-gradient(90deg,#22d3ee,#0ea5e9); }
+  .layer-brains .layer-title { color:#67e8f9; }
+  .app-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; }
+  .ac { background:rgba(14,165,233,0.05); border:1px solid rgba(14,165,233,0.12); border-radius:10px; padding:10px 6px; text-align:center; transition:all 0.3s; }
+  .ac:hover { background:rgba(14,165,233,0.1); transform:translateY(-2px); }
+  .ai { margin-bottom:4px; } .ai img { width:26px; height:26px; border-radius:5px; }
+  .an { font-weight:600; font-size:0.75rem; color:#e0f2fe; } .ar { font-size:0.62rem; color:#7dd3fc; }
+
+  .layer-search { background:linear-gradient(135deg,#1a1a2e,var(--surface2)); border:1px solid rgba(245,158,11,0.2); text-align:center; max-width:480px; }
+  .layer-search::before { background:linear-gradient(90deg,#fbbf24,#f59e0b); }
+  .layer-search .layer-title { color:#fcd34d; }
+  .search-row { display:flex; justify-content:center; align-items:center; gap:14px; }
+  .si { background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.18); border-radius:10px; padding:10px 16px; text-align:center; }
+  .si span { font-size:1.2rem; } .sn { font-weight:600; font-size:0.82rem; color:#fde68a; }
+  .sp { font-size:1.2rem; color:#475569; }
+
+  .layer-vpn { background:linear-gradient(135deg,#042f1c,#0a1f1a 50%,#0f172a); border:2px solid var(--emerald); box-shadow:0 0 30px rgba(16,185,129,0.06); text-align:center; }
+  .layer-vpn::before { background:linear-gradient(90deg,#34d399,#10b981,#059669); height:4px; }
+  .layer-vpn .layer-title { color:#6ee7b7; }
+  .vpn-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.25); padding:4px 12px; border-radius:20px; font-size:0.72rem; font-weight:600; color:#6ee7b7; margin-bottom:10px; }
+  .vdot { width:7px; height:7px; background:var(--emerald); border-radius:50%; animation:pulse 2s infinite; }
+  @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(16,185,129,0.4)}50%{opacity:0.8;box-shadow:0 0 0 6px rgba(16,185,129,0)}}
+  .vpn-row { display:flex; justify-content:center; gap:12px; margin:8px 0; flex-wrap:wrap; }
+  .vc { background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.15); border-radius:10px; padding:10px 16px; font-size:0.82rem; color:#a7f3d0; display:flex; align-items:center; gap:8px; }
+  .vc span { font-size:1.1rem; } .vc strong { color:#6ee7b7; }
+  .shield-row { display:flex; justify-content:center; gap:6px; margin-top:10px; flex-wrap:wrap; }
+  .st { font-size:0.65rem; font-weight:500; color:#6ee7b7; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.18); padding:2px 8px; border-radius:6px; }
+
+  .layer-storage { background:linear-gradient(135deg,#1e1b2e,var(--surface2)); border:1px solid rgba(244,114,182,0.2); text-align:center; }
+  .layer-storage::before { background:linear-gradient(90deg,#fb7185,#f472b6); }
+  .layer-storage .layer-title { color:#fda4af; }
+  .vault-row { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  .vault-row span { background:rgba(244,114,182,0.06); border:1px solid rgba(244,114,182,0.15); padding:6px 12px; border-radius:8px; font-size:0.78rem; color:#fecdd3; }
+
+  .layer-players { background:linear-gradient(135deg,#1e1b4b,var(--surface2)); border:1px solid rgba(129,140,248,0.2); text-align:center; }
+  .layer-players::before { background:linear-gradient(90deg,#a78bfa,var(--indigo)); }
+  .layer-players .layer-title { color:#c4b5fd; }
+  .tap-row { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  .tap-row span { background:rgba(129,140,248,0.06); border:1px solid rgba(129,140,248,0.15); padding:6px 12px; border-radius:8px; font-size:0.78rem; color:#e0e7ff; }
+
+  /* Security */
+  .sec-wrap { max-width:860px; margin:0 auto; padding:40px 24px; }
+  .sec-card { background:linear-gradient(135deg,#042f1c,#0a1f1a); border:1px solid rgba(16,185,129,0.25); border-radius:18px; padding:30px; position:relative; overflow:hidden; }
+  .sec-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#10b981,#34d399,#6ee7b7); }
+  .sec-card h2 { font-size:1.3rem; color:#6ee7b7; margin-bottom:16px; }
+  .sec-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .sec-i { display:flex; gap:8px; align-items:flex-start; }
+  .sec-i span { font-size:1rem; flex-shrink:0; }
+  .sec-i strong { font-size:0.85rem; color:#a7f3d0; display:block; }
+  .sec-i p { font-size:0.75rem; color:var(--text-muted); margin-top:2px; line-height:1.4; }
+
+  /* CTA */
+  .cta-wrap { max-width:700px; margin:0 auto; padding:20px 24px 50px; }
+  .cta-card { background:linear-gradient(135deg,#1a1033,var(--surface2)); border:1px solid rgba(99,102,241,0.3); border-radius:18px; padding:36px; text-align:center; position:relative; overflow:hidden; }
+  .cta-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--indigo),var(--purple),var(--pink)); }
+  .cta-card h2 { font-size:1.4rem; color:#c4b5fd; margin-bottom:6px; }
+  .cta-card p { color:var(--text-dim); font-size:0.9rem; margin-bottom:20px; }
+
+  @media(max-width:768px){
+    .layer{padding:12px 10px;border-radius:10px;text-align:center}
+    .layer-title{font-size:0.65rem} .layer-subtitle{font-size:0.72rem;margin-bottom:8px}
+    .fa{padding:2px 0} .fl-line{height:12px} .fl-label{font-size:0.58rem;padding:2px 7px} .fl-tri{border-left-width:5px;border-right-width:5px;border-top-width:6px}
+    .flow-container{padding:8px 12px 30px}
+    .app-grid{grid-template-columns:repeat(3,1fr);gap:4px}
+    .ac{padding:6px 4px} .ai img{width:20px;height:20px} .an{font-size:0.68rem} .ar{font-size:0.56rem}
+    .search-row{gap:8px} .si{padding:7px 10px}
+    .vpn-badge{font-size:0.62rem;padding:3px 8px} .vpn-row{gap:6px} .vc{padding:7px 10px;font-size:0.75rem}
+    .shield-row{gap:3px} .st{font-size:0.58rem;padding:2px 5px}
+    .vault-row span,.tap-row span{padding:4px 8px;font-size:0.7rem}
+    .sec-grid{grid-template-columns:1fr} .sec-card{padding:20px 14px}
+    .cta-card{padding:24px 16px} .cta-card h2{font-size:1.2rem}
+  }
+  @media(max-width:480px){
+    .search-row{flex-direction:column;gap:4px} .sp{transform:rotate(90deg);font-size:0.8rem}
+    .vpn-row{flex-direction:column} .layer{padding:10px 8px}
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.utils.toArray<HTMLElement>('.fl').forEach(el => {
+    gsap.to(el, { opacity:1, y:0, duration:0.8, ease:'power3.out',
+      scrollTrigger: { trigger:el, start:'top 85%' }
+    });
+  });
+
+  gsap.utils.toArray<HTMLElement>('.fa').forEach(el => {
+    gsap.from(el, { opacity:0, scaleY:0, duration:0.4, ease:'power2.out',
+      scrollTrigger: { trigger:el, start:'top 90%' }
+    });
+  });
+
+  gsap.from('.sec-card', { opacity:0, y:30, duration:0.7, ease:'power3.out',
+    scrollTrigger: { trigger:'.sec-card', start:'top 82%' }
+  });
+
+  gsap.from('.cta-card', { opacity:0, y:30, duration:0.7, ease:'power3.out',
+    scrollTrigger: { trigger:'.cta-card', start:'top 85%' }
+  });
+</script>
