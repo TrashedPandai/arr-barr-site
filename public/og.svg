@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0e1a"/>
+      <stop offset="100%" stop-color="#131a2e"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d4a04a"/>
+      <stop offset="100%" stop-color="#8b6914"/>
+    </linearGradient>
+    <linearGradient id="goldText" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#d4a04a"/>
+      <stop offset="50%" stop-color="#f0d090"/>
+      <stop offset="100%" stop-color="#b8860b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Subtle grid pattern -->
+  <g opacity="0.03" stroke="#ffffff" stroke-width="0.5">
+    <line x1="0" y1="100" x2="1200" y2="100"/>
+    <line x1="0" y1="200" x2="1200" y2="200"/>
+    <line x1="0" y1="300" x2="1200" y2="300"/>
+    <line x1="0" y1="400" x2="1200" y2="400"/>
+    <line x1="0" y1="500" x2="1200" y2="500"/>
+    <line x1="300" y1="0" x2="300" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="900" y1="0" x2="900" y2="630"/>
+  </g>
+
+  <!-- Helm wheel -->
+  <g transform="translate(600, 250)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="0" cy="0" r="80" stroke="#8b6914" stroke-width="5" opacity="0.3"/>
+    <circle cx="0" cy="0" r="80" stroke="url(#gold)" stroke-width="3" opacity="0.5"/>
+    <circle cx="0" cy="0" r="28" stroke="#8b6914" stroke-width="4" opacity="0.3"/>
+    <circle cx="0" cy="0" r="12" fill="url(#gold)" opacity="0.6"/>
+    <!-- Spokes -->
+    <line x1="0" y1="-80" x2="0" y2="-28" stroke="#8b6914" stroke-width="4" opacity="0.4"/>
+    <line x1="0" y1="28" x2="0" y2="80" stroke="#8b6914" stroke-width="4" opacity="0.4"/>
+    <line x1="-80" y1="0" x2="-28" y2="0" stroke="#8b6914" stroke-width="4" opacity="0.4"/>
+    <line x1="28" y1="0" x2="80" y2="0" stroke="#8b6914" stroke-width="4" opacity="0.4"/>
+    <line x1="-57" y1="-57" x2="-20" y2="-20" stroke="#8b6914" stroke-width="3" opacity="0.3"/>
+    <line x1="20" y1="20" x2="57" y2="57" stroke="#8b6914" stroke-width="3" opacity="0.3"/>
+    <line x1="57" y1="-57" x2="20" y2="-20" stroke="#8b6914" stroke-width="3" opacity="0.3"/>
+    <line x1="-20" y1="20" x2="-57" y2="57" stroke="#8b6914" stroke-width="3" opacity="0.3"/>
+  </g>
+
+  <!-- Title -->
+  <text x="600" y="420" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="72" font-weight="800" fill="url(#goldText)" letter-spacing="-2">arr-barr</text>
+
+  <!-- Tagline -->
+  <text x="600" y="475" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="24" fill="#94a3b8" font-weight="400">Your media. Your server. Your rules.</text>
+
+  <!-- Service count badge -->
+  <rect x="490" y="510" width="220" height="36" rx="18" fill="rgba(212,160,74,0.1)" stroke="rgba(212,160,74,0.2)" stroke-width="1"/>
+  <text x="600" y="534" text-anchor="middle" font-family="'SF Mono', monospace" font-size="13" fill="#d4a04a" font-weight="600" letter-spacing="1.5">15 SERVICES • 1 REPO</text>
+
+  <!-- Bottom border accent -->
+  <rect x="0" y="624" width="1200" height="6" fill="url(#gold)" opacity="0.4"/>
+</svg>
