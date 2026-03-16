@@ -503,17 +503,21 @@ import Terminal from '../components/Terminal.astro';
       transform:scale(2.2);
     }
     .chapter-node { position:static; width:8px; height:8px; margin-bottom:12px; }
-    .chapter { padding-bottom:60px; position:relative; z-index:1; }
+    .chapter { padding-bottom:40px; position:relative; z-index:1; }
+    .chapter:last-child { padding-bottom:20px; }
     .chapter-content { position:relative; z-index:1; }
     .chapter-title { font-size:1.8rem; }
     .crew-heading { font-size:1.8rem; }
+    .crew-section { padding-top:24px; }
     .final-cta { padding:60px 20px 40px; }
-    .beach-shore { height:200px; }
+    .beach-shore { height:120px; }
   }
   @media(max-width:480px){
     .hero-tag { font-size:clamp(0.5rem, 2.8vw, 0.7rem); letter-spacing:1px; }
     .journey-wrap { padding:40px 16px 16px; }
-    .chapter { padding-bottom:50px; }
+    .chapter { padding-bottom:30px; }
+    .chapter:last-child { padding-bottom:16px; }
+    .beach-shore { height:90px; }
     .chapter-title { font-size:1.5rem; }
   }
 
