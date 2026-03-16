@@ -1,0 +1,607 @@
+---
+import DocsLayout from '../../../layouts/DocsLayout.astro';
+---
+
+<DocsLayout title="Network Architecture" breadcrumbs={[{label:'Architecture'}, {label:'Network'}]}>
+
+<!-- ═══ SECTION 1: THREE NETWORK ZONES ═══ -->
+<section class="net-section">
+  <h2 class="section-heading">Three Network Zones</h2>
+  <p class="section-desc">Every container lives in exactly one zone. Download traffic is encrypted, management traffic stays private, and streaming gets direct hardware access.</p>
+
+  <!-- Zone 1: VPN Tunnel -->
+  <div class="zone-card zone-vpn">
+    <div class="zone-header">
+      <span class="zone-badge zone-badge-vpn">Zone 1</span>
+      <h3 class="zone-title">VPN Tunnel</h3>
+    </div>
+    <p class="zone-desc">All download traffic encrypted through WireGuard. Kill switch with <code>iptables DROP</code> — if the tunnel drops, nothing leaks.</p>
+    <div class="chip-grid">
+      <span class="chip chip-vpn">Gluetun <code>VPN Gateway</code></span>
+      <span class="chip chip-vpn">Transmission <code>:9091</code></span>
+      <span class="chip chip-vpn">SABnzbd <code>:8080</code></span>
+    </div>
+  </div>
+
+  <!-- Zone 2: Docker Bridge -->
+  <div class="zone-card zone-bridge">
+    <div class="zone-header">
+      <span class="zone-badge zone-badge-bridge">Zone 2</span>
+      <h3 class="zone-title">Docker Bridge</h3>
+    </div>
+    <p class="zone-desc">Private bridge network for all management and automation services. Containers discover each other by name — no exposed ports needed internally.</p>
+    <div class="chip-grid grid-no-orphan">
+      <span class="chip chip-bridge">Radarr <code>:7878</code></span>
+      <span class="chip chip-bridge">Sonarr <code>:8989</code></span>
+      <span class="chip chip-bridge">Lidarr <code>:8686</code></span>
+      <span class="chip chip-bridge">Prowlarr <code>:9696</code></span>
+      <span class="chip chip-bridge">Bazarr <code>:6767</code></span>
+      <span class="chip chip-bridge">Seerr <code>:5055</code></span>
+      <span class="chip chip-bridge">QuestArr <code>:5002</code></span>
+      <span class="chip chip-bridge">FlareSolverr <code>:8191</code></span>
+      <span class="chip chip-bridge">LazyLib <code>:5299</code></span>
+      <span class="chip chip-bridge">Kavita <code>:5004</code></span>
+      <span class="chip chip-bridge">Audiobookshelf <code>:13378</code></span>
+    </div>
+  </div>
+
+  <!-- Zone 3: Host Network -->
+  <div class="zone-card zone-host">
+    <div class="zone-header">
+      <span class="zone-badge zone-badge-host">Zone 3</span>
+      <h3 class="zone-title">Host Network</h3>
+    </div>
+    <p class="zone-desc">Direct host network access for DLNA/UPnP discovery and hardware transcoding (VA-API, NVENC). No network isolation — full LAN visibility.</p>
+    <div class="chip-grid">
+      <span class="chip chip-host">Jellyfin <code>:8096</code></span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 2: VPN KILL SWITCH ═══ -->
+<section class="net-section">
+  <h2 class="section-heading">VPN Kill Switch</h2>
+  <p class="section-desc">Gluetun enforces a strict kill switch using iptables. If the WireGuard tunnel drops, all outbound traffic from download clients is blocked — zero leaks, zero exceptions.</p>
+
+  <div class="flow-steps">
+    <div class="flow-step flow-step-danger">
+      <span class="flow-num">1</span>
+      <div class="flow-body">
+        <strong>Tunnel drops</strong>
+        <span>WireGuard connection lost</span>
+      </div>
+    </div>
+    <div class="flow-arrow">&darr;</div>
+    <div class="flow-step flow-step-danger">
+      <span class="flow-num">2</span>
+      <div class="flow-body">
+        <strong>Client tries to send</strong>
+        <span>Transmission/SABnzbd attempts outbound</span>
+      </div>
+    </div>
+    <div class="flow-arrow">&darr;</div>
+    <div class="flow-step flow-step-block">
+      <span class="flow-num">3</span>
+      <div class="flow-body">
+        <strong>BLOCKED by iptables</strong>
+        <span>Default policy: <code>DROP</code> all non-tunnel traffic</span>
+      </div>
+    </div>
+    <div class="flow-arrow">&darr;</div>
+    <div class="flow-step flow-step-safe">
+      <span class="flow-num">4</span>
+      <div class="flow-body">
+        <strong>Zero traffic leaks</strong>
+        <span>No packets leave your real IP</span>
+      </div>
+    </div>
+    <div class="flow-arrow">&darr;</div>
+    <div class="flow-step flow-step-safe">
+      <span class="flow-num">5</span>
+      <div class="flow-body">
+        <strong>Tunnel re-establishes</strong>
+        <span>Gluetun reconnects automatically</span>
+      </div>
+    </div>
+    <div class="flow-arrow">&darr;</div>
+    <div class="flow-step flow-step-ok">
+      <span class="flow-num">6</span>
+      <div class="flow-body">
+        <strong>Downloads resume</strong>
+        <span>Traffic flows through tunnel again</span>
+      </div>
+    </div>
+  </div>
+
+  <details class="adv-details">
+    <summary>How iptables enforces this</summary>
+    <p>Gluetun sets the default <code>OUTPUT</code> chain policy to <code>DROP</code>, then adds explicit <code>ACCEPT</code> rules only for traffic going through the <code>tun0</code> interface (the WireGuard tunnel). If <code>tun0</code> goes down, no rules match — everything is dropped. This is a whitelist approach: only tunnel traffic is allowed, everything else is denied by default.</p>
+  </details>
+</section>
+
+<!-- ═══ SECTION 3: SEARCH VS DOWNLOAD TRAFFIC ═══ -->
+<section class="net-section">
+  <h2 class="section-heading">Search vs Download Traffic</h2>
+  <p class="section-desc">Not all traffic needs VPN protection. Search queries are harmless metadata lookups — it's the actual file downloads that need encryption.</p>
+
+  <div class="compare-grid grid-no-orphan">
+    <div class="compare-card compare-direct">
+      <h4 class="compare-title">Search Traffic</h4>
+      <span class="compare-tag compare-tag-direct">Direct (no VPN)</span>
+      <div class="compare-flow">
+        <span class="compare-node">Arr apps</span>
+        <span class="compare-arrow">&rarr;</span>
+        <span class="compare-node">Indexer sites</span>
+      </div>
+      <p class="compare-detail">Radarr, Sonarr, Lidarr, and Prowlarr query indexers over <strong>HTTPS</strong>. These are simple API calls — "does this release exist?" — and reveal nothing about what you actually download.</p>
+    </div>
+
+    <div class="compare-card compare-vpn">
+      <h4 class="compare-title">Download Traffic</h4>
+      <span class="compare-tag compare-tag-vpn">VPN Encrypted</span>
+      <div class="compare-flow">
+        <span class="compare-node">Transmission / SABnzbd</span>
+        <span class="compare-arrow">&rarr;</span>
+        <span class="compare-node">WireGuard tunnel</span>
+      </div>
+      <p class="compare-detail">Actual file transfers go through Gluetun's WireGuard tunnel. Torrent swarms and Usenet downloads are the traffic that ISPs and copyright trolls monitor — so this <strong>must</strong> be encrypted.</p>
+    </div>
+  </div>
+
+  <details class="adv-details">
+    <summary>Why search doesn't need VPN</summary>
+    <p>Searching an indexer is like checking a library catalog — it tells you what exists but doesn't transfer any copyrighted content. The HTTPS connection already encrypts the query. VPN-routing search traffic would add latency and reduce reliability for zero privacy benefit. Downloads are different: you're transferring actual files, your IP is visible in torrent swarms, and ISPs can see the volume and destination of Usenet traffic.</p>
+  </details>
+</section>
+
+<!-- ═══ SECTION 4: DNS ROUTING ═══ -->
+<section class="net-section">
+  <h2 class="section-heading">DNS Routing</h2>
+  <p class="section-desc">Each zone resolves DNS differently. VPN traffic uses tunnel DNS, bridge services use Docker's resolver, and the host uses your router.</p>
+
+  <div class="dns-zones">
+    <div class="zone-card zone-vpn">
+      <div class="zone-header">
+        <span class="zone-badge zone-badge-vpn">VPN Zone</span>
+      </div>
+      <div class="dns-route">
+        <span class="dns-service">Transmission &amp; SABnzbd</span>
+        <span class="dns-arrow">&rarr;</span>
+        <span class="dns-resolver">Gluetun DNS</span>
+        <span class="dns-arrow">&rarr;</span>
+        <span class="dns-target">Cloudflare <code>1.1.1.1</code></span>
+      </div>
+      <p class="dns-note">DNS queries go through the VPN tunnel to prevent DNS leaks. Your ISP never sees what domains download clients resolve.</p>
+    </div>
+
+    <div class="zone-card zone-bridge">
+      <div class="zone-header">
+        <span class="zone-badge zone-badge-bridge">Bridge Zone</span>
+      </div>
+      <div class="dns-route">
+        <span class="dns-service">Arr apps</span>
+        <span class="dns-arrow">&rarr;</span>
+        <span class="dns-resolver">Docker DNS <code>127.0.0.11</code></span>
+        <span class="dns-arrow">&rarr;</span>
+        <span class="dns-target">1.1.1.1 / 8.8.8.8</span>
+      </div>
+      <p class="dns-note">Docker's built-in DNS resolver handles container name resolution, then forwards external queries to Cloudflare and Google.</p>
+    </div>
+
+    <div class="zone-card zone-host">
+      <div class="zone-header">
+        <span class="zone-badge zone-badge-host">Host Zone</span>
+      </div>
+      <div class="dns-route">
+        <span class="dns-service">Jellyfin</span>
+        <span class="dns-arrow">&rarr;</span>
+        <span class="dns-resolver">Router DNS</span>
+        <span class="dns-arrow">&rarr;</span>
+        <span class="dns-target">192.168.1.254</span>
+      </div>
+      <p class="dns-note">Running on the host network, Jellyfin uses your router's DNS — same as any other device on your LAN.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 5: CROSS-ZONE CONNECTIONS ═══ -->
+<section class="net-section">
+  <h2 class="section-heading">Cross-Zone Connections</h2>
+  <p class="section-desc">Services in different zones still need to talk to each other. Docker's bridge network and shared network namespaces make this possible.</p>
+
+  <div class="cross-card">
+    <div class="cross-item">
+      <strong>Bridge &harr; VPN</strong>
+      <p>Arr apps (Zone 2) send downloads to Transmission and SABnzbd (Zone 1) through Gluetun's shared network namespace. Radarr talks to <code>gluetun:9091</code> — Gluetun proxies the connection to Transmission inside the tunnel.</p>
+    </div>
+    <div class="cross-item">
+      <strong>Bridge &harr; Host</strong>
+      <p>Bridge containers reach Jellyfin (Zone 3) via the Docker host gateway. Jellyfin accesses arr APIs using the host's IP on their mapped ports.</p>
+    </div>
+    <div class="cross-item">
+      <strong>Service Discovery</strong>
+      <p>Within the Docker bridge, containers resolve each other by name — <code>radarr</code>, <code>sonarr</code>, <code>prowlarr</code> — thanks to Docker's embedded DNS at <code>127.0.0.11</code>. No hardcoded IPs needed.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PAGE NAV ═══ -->
+<div class="page-nav" slot="page-nav">
+  <a href="/docs" class="nav-prev">&larr; Docs Home</a>
+  <a href="/docs/architecture/storage" class="nav-next">Storage &amp; Hardlinks &rarr;</a>
+</div>
+
+</DocsLayout>
+
+<style>
+  /* ═══ SECTIONS ═══ */
+  .net-section {
+    margin-bottom: 48px;
+  }
+  .net-section:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .section-heading {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 8px;
+  }
+  .section-desc {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  /* ═══ ZONE CARDS ═══ */
+  .zone-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border-left: 3px solid var(--border);
+  }
+  .zone-vpn { border-left-color: var(--emerald); }
+  .zone-bridge { border-left-color: var(--cyan); }
+  .zone-host { border-left-color: var(--indigo); }
+
+  .zone-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .zone-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .zone-badge-vpn { background: rgba(16,185,129,0.12); color: var(--emerald); }
+  .zone-badge-bridge { background: rgba(34,211,238,0.12); color: var(--cyan); }
+  .zone-badge-host { background: rgba(99,102,241,0.12); color: var(--indigo); }
+
+  .zone-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #f1f5f9;
+    margin: 0;
+  }
+  .zone-desc {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .zone-desc code {
+    font-size: 0.75rem;
+    background: rgba(99,102,241,0.08);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--sky);
+  }
+
+  /* ═══ SERVICE CHIPS ═══ */
+  .chip-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .chip {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+  }
+  .chip code {
+    font-size: 0.68rem;
+    opacity: 0.6;
+    font-weight: 400;
+  }
+  .chip-vpn { background: rgba(16,185,129,0.08); color: var(--emerald); }
+  .chip-bridge { background: rgba(34,211,238,0.08); color: var(--cyan); }
+  .chip-host { background: rgba(99,102,241,0.08); color: var(--indigo); }
+
+  .grid-no-orphan {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  @media (max-width: 480px) {
+    .grid-no-orphan {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ═══ FLOW STEPS (KILL SWITCH) ═══ */
+  .flow-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 16px;
+  }
+  .flow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .flow-num {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+  .flow-step-danger .flow-num { background: rgba(248,113,113,0.15); color: #f87171; }
+  .flow-step-block .flow-num { background: rgba(251,191,36,0.15); color: #fbbf24; }
+  .flow-step-safe .flow-num { background: rgba(16,185,129,0.15); color: var(--emerald); }
+  .flow-step-ok .flow-num { background: rgba(99,102,241,0.15); color: var(--indigo); }
+
+  .flow-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .flow-body strong {
+    font-size: 0.85rem;
+    color: #f1f5f9;
+  }
+  .flow-body span {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+  .flow-body code {
+    font-size: 0.73rem;
+    background: rgba(99,102,241,0.08);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--sky);
+  }
+  .flow-arrow {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    padding: 2px 0;
+  }
+
+  /* ═══ COMPARE GRID (SEARCH VS DOWNLOAD) ═══ */
+  .compare-grid {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .compare-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .compare-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #f1f5f9;
+    margin: 0 0 8px;
+  }
+  .compare-tag {
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 12px;
+  }
+  .compare-tag-direct { background: rgba(34,211,238,0.12); color: var(--cyan); }
+  .compare-tag-vpn { background: rgba(16,185,129,0.12); color: var(--emerald); }
+
+  .compare-flow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .compare-node {
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(99,102,241,0.06);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+  .compare-arrow {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+  .compare-detail {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    line-height: 1.55;
+    margin: 0;
+  }
+  .compare-detail strong {
+    color: #f1f5f9;
+  }
+
+  /* ═══ DNS ROUTING ═══ */
+  .dns-zones {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .dns-route {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .dns-service {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #f1f5f9;
+  }
+  .dns-arrow {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+  .dns-resolver {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+  }
+  .dns-resolver code,
+  .dns-target code {
+    font-size: 0.72rem;
+    background: rgba(99,102,241,0.08);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--sky);
+  }
+  .dns-target {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--sky);
+  }
+  .dns-note {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* ═══ CROSS-ZONE ═══ */
+  .cross-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .cross-item strong {
+    font-size: 0.88rem;
+    color: #f1f5f9;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .cross-item p {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    line-height: 1.55;
+    margin: 0;
+  }
+  .cross-item code {
+    font-size: 0.75rem;
+    background: rgba(99,102,241,0.08);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--sky);
+  }
+
+  /* ═══ DETAILS/SUMMARY ═══ */
+  .adv-details {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-top: 12px;
+  }
+  .adv-details summary {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    padding: 10px 14px;
+    cursor: pointer;
+    list-style: none;
+  }
+  .adv-details summary::-webkit-details-marker { display: none; }
+  .adv-details summary::before {
+    content: '▸ ';
+    color: var(--text-muted);
+  }
+  .adv-details[open] summary::before {
+    content: '▾ ';
+  }
+  .adv-details p {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    padding: 0 14px 12px;
+    margin: 0;
+  }
+  .adv-details code {
+    font-size: 0.73rem;
+    background: rgba(99,102,241,0.08);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--sky);
+  }
+
+  /* ═══ PAGE NAV ═══ */
+  .page-nav {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+  }
+  .nav-prev,
+  .nav-next {
+    font-size: 0.82rem;
+    color: var(--sky);
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+  .nav-prev:hover,
+  .nav-next:hover {
+    opacity: 0.8;
+  }
+
+  /* ═══ RESPONSIVE ═══ */
+  @media (min-width: 640px) {
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .grid-no-orphan {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

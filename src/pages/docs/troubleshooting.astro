@@ -1,0 +1,497 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+---
+
+<DocsLayout title="Troubleshooting" breadcrumbs={[{label:'Troubleshooting'}]}>
+
+<section class="ts-hero">
+  <h1 class="ts-title">Troubleshooting</h1>
+  <p class="ts-subtitle">Common issues with symptoms, root causes, and fixes.</p>
+</section>
+
+<div class="ts-filters" id="tsFilters">
+  <button class="ts-chip active" data-filter="all">All</button>
+  <button class="ts-chip" data-filter="vpn">VPN</button>
+  <button class="ts-chip" data-filter="downloads">Downloads</button>
+  <button class="ts-chip" data-filter="media">Media</button>
+  <button class="ts-chip" data-filter="permissions">Permissions</button>
+</div>
+
+<div class="ts-cards" id="tsCards">
+
+  <!-- 1. Download stuck at 0% -->
+  <details class="ts-card" data-category="vpn">
+    <summary class="ts-summary">
+      <span class="ts-dot dot-high"></span>
+      <span class="ts-card-title">Download stuck at 0%</span>
+      <span class="ts-tag tag-vpn">VPN</span>
+    </summary>
+    <div class="ts-body">
+      <div class="ts-section">
+        <div class="ts-label">Symptom</div>
+        <p>Download added but no progress, speed shows 0 B/s.</p>
+      </div>
+      <div class="ts-section">
+        <div class="ts-label">Cause</div>
+        <p>VPN tunnel dropped and kill switch blocked all traffic.</p>
+      </div>
+      <div class="ts-section">
+        <div class="ts-label">Fix</div>
+        <p>Check VPN status, restart Gluetun.</p>
+      </div>
+      <div class="ts-commands">
+        <div class="ts-cmd"><code>arr vpn</code><button class="ts-copy" data-copy="arr vpn">Copy</button></div>
+        <div class="ts-cmd"><code>docker restart gluetun</code><button class="ts-copy" data-copy="docker restart gluetun">Copy</button></div>
+      </div>
+    </div>
+  </details>
+
+  <!-- 2. No torrent peers -->
+  <details class="ts-card" data-category="downloads">
+    <summary class="ts-summary">
+      <span class="ts-dot dot-medium"></span>
+      <span class="ts-card-title">No torrent peers</span>
+      <span class="ts-tag tag-downloads">Downloads</span>
+    </summary>
+    <div class="ts-body">
+      <div class="ts-section">
+        <div class="ts-label">Symptom</div>
+        <p>Torrent downloads have 0 peers, upload works fine.</p>
+      </div>
+      <div class="ts-section">
+        <div class="ts-label">Cause</div>
+        <p>Port forwarding not configured or expired.</p>
+      </div>
+      <div class="ts-section">
+        <div class="ts-label">Fix</div>
+        <p>Enable port forwarding in VPN provider, update Transmission.</p>
+      </div>
+      <div class="ts-commands">
+        <div class="ts-cmd"><code>arr vpn</code><button class="ts-copy" data-copy="arr vpn">Copy</button></div>
+      </div>
+    </div>
+  </details>
+
+  <!-- 3. VPN won't connect -->
+  <details class="ts-card" data-category="vpn">
+    <summary class="ts-summary">
+      <span class="ts-dot dot-high"></span>
+      <span class="ts-card-title">VPN won't connect</span>
+      <span class="ts-tag tag-vpn">VPN</span>
+    </summary>
+    <div class="ts-body">
+      <div class="ts-section">
+        <div class="ts-label">Symptom</div>
+        <p>Gluetun container restarts repeatedly.</p>
+      </div>
+      <div class="ts-section">
+        <div class="ts-label">Cause</div>
+        <p>Invalid credentials or server maintenance.</p>
+      </div>
+      <div class="ts-section">
+        <div class="ts-label">Fix</div>
+        <p>Check .env VPN credentials, try different server.</p>
+      </div>
+      <div class="ts-commands">
+        <div class="ts-cmd"><code>docker logs gluetun --tail 50</code><button class="ts-copy" data-copy="docker logs gluetun --tail 50">Copy</button></div>
+      </div>
+    </div>
+  </details>
+
+  <!-- 4. Missing usenet articles -->
+  <details class="ts-card" data-category="downloads">
+    <summary class="ts-summary">
+      <span class="ts-dot dot-medium"></span>
+      <span class="ts-card-title">Missing usenet articles</span>
+      <span class="ts-tag tag-downloads">Downloads</span>
+    </summary>
+    <div class="ts-body">
+      <div class="ts-section">
+        <div class="ts-label">Symptom</div>
+        <p>SABnzbd shows "missing articles" errors.</p>
+      </div>
+      <div class="ts-section">
+        <div class="ts-label">Cause</div>
+        <p>DMCA takedowns propagating across provider backbone.</p>
+      </div>
+      <div class="ts-section">
+        <div class="ts-label">Fix</div>
+        <p>Use multiple providers on different backbones.</p>
+      </div>
+      <div class="ts-commands">
+        <div class="ts-cmd"><code>docker logs sabnzbd --tail 50</code><button class="ts-copy" data-copy="docker logs sabnzbd --tail 50">Copy</button></div>
+      </div>
+    </div>
+  </details>
+
+  <!-- 5. Files copied not hardlinked -->
+  <details class="ts-card" data-category="downloads">
+    <summary class="ts-summary">
+      <span class="ts-dot dot-high"></span>
+      <span class="ts-card-title">Files copied not hardlinked</span>
+      <span class="ts-tag tag-downloads">Downloads</span>
+    </summary>
+    <div class="ts-body">
+      <div class="ts-section">
+        <div class="ts-label">Symptom</div>
+        <p>Disk usage doubles after import.</p>
+      </div>
+      <div class="ts-section">
+        <div class="ts-label">Cause</div>
+        <p>Downloads and media on separate Docker mounts.</p>
+      </div>
+      <div class="ts-section">
+        <div class="ts-label">Fix</div>
+        <p>Use single mount <code>-v /data:/data</code>.</p>
+      </div>
+      <div class="ts-commands">
+        <div class="ts-cmd"><code>ls -li</code><button class="ts-copy" data-copy="ls -li">Copy</button></div>
+      </div>
+    </div>
+  </details>
+
+  <!-- 6. Permission denied on import -->
+  <details class="ts-card" data-category="permissions">
+    <summary class="ts-summary">
+      <span class="ts-dot dot-high"></span>
+      <span class="ts-card-title">Permission denied on import</span>
+      <span class="ts-tag tag-permissions">Permissions</span>
+    </summary>
+    <div class="ts-body">
+      <div class="ts-section">
+        <div class="ts-label">Symptom</div>
+        <p>Radarr/Sonarr fails to move or hardlink files.</p>
+      </div>
+      <div class="ts-section">
+        <div class="ts-label">Cause</div>
+        <p>PUID/PGID mismatch between services.</p>
+      </div>
+      <div class="ts-section">
+        <div class="ts-label">Fix</div>
+        <p>Ensure all services use same PUID/PGID in .env.</p>
+      </div>
+      <div class="ts-commands">
+        <div class="ts-cmd"><code>id $USER</code><button class="ts-copy" data-copy="id $USER">Copy</button></div>
+      </div>
+    </div>
+  </details>
+
+  <!-- 7. No compatible streams -->
+  <details class="ts-card" data-category="media">
+    <summary class="ts-summary">
+      <span class="ts-dot dot-medium"></span>
+      <span class="ts-card-title">"No compatible streams" in Jellyfin</span>
+      <span class="ts-tag tag-media">Media</span>
+    </summary>
+    <div class="ts-body">
+      <div class="ts-section">
+        <div class="ts-label">Symptom</div>
+        <p>Playback fails with transcoding error.</p>
+      </div>
+      <div class="ts-section">
+        <div class="ts-label">Cause</div>
+        <p>Hardware transcoding not enabled or no driver access.</p>
+      </div>
+      <div class="ts-section">
+        <div class="ts-label">Fix</div>
+        <p>Enable QSV/VAAPI in Jellyfin dashboard, pass <code>/dev/dri</code>.</p>
+      </div>
+      <div class="ts-commands">
+        <div class="ts-cmd"><code>ls /dev/dri</code><button class="ts-copy" data-copy="ls /dev/dri">Copy</button></div>
+      </div>
+    </div>
+  </details>
+
+  <!-- 8. Subtitles out of sync -->
+  <details class="ts-card" data-category="media">
+    <summary class="ts-summary">
+      <span class="ts-dot dot-low"></span>
+      <span class="ts-card-title">Subtitles out of sync</span>
+      <span class="ts-tag tag-media">Media</span>
+    </summary>
+    <div class="ts-body">
+      <div class="ts-section">
+        <div class="ts-label">Symptom</div>
+        <p>Subtitles appear several seconds early or late.</p>
+      </div>
+      <div class="ts-section">
+        <div class="ts-label">Cause</div>
+        <p>Subtitle provider timing doesn't match release.</p>
+      </div>
+      <div class="ts-section">
+        <div class="ts-label">Fix</div>
+        <p>Enable subsync in Bazarr settings for automatic correction.</p>
+      </div>
+      <div class="ts-commands">
+        <div class="ts-cmd"><code>Bazarr &rarr; Settings &rarr; Subtitles &rarr; Post-Processing</code><button class="ts-copy" data-copy="Bazarr → Settings → Subtitles → Post-Processing">Copy</button></div>
+      </div>
+    </div>
+  </details>
+
+</div>
+
+<div class="page-nav" slot="page-nav">
+  <a href="/docs/operations" class="nav-prev">&larr; Operations & CLI</a>
+  <a href="/docs" class="nav-next">Docs Home &rarr;</a>
+</div>
+
+<style>
+  .ts-hero {
+    margin-bottom: 32px;
+  }
+
+  .ts-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
+
+  .ts-subtitle {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  /* Filter Chips */
+  .ts-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .ts-chip {
+    font-size: 0.75rem;
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+  }
+
+  .ts-chip:hover {
+    border-color: var(--text-muted);
+    color: var(--text);
+  }
+
+  .ts-chip.active {
+    background: var(--indigo);
+    border-color: var(--indigo);
+    color: white;
+  }
+
+  /* Issue Cards */
+  .ts-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .ts-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .ts-card[open] {
+    border-color: var(--text-muted);
+  }
+
+  .ts-card.hidden {
+    display: none;
+  }
+
+  /* Summary (clickable header) */
+  .ts-summary {
+    padding: 14px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    list-style: none;
+    user-select: none;
+  }
+
+  .ts-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .ts-summary::marker {
+    content: '';
+  }
+
+  .ts-card-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    flex: 1;
+  }
+
+  /* Severity Dots */
+  .ts-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-high {
+    background: var(--red);
+  }
+
+  .dot-medium {
+    background: var(--yellow);
+  }
+
+  .dot-low {
+    background: var(--emerald);
+  }
+
+  /* Category Tags */
+  .ts-tag {
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-muted);
+  }
+
+  /* Expanded Content */
+  .ts-body {
+    padding: 0 16px 16px;
+  }
+
+  .ts-section {
+    margin-bottom: 12px;
+  }
+
+  .ts-section:last-of-type {
+    margin-bottom: 16px;
+  }
+
+  .ts-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .ts-section p {
+    margin: 0;
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  /* Command Blocks */
+  .ts-commands {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .ts-cmd {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.78rem;
+    font-family: monospace;
+    overflow-x: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .ts-cmd code {
+    white-space: nowrap;
+  }
+
+  .ts-copy {
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    flex-shrink: 0;
+    font-family: inherit;
+    transition: all 0.2s ease;
+  }
+
+  .ts-copy:hover {
+    border-color: var(--text-muted);
+    color: var(--text);
+  }
+
+  /* Page Nav */
+  .page-nav {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+  }
+
+  .page-nav a {
+    font-size: 0.82rem;
+    color: var(--sky);
+    text-decoration: none;
+  }
+
+  .page-nav a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const filters = document.getElementById('tsFilters');
+    const cards = document.querySelectorAll('.ts-card');
+
+    if (!filters) return;
+
+    filters.addEventListener('click', (e) => {
+      const chip = e.target.closest('.ts-chip');
+      if (!chip) return;
+
+      const filter = chip.dataset.filter;
+
+      // Update active chip
+      filters.querySelectorAll('.ts-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+
+      // Filter cards
+      cards.forEach(card => {
+        if (filter === 'all' || card.dataset.category === filter) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
+
+    // Copy button handler
+    document.querySelectorAll('.ts-copy').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const text = btn.dataset.copy;
+        navigator.clipboard.writeText(text).then(() => {
+          const original = btn.textContent;
+          btn.textContent = 'Copied';
+          setTimeout(() => { btn.textContent = original; }, 1500);
+        });
+      });
+    });
+  });
+</script>
+
+</DocsLayout>

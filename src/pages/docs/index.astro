@@ -1,0 +1,178 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+---
+
+<DocsLayout title="Docs" description="Technical reference for the arr-barr stack.">
+
+<section class="hub-hero">
+  <h1 class="hub-title">arr-barr <span>docs</span></h1>
+  <p class="hub-lead">The complete technical reference. Everything under the hood.</p>
+
+  <div class="repo-card">
+    <div class="repo-left">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" class="repo-icon"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      <div>
+        <a href="https://github.com/TrashedPandai/arr-barr" target="_blank" rel="noopener" class="repo-name">TrashedPandai/arr-barr</a>
+        <span class="repo-desc">The stack — Docker Compose, CLI, configs</span>
+      </div>
+    </div>
+    <button class="repo-clone" id="docsCloneBtn">
+      <code>git clone https://github.com/TrashedPandai/arr-barr.git</code>
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" opacity="0.5"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25zM5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25z"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- Stats -->
+<section class="hub-stats">
+  <div class="stat-grid grid-no-orphan">
+    <div class="stat"><div class="stat-val">15</div><div class="stat-label">Services</div></div>
+    <div class="stat"><div class="stat-val">12</div><div class="stat-label">Indexers</div></div>
+    <div class="stat"><div class="stat-val">48</div><div class="stat-label">Custom Formats</div></div>
+    <div class="stat"><div class="stat-val">3</div><div class="stat-label">Network Zones</div></div>
+    <div class="stat"><div class="stat-val">12</div><div class="stat-label">CLI Commands</div></div>
+    <div class="stat"><div class="stat-val">0<span>GB</span></div><div class="stat-label">Wasted by Hardlinks</div></div>
+  </div>
+</section>
+
+<!-- Card Grid -->
+<section class="hub-grid">
+  <a href="/docs/architecture/network" class="hub-card">
+    <div class="hub-card-icon hub-icon-arch">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M19.07 4.93l-2.83 2.83M7.76 16.24l-2.83 2.83"/></svg>
+    </div>
+    <div class="hub-card-body">
+      <h3>Network Architecture</h3>
+      <p>Three isolated zones, VPN kill switch, DNS routing, and how 15 services talk to each other.</p>
+    </div>
+    <span class="hub-card-arrow">&rarr;</span>
+  </a>
+
+  <a href="/docs/architecture/storage" class="hub-card">
+    <div class="hub-card-icon hub-icon-store">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12H2m20 0l-4-8H6L2 12m20 0v6a2 2 0 01-2 2H4a2 2 0 01-2-2v-6"/><circle cx="6" cy="16" r="1"/></svg>
+    </div>
+    <div class="hub-card-body">
+      <h3>Storage & Hardlinks</h3>
+      <p>Single mount, zero wasted space. Volume tiers, directory tree, and why hardlinks matter.</p>
+    </div>
+    <span class="hub-card-arrow">&rarr;</span>
+  </a>
+
+  <a href="/docs/pipeline" class="hub-card">
+    <div class="hub-card-icon hub-icon-pipe">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    </div>
+    <div class="hub-card-body">
+      <h3>Pipeline & Quality</h3>
+      <p>Request to stream in 6 steps. Custom format scoring, decision engine, and special pipelines.</p>
+    </div>
+    <span class="hub-card-arrow">&rarr;</span>
+  </a>
+
+  <a href="/docs/operations" class="hub-card">
+    <div class="hub-card-icon hub-icon-ops">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+    </div>
+    <div class="hub-card-body">
+      <h3>Operations & CLI</h3>
+      <p>12 commands, compose profiles, health endpoints, updates, setup, and self-repair.</p>
+    </div>
+    <span class="hub-card-arrow">&rarr;</span>
+  </a>
+
+  <a href="/docs/troubleshooting" class="hub-card">
+    <div class="hub-card-icon hub-icon-help">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3m.08 4h.01"/></svg>
+    </div>
+    <div class="hub-card-body">
+      <h3>Troubleshooting</h3>
+      <p>Common issues with symptoms, causes, and fixes. VPN, downloads, media, permissions.</p>
+    </div>
+    <span class="hub-card-arrow">&rarr;</span>
+  </a>
+</section>
+
+<style>
+  .hub-hero { margin-bottom:32px; }
+  .hub-title { font-size:clamp(1.6rem, 4vw, 2rem); font-weight:800; color:#f1f5f9; margin-bottom:4px; }
+  .hub-title span { color:var(--indigo); }
+  .hub-lead { font-size:0.92rem; color:var(--text-dim); margin-bottom:20px; }
+
+  .repo-card {
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    background:var(--surface); border:1px solid var(--border); border-radius:10px;
+    padding:12px 16px; flex-wrap:wrap;
+  }
+  .repo-left { display:flex; align-items:center; gap:10px; }
+  .repo-icon { color:var(--text-dim); flex-shrink:0; }
+  .repo-name { font-size:0.85rem; font-weight:600; color:var(--sky); display:block; }
+  .repo-desc { font-size:0.72rem; color:var(--text-muted); }
+  .repo-clone {
+    background:none; border:1px solid var(--border); border-radius:6px;
+    padding:4px 10px; cursor:pointer; display:flex; align-items:center; gap:6px;
+    color:var(--text-dim); transition:all 0.2s;
+  }
+  .repo-clone:hover { border-color:var(--border-h); color:var(--text); }
+  .repo-clone code { font-size:0.68rem; background:none; border:none; padding:0; color:inherit; }
+
+  .hub-stats { margin-bottom:36px; }
+  .stat-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; }
+  .stat {
+    text-align:center; padding:14px 8px;
+    background:var(--surface); border:1px solid var(--border); border-radius:10px;
+  }
+  .stat-val { font-size:1.5rem; font-weight:800; color:var(--indigo); }
+  .stat-val span { font-size:0.7rem; font-weight:600; }
+  .stat-label { font-size:0.62rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-muted); margin-top:2px; }
+
+  .hub-grid { display:grid; grid-template-columns:1fr; gap:10px; }
+
+  .hub-card {
+    display:grid; grid-template-columns:48px 1fr 24px; align-items:center; gap:14px;
+    padding:18px 16px; border-radius:12px;
+    background:var(--surface); border:1px solid var(--border);
+    text-decoration:none; color:inherit;
+    transition:all 0.2s;
+  }
+  .hub-card:hover { border-color:rgba(99,102,241,0.3); transform:translateY(-1px); background:rgba(19,26,46,0.8); }
+
+  .hub-card-icon {
+    width:48px; height:48px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .hub-icon-arch { background:rgba(34,211,238,0.08); color:var(--cyan); }
+  .hub-icon-store { background:rgba(251,191,36,0.08); color:var(--yellow); }
+  .hub-icon-pipe { background:rgba(192,132,252,0.08); color:var(--purple); }
+  .hub-icon-ops { background:rgba(129,140,248,0.08); color:var(--indigo); }
+  .hub-icon-help { background:rgba(16,185,129,0.08); color:var(--emerald); }
+
+  .hub-card-body h3 { font-size:0.95rem; font-weight:700; color:#f1f5f9; margin:0 0 3px; }
+  .hub-card-body p { font-size:0.78rem; color:var(--text-muted); margin:0; line-height:1.5; }
+
+  .hub-card-arrow { color:rgba(255,255,255,0.15); font-size:1.1rem; transition:all 0.2s; justify-self:end; }
+  .hub-card:hover .hub-card-arrow { color:var(--indigo); transform:translateX(3px); }
+
+  @media(min-width:640px) {
+    .hub-grid { grid-template-columns:1fr 1fr; }
+    .hub-grid > :last-child:nth-child(odd) { grid-column:1 / -1; }
+  }
+  @media(max-width:480px) {
+    .stat-grid { grid-template-columns:repeat(2, 1fr); }
+    .repo-clone { display:none; }
+  }
+</style>
+
+<script>
+  document.getElementById('docsCloneBtn')?.addEventListener('click', () => {
+    navigator.clipboard.writeText('git clone https://github.com/TrashedPandai/arr-barr.git');
+    const btn = document.getElementById('docsCloneBtn');
+    if (btn) {
+      const orig = btn.querySelector('code')!.textContent;
+      btn.querySelector('code')!.textContent = 'Copied!';
+      setTimeout(() => { btn.querySelector('code')!.textContent = orig; }, 1500);
+    }
+  });
+</script>
+
+</DocsLayout>
