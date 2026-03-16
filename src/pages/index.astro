@@ -158,6 +158,27 @@ import Terminal from '../components/Terminal.astro';
 <!-- On-shore zone — warm background from beach arrival -->
 <div class="shore-ground">
 
+<!-- Spyglass reveal — circular aperture that opens to reveal The Crew -->
+<div class="spyglass-wrap" id="spyglassWrap">
+  <!-- Lens ring overlay -->
+  <div class="spyglass-ring" id="spyglassRing" aria-hidden="true">
+    <svg viewBox="0 0 200 200" class="ring-svg">
+      <!-- Outer brass ring -->
+      <circle cx="100" cy="100" r="90" fill="none" stroke="#d4a04a" stroke-width="3" opacity="0.6"/>
+      <circle cx="100" cy="100" r="88" fill="none" stroke="#b8862d" stroke-width="1" opacity="0.3"/>
+      <circle cx="100" cy="100" r="93" fill="none" stroke="#e8c06a" stroke-width="0.5" opacity="0.25"/>
+      <!-- Crosshairs -->
+      <line x1="100" y1="20" x2="100" y2="45" stroke="#d4a04a" stroke-width="0.5" opacity="0.3"/>
+      <line x1="100" y1="155" x2="100" y2="180" stroke="#d4a04a" stroke-width="0.5" opacity="0.3"/>
+      <line x1="20" y1="100" x2="45" y2="100" stroke="#d4a04a" stroke-width="0.5" opacity="0.3"/>
+      <line x1="155" y1="100" x2="180" y2="100" stroke="#d4a04a" stroke-width="0.5" opacity="0.3"/>
+      <!-- Lens flare accent -->
+      <circle cx="72" cy="55" r="6" fill="rgba(212,160,74,0.08)"/>
+      <circle cx="68" cy="50" r="2.5" fill="rgba(255,220,160,0.12)"/>
+    </svg>
+  </div>
+  <div class="spyglass-content" id="spyglassContent">
+
 <!-- CREW — card-based layout, mobile-first -->
 <section class="crew-section">
   <h2 class="crew-heading split-title">The Crew</h2>
@@ -291,6 +312,9 @@ import Terminal from '../components/Terminal.astro';
     </div>
   </div>
 </section>
+
+  </div><!-- /spyglass-content -->
+</div><!-- /spyglass-wrap -->
 
 <!-- CTA -->
 <section class="final-cta">
@@ -462,6 +486,52 @@ import Terminal from '../components/Terminal.astro';
     );
   }
 
+  /* ═══ SPYGLASS REVEAL ═══ */
+  .spyglass-wrap {
+    position: relative;
+    overflow: hidden;
+  }
+  .spyglass-content {
+    clip-path: circle(8% at 50% 80px);
+    will-change: clip-path;
+  }
+  .spyglass-ring {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 160px;
+    height: 160px;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0.9;
+  }
+  .ring-svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 8px rgba(212,160,74,0.25));
+  }
+  @media(max-width:768px) {
+    .spyglass-content {
+      clip-path: circle(12% at 50% 60px);
+    }
+    .spyglass-ring {
+      width: 120px;
+      height: 120px;
+      top: 2px;
+    }
+  }
+  @media(max-width:480px) {
+    .spyglass-content {
+      clip-path: circle(14% at 50% 50px);
+    }
+    .spyglass-ring {
+      width: 100px;
+      height: 100px;
+      top: 0px;
+    }
+  }
+
   /* ═══ CTA ═══ */
   .final-cta { text-align:center; padding:100px 24px 60px; position:relative; max-width:600px; margin:0 auto; }
   .cta-glow { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse 60% 50% at 50% 40%,rgba(212,160,74,0.05) 0%,transparent 70%); }
@@ -530,6 +600,8 @@ import Terminal from '../components/Terminal.astro';
     .journey-ship { display:none !important; }
     .particle { opacity:0.3 !important; }
     .star { opacity:0.3 !important; }
+    .spyglass-content { clip-path:none !important; }
+    .spyglass-ring { display:none !important; }
   }
 </style>
 
@@ -901,6 +973,40 @@ import Terminal from '../components/Terminal.astro';
         onLeaveBack: () => node.classList.remove('active'),
       });
     });
+
+    // ═══ Spyglass reveal ═══
+    const spyglassContent = document.getElementById('spyglassContent');
+    const spyglassRing = document.getElementById('spyglassRing');
+    const spyglassWrap = document.getElementById('spyglassWrap');
+
+    if (spyglassContent && spyglassRing && spyglassWrap) {
+      // Determine center point based on screen size
+      const isMobile = window.innerWidth <= 768;
+      const isSmall = window.innerWidth <= 480;
+      const centerY = isSmall ? 50 : isMobile ? 60 : 80;
+      const startRadius = isSmall ? 14 : isMobile ? 12 : 8;
+
+      const spyTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: spyglassWrap,
+          start: 'top 85%',
+          end: 'top 20%',
+          scrub: 0.8,
+        }
+      });
+
+      spyTl.fromTo(spyglassContent,
+        { clipPath: `circle(${startRadius}% at 50% ${centerY}px)` },
+        { clipPath: `circle(150% at 50% ${centerY}px)`, duration: 1, ease: 'power2.inOut' }
+      );
+
+      spyTl.to(spyglassRing, {
+        opacity: 0,
+        scale: 2.5,
+        duration: 0.5,
+        ease: 'power2.in',
+      }, 0);
+    }
 
     // ═══ Crew heading SplitText ═══
     const crewSplit = new SplitText('.crew-heading', { type: 'chars' });
