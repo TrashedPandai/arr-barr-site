@@ -7,92 +7,76 @@
 - [ ] Deal with typo domain `arrbrr.com` (cancel/refund if possible)
 
 ## Home Page Polish
-- [ ] Add OG/Twitter meta tags (image, title, description) for link previews
-- [ ] Add favicon link tags in Base layout (`<link rel="icon">`)
+- [x] Add OG/Twitter meta tags (image, title, description) for link previews
+- [x] Add favicon link tags in Base layout
+- [x] Add alt text + dimensions to all crew logo images
+- [x] Terminal click-to-skip for fast-forward
+- [x] Terminal ARIA attributes for screen readers
+- [x] Group-tag contrast bumped to WCAG AA
+- [x] Beach shore responsive height (clamp instead of fixed 300px)
+- [x] No-JS fallback for scroll-animated elements
+- [x] Reduced-motion handling for Lenis smooth scroll
+- [x] Self-hosted all crew service icons locally (`/icons/`)
 - [ ] Hero side SVG ornaments are duplicated inline — extract to a component
-- [ ] Compass loads invisible (`opacity: 0`) then GSAP fades in — add `noscript` fallback
-- [ ] Terminal typing speed feels slow on revisit — add skip/fast-forward on click
-- [ ] Terminal: no pause between scenes looping — add visible "scene done" indicator
-- [ ] Flow diagram app icons load from external GitHub URLs — self-host or cache
-- [ ] Flow diagram: `.app-grid` 6-col layout breaks awkwardly between 480–768px
-- [ ] Security section uses emoji checkmarks — consider SVG icons for consistency
-- [ ] CTA "Everything you need is in the repo" — link to the actual GitHub repo
-- [ ] Add scroll-to-top button or smooth anchor nav
 - [ ] Hero wave SVG animation (`waveDrift`) uses 200% width hack — test on ultrawide
-- [ ] `.fl` elements start `opacity:0; transform:translateY(30px)` — broken without JS
 
 ## Navigation & Layout
-- [ ] Mobile hamburger menu doesn't close when a link is clicked
-- [ ] Nav has no GitHub/repo link
-- [ ] No 404 page
-- [ ] Footer says "Pandai Technologies" — link it or add a GitHub icon
-- [ ] Footer has no nav links (Home, Guide, etc.)
-- [ ] Base layout loads 3 Google Fonts weights — audit which are actually used
-- [ ] `Cinzel Decorative` only used in compass SVG — consider self-hosting or lazy loading
+- [x] Mobile hamburger menu closes when a link is clicked
+- [x] Nav has GitHub/repo link + clone button
+- [x] Custom 404 page
+- [x] Footer links to GitHub repo
+- [x] Footer has nav links (Home, Guide, Crew, Costs, Docs)
+- [x] Removed unused Cinzel + Cinzel Decorative fonts (not referenced anywhere)
 
-## Guide Page (`/guide`)
-- [ ] Currently just a placeholder — needs full content
-- [ ] Sections needed: prerequisites, clone repo, configure `.env`, start stack, first request
-- [ ] Add copy-to-clipboard for terminal commands
-- [ ] Step-by-step numbered walkthrough with progress indicator
-- [ ] Link to relevant docs sections when they exist
-- [ ] Troubleshooting FAQ at the bottom
+## Guide Page (`/guide`) — Done
+- [x] Full content with 8 steps (prerequisites -> invite friends)
+- [x] Step-by-step numbered walkthrough with progress indicator
+- [x] Copy-to-clipboard for terminal commands
+- [x] Troubleshooting FAQ at the bottom
+- [x] Links to relevant docs sections
 
-## Architecture Page (`/architecture`)
-- [ ] Currently just a placeholder — needs full content
-- [ ] Interactive network topology diagram (containers, ports, VPN routing)
-- [ ] Hardlink path diagram (single mount → library structure)
-- [ ] Service dependency graph (what talks to what)
-- [ ] Docker Compose profile breakdown (media, books, games, etc.)
-- [ ] Quality pipeline explainer (custom formats → scoring → selection)
-
-## Crew Page (`/crew`) — Not Started
-- [ ] Create `/crew` page
-- [ ] Visual roster of all 15+ services with icons, roles, one-liner descriptions
-- [ ] Group by function: request → search → download → organize → serve
-- [ ] Each card links to the service's docs or relevant guide section
-- [ ] Add to nav
+## Crew Page (`/crew`) — Done
+- [x] Visual roster of all 15 services with icons, roles, one-liner descriptions
+- [x] Grouped by function (request -> search -> download -> organize -> stream)
+- [x] Each card links to service's repo/site
+- [x] In nav
 
 ## Costs Page (`/costs`) — Done
-- [x] Three-tier pricing: Torrents Only (~$5), Torrents+Usenet (~$15), Full Spread (~$25)
+- [x] Three-tier pricing with usenet deep dive
 - [x] Hardware options, optional add-ons, bottom line summary
-- [x] No streaming service comparison (we're not selling anything)
 - [x] All example media names are fictional
 
-## Docs Section (`/docs`) — Not Started
-- [ ] Create `/docs` landing page with topic index
-- [ ] CLI reference (all `arr` commands)
-- [ ] Quality scoring deep dive (TRaSH + Davo custom formats)
-- [ ] Hardlink architecture explainer
-- [ ] Network topology & VPN routing
-- [ ] Backup & restore procedures
-- [ ] Add to nav
+## Docs Section (`/docs`) — Done
+- [x] Full docs page with overview, topology, hardlinks, profiles, pipelines
+- [x] CLI reference section
+- [x] Quality scoring deep dive
+- [x] Network topology & VPN routing
+- [x] Architecture diagrams page (`/docs/diagrams`) with 20+ SVG diagrams
+- [x] In nav
+- [ ] Backup & restore procedures section
 
 ## Styles & Design
-- [ ] Tons of inline `style` attrs on pages — move to component/scoped styles
-- [ ] Color tokens exist but many components use raw `rgba()` values instead
+- [x] Scrollbar styles — Firefox `scrollbar-color` added
+- [x] `:focus-visible` outlines on all interactive elements
+- [x] JSON-LD structured data (Organization, WebSite)
+- [x] Canonical URL tags
+- [x] Terminal component uses CSS tokens instead of hardcoded hex
 - [ ] No dark/light toggle (fine for now, but note for later)
-- [ ] Scrollbar styles are webkit-only — add Firefox `scrollbar-color`
-- [ ] No focus/keyboard styles on interactive elements (accessibility)
-- [ ] Buttons have no `:focus-visible` outline
-- [ ] Flow diagram layer cards have no `aria-label` or semantic structure
 
 ## Performance & SEO
-- [ ] No `sitemap.xml` — add `@astrojs/sitemap` integration
-- [ ] No `robots.txt`
-- [ ] GSAP is a big dependency — check if tree-shaking is working (only ScrollTrigger needed)
-- [ ] External font request blocks render — consider `font-display: swap` or self-hosting
-- [ ] No image optimization — add `@astrojs/image` or `astro:assets` for any future images
+- [x] `sitemap.xml` via `@astrojs/sitemap`
+- [x] `robots.txt`
+- [ ] GSAP is a big dependency — check if tree-shaking is working
 - [ ] Lighthouse audit once deployed
+- [ ] No image optimization — add `astro:assets` for any future images
 
-## GitHub & CI
-- [ ] `.github/` has a workflow but deploy target is Cloudflare Pages now — verify/update
-- [ ] Add branch preview deploys via Cloudflare Pages
-- [ ] README for the repo (setup, dev, deploy instructions)
+## Code Quality
+- [x] Shared scroll-reveal utility (`src/scripts/scroll-reveal.ts`) — used by crew, costs, guide
+- [ ] `.github/` workflow — verify deploy target matches current setup
 
 ## Future Ideas
 - [ ] Blog/changelog section for arr-barr updates
 - [ ] Live status page pulling from Athena health checks
 - [ ] Friend invite flow — generate a quick-start link
 - [ ] Search across all docs pages
-- [ ] Animated service cards that flip to show config details
+- [ ] OG image (design a share card for social previews)

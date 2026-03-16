@@ -379,13 +379,6 @@ const hardware = [
 </style>
 
 <script>
-  import { gsap } from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
-  gsap.registerPlugin(ScrollTrigger);
-
-  gsap.utils.toArray<HTMLElement>('.gs').forEach(el => {
-    gsap.to(el, { opacity:1, y:0, duration:0.7, ease:'power3.out',
-      scrollTrigger: { trigger:el, start:'top 85%' }
-    });
-  });
+  import { initScrollReveal } from '../scripts/scroll-reveal';
+  initScrollReveal();
 </script>

@@ -114,7 +114,7 @@ const groups = [
   </div>
 
   <div class="crew-cta gs">
-    <p>Ready to get started? <a href="/guide">Read the guide</a> or explore the <a href="/architecture">technical architecture</a>.</p>
+    <p>Ready to get started? <a href="/guide">Read the guide</a> or explore the <a href="/docs/diagrams">technical architecture</a>.</p>
   </div>
 </div>
 
@@ -219,13 +219,6 @@ const groups = [
 </style>
 
 <script>
-  import { gsap } from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
-  gsap.registerPlugin(ScrollTrigger);
-
-  gsap.utils.toArray<HTMLElement>('.gs').forEach(el => {
-    gsap.to(el, { opacity:1, y:0, duration:0.7, ease:'power3.out',
-      scrollTrigger: { trigger:el, start:'top 85%' }
-    });
-  });
+  import { initScrollReveal } from '../scripts/scroll-reveal';
+  initScrollReveal();
 </script>

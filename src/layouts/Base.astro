@@ -17,13 +17,16 @@ const currentPath = Astro.url.pathname;
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content={description}>
   <title>{title}</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site || 'https://arrbarr.com').href}>
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content={title}>
   <meta property="og:description" content={description}>
   <meta property="og:image" content="https://arrbarr.com/og.png">
-  <meta property="og:url" content={`https://arrbarr.com${Astro.url.pathname}`}>
+  <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site || 'https://arrbarr.com').href}>
   <meta property="og:site_name" content="arr-barr">
 
   <!-- Twitter / Discord -->
@@ -31,9 +34,22 @@ const currentPath = Astro.url.pathname;
   <meta name="twitter:title" content={title}>
   <meta name="twitter:description" content={description}>
   <meta name="twitter:image" content="https://arrbarr.com/og.png">
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "arr-barr",
+    "url": "https://arrbarr.com",
+    "description": "Open-source, self-hosted media automation stack. Movies, TV, music, books, audiobooks, and games — all in one repo.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Pandai Technologies",
+      "url": "https://github.com/TrashedPandai"
+    }
+  })}></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Cinzel+Decorative:wght@400;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -107,7 +123,14 @@ const currentPath = Astro.url.pathname;
 </main>
 
 <footer>
-  <p>arr-barr &mdash; Pandai Technologies</p>
+  <nav class="footer-nav">
+    <a href="/">Home</a>
+    <a href="/guide">The Guide</a>
+    <a href="/crew">The Crew</a>
+    <a href="/costs">Costs</a>
+    <a href="/docs">Docs</a>
+  </nav>
+  <p><a href="https://github.com/TrashedPandai/arr-barr" target="_blank" rel="noopener" class="footer-brand">arr-barr</a> &mdash; Pandai Technologies</p>
   <p class="mt-1" style="font-size:0.72rem;">Open source. Self-hosted. Self-poured.</p>
   <p class="legal-notice">arr-barr documents the setup and configuration of open-source, legally available software. Users are solely responsible for ensuring their use complies with all applicable laws, including copyright law, in their jurisdiction. This project does not endorse, encourage, or facilitate copyright infringement.</p>
 </footer>
@@ -169,6 +192,19 @@ const currentPath = Astro.url.pathname;
     transition:all 0.2s;
   }
   .clone-toast.show { opacity:1; transform:translateY(0); }
+
+  /* Footer */
+  .footer-nav {
+    display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .footer-nav a {
+    color: rgba(160,175,140,0.5); font-size: 0.78rem; text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-nav a:hover { color: var(--gold); }
+  .footer-brand { color: inherit; transition: color 0.2s; }
+  .footer-brand:hover { color: var(--gold); }
 
   @media (max-width: 640px) {
     .nav-links {
@@ -252,8 +288,16 @@ const currentPath = Astro.url.pathname;
   });
 
   // Mobile menu
-  document.getElementById('hamburger')?.addEventListener('click', () => {
-    document.getElementById('navLinks')?.classList.toggle('open');
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger?.addEventListener('click', () => {
+    navLinks?.classList.toggle('open');
+  });
+  // Close mobile menu when a link is clicked
+  navLinks?.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+    });
   });
 </script>
 

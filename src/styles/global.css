@@ -47,6 +47,7 @@ body {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border-h); border-radius: 3px; }
+html { scrollbar-color: var(--border-h) var(--bg); scrollbar-width: thin; }
 
 a { color: var(--sky); text-decoration: none; transition: color 0.2s; }
 a:hover { color: var(--cyan); }
@@ -106,6 +107,13 @@ img { max-width: 100%; height: auto; }
   color: var(--gold);
 }
 
+/* ═══ Focus ═══ */
+:focus-visible {
+  outline: 2px solid var(--indigo);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 /* ═══ Section Headers ═══ */
 .section-header {
   text-align: center;
@@ -148,6 +156,14 @@ footer {
    spans full width when it would otherwise sit alone. */
 .grid-no-orphan > :last-child:nth-child(odd) {
   grid-column: 1 / -1;
+}
+
+/* ═══ No-JS Fallback ═══ */
+@media (scripting: none) {
+  .gs, .ds, .dg-section, .chapter-content { opacity: 1 !important; transform: none !important; }
+}
+noscript ~ * .gs, noscript ~ * .ds, noscript ~ * .dg-section, noscript ~ * .chapter-content {
+  opacity: 1; transform: none;
 }
 
 /* ═══ Responsive ═══ */

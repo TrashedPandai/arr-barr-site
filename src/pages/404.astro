@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="404 — arr-barr" description="Page not found.">
+
+<section class="lost">
+  <h1>404</h1>
+  <p class="lost-sub">This page drifted off the map.</p>
+  <nav class="lost-nav">
+    <a href="/" class="btn btn-primary">Back to shore</a>
+    <a href="/guide" class="btn btn-ghost">The Guide</a>
+    <a href="/docs" class="btn btn-ghost">Docs</a>
+  </nav>
+</section>
+
+</Base>
+
+<style>
+  .lost {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 70vh; text-align: center; padding: 60px 24px;
+  }
+  .lost h1 {
+    font-size: clamp(4rem, 15vw, 8rem); font-weight: 800;
+    background: linear-gradient(135deg, var(--indigo), var(--purple));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; letter-spacing: -2px;
+  }
+  .lost-sub {
+    color: var(--text-dim); font-size: 1.1rem; margin: 8px 0 32px;
+  }
+  .lost-nav {
+    display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+  }
+</style>
