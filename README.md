@@ -2,7 +2,7 @@
 
 # arrbarr.com
 
-The official website for **[arr-barr](https://github.com/TrashedPandai/arr-barr)** — a self-hosted media automation stack.
+The official website for **[arr-barr](https://github.com/TrashedPandai/arr-barr)** — a self-hosted media management and automation stack.
 
 [🌐 Live Site](https://arrbarr.com) · [arr-barr Stack](https://github.com/TrashedPandai/arr-barr) · [Docs](https://arrbarr.com/docs)
 
@@ -12,14 +12,14 @@ The official website for **[arr-barr](https://github.com/TrashedPandai/arr-barr)
 
 ## What's Here
 
-The website at [arrbarr.com](https://arrbarr.com) is the friendly face of the arr-barr project. It's designed for non-technical users who want to understand what the stack does, how it works, and how to get started — without reading a single line of YAML.
+The website at [arrbarr.com](https://arrbarr.com) is the friendly face of the arr-barr project. It's designed for users who want to understand what the stack does, how it works, and how to get started — without reading a single line of YAML.
 
 | Page | What It Covers |
 |---|---|
 | **[Home](https://arrbarr.com)** | Animated terminal demo, pipeline flow diagram, security overview |
 | **[The Guide](https://arrbarr.com/guide)** | Step-by-step setup from zero to streaming |
 | **[The Crew](https://arrbarr.com/crew)** | Visual roster of all 15 services grouped by role |
-| **[Costs](https://arrbarr.com/costs)** | Pricing tiers, streaming comparison ($92/mo vs $17/mo), hardware options |
+| **[Costs](https://arrbarr.com/costs)** | Pricing breakdown, hardware options, running cost comparison |
 | **[Docs](https://arrbarr.com/docs)** | Interactive technical reference — network topology, quality scoring, CLI, troubleshooting |
 
 ## Stack
