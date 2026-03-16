@@ -16,7 +16,7 @@ const tiers = [
       'The arr CLI tool',
       'Unlimited users & streams',
     ],
-    note: 'The cheapest way to get started. VPN is the only cost — everything else is free and open source. Based on a typical premium VPN at ~$10/mo month-to-month.',
+    note: 'VPN is the only cost. Everything else is free and open source.',
   },
   {
     name: 'Torrents + Usenet',
@@ -55,13 +55,13 @@ const usenetConcepts = [
   {
     title: 'Providers',
     icon: '\u2B07',
-    desc: 'Providers host content on independent server networks called "backbones." Your download client connects to them directly. Each backbone has different retention periods and availability — mixing providers across backbones improves reliability.',
+    desc: 'Host content on server networks ("backbones"). Mixing providers across backbones improves reliability.',
     color: 'cyan',
   },
   {
     title: 'Indexers',
     icon: '\uD83D\uDD0D',
-    desc: 'Indexers catalog what\'s available and let your apps search for it. Think of providers as warehouses and indexers as the search engine that knows what\'s in stock. Free indexers exist but paid ones find more, faster.',
+    desc: 'Search engines that find what\'s available. Free indexers exist but paid ones find more.',
     color: 'yellow',
   },
 ];
@@ -76,7 +76,7 @@ const usenetTiers = [
       { label: '1 budget provider', cost: '$3-5/mo' },
       { label: '1 free indexer', cost: '$0' },
     ],
-    note: 'One provider, one free indexer. Gets you started with usenet. You may hit some incomplete downloads, but most things work fine.',
+    note: 'Gets you started. Most things work fine.',
   },
   {
     name: 'Mid-Range',
@@ -88,7 +88,7 @@ const usenetTiers = [
       { label: '1 block account (fill)', cost: '~$2/mo equiv.' },
       { label: '2 paid indexers', cost: '~$1.50/mo equiv.' },
     ],
-    note: 'A premium provider for speed and retention, a block account on a different backbone to fill gaps, and two paid indexers. The sweet spot for most people.',
+    note: 'The sweet spot for most people.',
   },
   {
     name: 'Max Coverage',
@@ -100,22 +100,14 @@ const usenetTiers = [
       { label: '1 block account (fill)', cost: '~$2/mo equiv.' },
       { label: '3 paid indexers', cost: '~$2.50/mo equiv.' },
     ],
-    note: 'Two unlimited providers on different backbones means near-100% completion. Three indexers find everything. This is the endgame.',
+    note: 'Near-100% completion. The endgame.',
   },
 ];
 
 const hardware = [
-  { name: 'Synology DS920+', price: '$550', desc: 'Our reference hardware. Intel QSV for transcoding, 4 bays, low power.', tag: 'Recommended' },
-  { name: 'Used Mini PC', price: '$100-200', desc: 'Any Intel N100/N5105 box. Excellent for transcoding. Add external drives.', tag: 'Budget' },
-  { name: 'Old Desktop', price: '$0', desc: 'Repurpose what you have. If it runs Docker and stays on, it works.', tag: 'Free' },
-  { name: 'Raspberry Pi 5', price: '$80', desc: 'Works in a pinch but no hardware transcoding and limited RAM. Not ideal.', tag: 'Not recommended' },
-];
-
-const optional = [
-  { name: 'Domain name', price: '~$10/yr', desc: 'For remote access with a clean URL. Optional if you use Tailscale.' },
-  { name: 'Tailscale', price: 'Free', desc: 'Mesh VPN for secure remote access. Free tier covers personal use.' },
-  { name: 'Hard drives', price: '$50-150/ea', desc: 'More storage = bigger library. Start with what you have, expand later.' },
-  { name: 'Cloudflare', price: 'Free', desc: 'DNS and CDN. Free plan is plenty for a personal media site.' },
+  { name: 'Synology DS920+', price: '$550', desc: 'Intel QSV transcoding, 4 bays, low power.', tag: 'Recommended' },
+  { name: 'Used Mini PC', price: '$100-200', desc: 'Intel N100/N5105. Great transcoding.', tag: 'Budget' },
+  { name: 'Old Desktop', price: '$0', desc: 'Runs Docker and stays on? It works.', tag: 'Free' },
 ];
 ---
 
@@ -167,27 +159,6 @@ const optional = [
       ))}
     </div>
 
-    <div class="backbone-callout gs">
-      <h3>Why different backbones?</h3>
-      <p>Each backbone operates independently with different retention policies, peering arrangements, and completion rates. Using providers on different backbones gives you redundancy — if one is missing an article, another likely has it. This is the key to high completion rates.</p>
-      <div class="backbone-visual">
-        <div class="bb-col">
-          <span class="bb-label">Backbone A</span>
-          <span class="bb-status bb-down">Missing</span>
-        </div>
-        <div class="bb-arrow">&rarr;</div>
-        <div class="bb-col">
-          <span class="bb-label">Backbone B</span>
-          <span class="bb-status bb-up">Still available</span>
-        </div>
-        <div class="bb-arrow">&rarr;</div>
-        <div class="bb-col">
-          <span class="bb-label">Your client</span>
-          <span class="bb-status bb-up">Downloads from B</span>
-        </div>
-      </div>
-    </div>
-
     <div class="usenet-tier-grid">
       {usenetTiers.map(tier => (
         <div class={`usenet-tier-card ut-${tier.color} gs`}>
@@ -209,16 +180,8 @@ const optional = [
       ))}
     </div>
 
-    <div class="block-callout gs">
-      <div class="block-icon">&#x1F4E6;</div>
-      <div class="block-body">
-        <h3>Block Accounts</h3>
-        <p>A block account is a one-time purchase of download volume (500GB-1TB for $15-30). You use it as a "fill" server — your main provider tries first, the block account catches failures. Since they're on a different backbone, they often have content your primary is missing. A 1TB block can last months as a backup source.</p>
-      </div>
-    </div>
-
     <div class="usenet-tip gs">
-      <p><strong>Pro tip:</strong> Never pay for two providers on the same backbone — that's wasted money. One provider per backbone, block accounts for fill, and 2-3 indexers is the proven formula. Black Friday (late November) is consistently the best time to lock in annual pricing.</p>
+      <p><strong>Tip:</strong> One provider per backbone, block accounts for fill, 2-3 indexers. Black Friday is the best time to lock in annual pricing.</p>
     </div>
   </section>
 
@@ -235,22 +198,6 @@ const optional = [
           </div>
           <div class="hw-price">{hw.price}</div>
           <p>{hw.desc}</p>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <!-- Optional -->
-  <section class="opt-section gs">
-    <h2>Optional Add-ons</h2>
-    <div class="opt-grid grid-no-orphan">
-      {optional.map(opt => (
-        <div class="opt-card">
-          <div class="opt-top">
-            <h3>{opt.name}</h3>
-            <span class="opt-price">{opt.price}</span>
-          </div>
-          <p>{opt.desc}</p>
         </div>
       ))}
     </div>
@@ -354,27 +301,6 @@ const optional = [
   .uc-yellow h3 { color:var(--yellow); }
   .uc-card p { font-size:0.82rem; color:var(--text-dim); line-height:1.7; }
 
-  .backbone-callout {
-    background:var(--surface); border:1px solid var(--border);
-    border-left:3px solid var(--indigo);
-    border-radius:12px; padding:20px 24px; margin-bottom:24px;
-  }
-  .backbone-callout h3 { font-size:0.95rem; color:#e0e6f0; margin-bottom:8px; }
-  .backbone-callout > p { font-size:0.82rem; color:var(--text-dim); line-height:1.7; margin-bottom:16px; }
-  .backbone-visual { display:flex; align-items:center; gap:16px; justify-content:center; }
-  .bb-col { display:flex; flex-direction:column; align-items:center; gap:6px; }
-  .bb-label {
-    font-size:0.72rem; color:var(--text-muted); text-transform:uppercase;
-    letter-spacing:0.05em; font-weight:600;
-  }
-  .bb-status {
-    font-size:0.72rem; font-weight:500; padding:3px 10px;
-    border-radius:6px; border:1px solid;
-  }
-  .bb-down { background:rgba(248,113,113,0.1); color:var(--red); border-color:rgba(248,113,113,0.2); }
-  .bb-up { background:rgba(16,185,129,0.1); color:var(--emerald); border-color:rgba(16,185,129,0.2); }
-  .bb-arrow { color:var(--text-muted); font-size:1.2rem; }
-
   .usenet-tier-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px; }
   .usenet-tier-card {
     background:var(--surface); border:1px solid var(--border);
@@ -396,20 +322,6 @@ const optional = [
   .ut-row:last-child { border-bottom:none; }
   .ut-cost { color:var(--text-muted); font-weight:500; font-size:0.78rem; white-space:nowrap; }
   .ut-note { font-size:0.78rem; color:var(--text-muted); line-height:1.6; font-style:italic; }
-
-  .block-callout {
-    display:flex; gap:16px; align-items:flex-start;
-    background:var(--surface); border:1px solid var(--border);
-    border-radius:12px; padding:20px; margin-bottom:16px;
-  }
-  .block-icon {
-    flex-shrink:0; width:40px; height:40px;
-    display:flex; align-items:center; justify-content:center;
-    background:rgba(251,191,36,0.1); border-radius:8px;
-    font-size:1.2rem; border:1px solid rgba(251,191,36,0.2);
-  }
-  .block-body h3 { font-size:0.95rem; color:var(--yellow); margin-bottom:6px; }
-  .block-body p { font-size:0.82rem; color:var(--text-dim); line-height:1.7; }
 
   .usenet-tip {
     background:var(--surface); border:1px solid var(--border);
@@ -439,22 +351,6 @@ const optional = [
   .hw-price { font-size:1.2rem; font-weight:700; color:var(--yellow); margin-bottom:6px; }
   .hw-card p { font-size:0.82rem; color:var(--text-dim); line-height:1.6; }
 
-  /* Optional */
-  .opt-section { margin-bottom:50px; }
-  .opt-section h2 { font-size:1.3rem; color:#f1f5f9; margin-bottom:16px; }
-  .opt-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
-
-  .opt-card {
-    background:var(--surface); border:1px solid var(--border);
-    border-radius:12px; padding:18px;
-  }
-  .opt-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
-  .opt-card h3 { font-size:0.95rem; color:#e0e6f0; }
-  .opt-price {
-    font-size:0.82rem; font-weight:600; color:var(--emerald);
-  }
-  .opt-card p { font-size:0.82rem; color:var(--text-dim); line-height:1.6; }
-
   /* Bottom line */
   .bottom-line { text-align:center; padding:30px 0 10px; border-top:1px solid rgba(30,41,59,0.4); }
   .bottom-line h2 { font-size:1.3rem; color:#f1f5f9; margin-bottom:20px; }
@@ -477,10 +373,7 @@ const optional = [
     .tier-grid { grid-template-columns:1fr; }
     .usenet-concepts { grid-template-columns:1fr; }
     .usenet-tier-grid { grid-template-columns:1fr; }
-    .backbone-visual { flex-direction:column; gap:8px; }
-    .bb-arrow { transform:rotate(90deg); }
     .hw-grid { grid-template-columns:1fr; }
-    .opt-grid { grid-template-columns:1fr; }
     .bl-grid { grid-template-columns:1fr; }
   }
 </style>
