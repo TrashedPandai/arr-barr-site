@@ -123,110 +123,6 @@ import Terminal from '../components/Terminal.astro';
   </div>
 </div>
 
-<!-- Fog zone — wraps the shore-to-crew transition so fog can cover both -->
-<div class="fog-zone" id="fogZone">
-
-<!-- Sea fog — multi-layer drifting wisps that part when the ship arrives -->
-<div class="sea-fog" id="seaFog" aria-hidden="true">
-  <!-- Filter definitions for procedural fog textures -->
-  <svg class="fog-filters" width="0" height="0">
-    <defs>
-      <filter id="fogNoise1" x="0" y="0" width="100%" height="100%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.006" numOctaves="4" seed="2" result="n"/>
-        <feComponentTransfer in="n" result="fog">
-          <feFuncR type="linear" slope="0" intercept="0.85"/>
-          <feFuncG type="linear" slope="0" intercept="0.88"/>
-          <feFuncB type="linear" slope="0" intercept="0.92"/>
-          <feFuncA type="table" tableValues="0 0.08 0.25 0.4 0.5 0.4 0.25 0.08 0"/>
-        </feComponentTransfer>
-        <feGaussianBlur in="fog" stdDeviation="3"/>
-      </filter>
-      <filter id="fogNoise2" x="0" y="0" width="100%" height="100%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.018 0.008" numOctaves="3" seed="7" result="n"/>
-        <feComponentTransfer in="n" result="fog">
-          <feFuncR type="linear" slope="0" intercept="0.82"/>
-          <feFuncG type="linear" slope="0" intercept="0.86"/>
-          <feFuncB type="linear" slope="0" intercept="0.9"/>
-          <feFuncA type="table" tableValues="0 0.05 0.18 0.35 0.45 0.35 0.18 0.05 0"/>
-        </feComponentTransfer>
-        <feGaussianBlur in="fog" stdDeviation="5"/>
-      </filter>
-      <filter id="fogNoise3" x="0" y="0" width="100%" height="100%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.008 0.004" numOctaves="5" seed="13" result="n"/>
-        <feComponentTransfer in="n" result="fog">
-          <feFuncR type="linear" slope="0" intercept="0.78"/>
-          <feFuncG type="linear" slope="0" intercept="0.82"/>
-          <feFuncB type="linear" slope="0" intercept="0.88"/>
-          <feFuncA type="table" tableValues="0 0.04 0.15 0.3 0.38 0.3 0.15 0.04 0"/>
-        </feComponentTransfer>
-        <feGaussianBlur in="fog" stdDeviation="2"/>
-      </filter>
-      <filter id="fogNoise4" x="0" y="0" width="100%" height="100%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.022 0.01" numOctaves="3" seed="23" result="n"/>
-        <feComponentTransfer in="n" result="fog">
-          <feFuncR type="linear" slope="0" intercept="0.88"/>
-          <feFuncG type="linear" slope="0" intercept="0.9"/>
-          <feFuncB type="linear" slope="0" intercept="0.93"/>
-          <feFuncA type="table" tableValues="0 0.03 0.12 0.22 0.28 0.22 0.12 0.03 0"/>
-        </feComponentTransfer>
-        <feGaussianBlur in="fog" stdDeviation="4"/>
-      </filter>
-      <filter id="fogNoise5" x="0" y="0" width="100%" height="100%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.015 0.007" numOctaves="4" seed="37" result="n"/>
-        <feComponentTransfer in="n" result="fog">
-          <feFuncR type="linear" slope="0" intercept="0.8"/>
-          <feFuncG type="linear" slope="0" intercept="0.84"/>
-          <feFuncB type="linear" slope="0" intercept="0.9"/>
-          <feFuncA type="table" tableValues="0 0.06 0.2 0.32 0.42 0.32 0.2 0.06 0"/>
-        </feComponentTransfer>
-        <feGaussianBlur in="fog" stdDeviation="3"/>
-      </filter>
-    </defs>
-  </svg>
-
-  <!-- 5 fog layers — each 200% wide with duplicated child for seamless loop -->
-  <div class="fog-band fog-band--1" id="fogBand1">
-    <div class="fog-wisp fog-wisp--a">
-      <svg viewBox="0 0 1200 600" preserveAspectRatio="none"><rect width="1200" height="600" filter="url(#fogNoise1)"/></svg>
-    </div>
-    <div class="fog-wisp fog-wisp--b">
-      <svg viewBox="0 0 1200 600" preserveAspectRatio="none"><rect width="1200" height="600" filter="url(#fogNoise1)"/></svg>
-    </div>
-  </div>
-  <div class="fog-band fog-band--2" id="fogBand2">
-    <div class="fog-wisp fog-wisp--a">
-      <svg viewBox="0 0 1200 600" preserveAspectRatio="none"><rect width="1200" height="600" filter="url(#fogNoise2)"/></svg>
-    </div>
-    <div class="fog-wisp fog-wisp--b">
-      <svg viewBox="0 0 1200 600" preserveAspectRatio="none"><rect width="1200" height="600" filter="url(#fogNoise2)"/></svg>
-    </div>
-  </div>
-  <div class="fog-band fog-band--3" id="fogBand3">
-    <div class="fog-wisp fog-wisp--a">
-      <svg viewBox="0 0 1200 600" preserveAspectRatio="none"><rect width="1200" height="600" filter="url(#fogNoise3)"/></svg>
-    </div>
-    <div class="fog-wisp fog-wisp--b">
-      <svg viewBox="0 0 1200 600" preserveAspectRatio="none"><rect width="1200" height="600" filter="url(#fogNoise3)"/></svg>
-    </div>
-  </div>
-  <div class="fog-band fog-band--4" id="fogBand4">
-    <div class="fog-wisp fog-wisp--a">
-      <svg viewBox="0 0 1200 600" preserveAspectRatio="none"><rect width="1200" height="600" filter="url(#fogNoise4)"/></svg>
-    </div>
-    <div class="fog-wisp fog-wisp--b">
-      <svg viewBox="0 0 1200 600" preserveAspectRatio="none"><rect width="1200" height="600" filter="url(#fogNoise4)"/></svg>
-    </div>
-  </div>
-  <div class="fog-band fog-band--5" id="fogBand5">
-    <div class="fog-wisp fog-wisp--a">
-      <svg viewBox="0 0 1200 600" preserveAspectRatio="none"><rect width="1200" height="600" filter="url(#fogNoise5)"/></svg>
-    </div>
-    <div class="fog-wisp fog-wisp--b">
-      <svg viewBox="0 0 1200 600" preserveAspectRatio="none"><rect width="1200" height="600" filter="url(#fogNoise5)"/></svg>
-    </div>
-  </div>
-</div>
-
 <!-- Beach shore transition — overhead view, waves crashing toward shore (top→bottom) -->
 <div class="beach-shore" id="beachShore">
   <svg class="shore-svg" viewBox="0 0 1200 400" preserveAspectRatio="none" aria-hidden="true">
@@ -412,7 +308,6 @@ import Terminal from '../components/Terminal.astro';
 </div>
 
 </div><!-- /shore-ground -->
-</div><!-- /fog-zone -->
 
 </Base>
 
@@ -444,129 +339,6 @@ import Terminal from '../components/Terminal.astro';
   .hero-wave-morph { position:absolute; bottom:-1px; left:0; right:0; height:80px; }
   .wave-svg { display:block; width:100%; height:100%; }
   .wave-flip { transform:scaleY(-1); }
-
-  /* ═══ SEA FOG ═══ */
-  .fog-zone {
-    position: relative;
-  }
-  .fog-filters { position:absolute; width:0; height:0; }
-  .sea-fog {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 15;
-    pointer-events: none;
-    overflow: hidden;
-    filter: blur(1px) saturate(1.2) sepia(0.08);
-    mix-blend-mode: screen;
-  }
-
-  /* Each band is 200% wide so two children tile seamlessly */
-  .fog-band {
-    position: absolute;
-    top: -10%;
-    left: 0;
-    width: 200%;
-    height: 120%;
-    display: flex;
-    will-change: transform, opacity;
-  }
-  .fog-wisp {
-    flex: 0 0 50%;
-    height: 100%;
-  }
-  .fog-wisp svg {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-
-  /* Layer 1 — slow, large shapes, background fog */
-  .fog-band--1 {
-    animation:
-      fogSlide 17s linear infinite,
-      fogBreath1 10s ease-in-out infinite;
-  }
-  /* Layer 2 — opposite direction, mid-ground */
-  .fog-band--2 {
-    animation:
-      fogSlideReverse 13s linear infinite,
-      fogBreath2 21s ease-in-out infinite;
-    top: -5%;
-  }
-  /* Layer 3 — slowest, deepest, biggest blobs */
-  .fog-band--3 {
-    animation:
-      fogSlide 23s linear infinite,
-      fogBreath3 27s ease-in-out infinite;
-    top: -15%;
-    height: 130%;
-  }
-  /* Layer 4 — fast wispy foreground */
-  .fog-band--4 {
-    animation:
-      fogSlideReverse 11s linear infinite,
-      fogBreath4 15s ease-in-out infinite;
-    top: 0%;
-  }
-  /* Layer 5 — mid-speed, adds density to center */
-  .fog-band--5 {
-    animation:
-      fogSlide 19s linear infinite,
-      fogBreath5 18s ease-in-out infinite;
-    top: -8%;
-    height: 125%;
-  }
-
-  /* Seamless horizontal slide — left 0 → left -50% (one child width) */
-  @keyframes fogSlide {
-    0%   { transform: translate3d(0, 0, 0); }
-    100% { transform: translate3d(-50%, 0, 0); }
-  }
-  @keyframes fogSlideReverse {
-    0%   { transform: translate3d(-50%, 0, 0); }
-    100% { transform: translate3d(0, 0, 0); }
-  }
-
-  /* Irregular opacity breathing — each layer on its own cycle */
-  @keyframes fogBreath1 {
-    0%   { opacity: 0.15; }
-    22%  { opacity: 0.55; }
-    40%  { opacity: 0.3; }
-    58%  { opacity: 0.48; }
-    80%  { opacity: 0.2; }
-    100% { opacity: 0.15; }
-  }
-  @keyframes fogBreath2 {
-    0%   { opacity: 0.5; }
-    25%  { opacity: 0.2; }
-    50%  { opacity: 0.12; }
-    80%  { opacity: 0.35; }
-    100% { opacity: 0.5; }
-  }
-  @keyframes fogBreath3 {
-    0%   { opacity: 0.7; }
-    27%  { opacity: 0.25; }
-    52%  { opacity: 0.55; }
-    68%  { opacity: 0.3; }
-    100% { opacity: 0.7; }
-  }
-  @keyframes fogBreath4 {
-    0%   { opacity: 0.1; }
-    30%  { opacity: 0.4; }
-    55%  { opacity: 0.18; }
-    75%  { opacity: 0.35; }
-    100% { opacity: 0.1; }
-  }
-  @keyframes fogBreath5 {
-    0%   { opacity: 0.35; }
-    20%  { opacity: 0.15; }
-    45%  { opacity: 0.45; }
-    70%  { opacity: 0.2; }
-    100% { opacity: 0.35; }
-  }
 
   /* ═══ BEACH SHORE ═══ */
   .beach-shore {
@@ -758,8 +530,6 @@ import Terminal from '../components/Terminal.astro';
     .journey-ship { display:none !important; }
     .particle { opacity:0.3 !important; }
     .star { opacity:0.3 !important; }
-    .sea-fog { display:none !important; }
-    .fog-band { animation:none !important; }
   }
 </style>
 
@@ -1068,40 +838,6 @@ import Terminal from '../components/Terminal.astro';
       });
     }
 
-    // ═══ SEA FOG — parts and dissipates as the ship arrives ═══
-    const fogZone = document.getElementById('fogZone');
-    const fogBands = [
-      { el: document.getElementById('fogBand1'), x: '-40%', y: '-15%', scale: 1.3 },
-      { el: document.getElementById('fogBand2'), x: '50%',  y: '-10%', scale: 1.2 },
-      { el: document.getElementById('fogBand3'), x: '-30%', y: '20%',  scale: 1.5 },
-      { el: document.getElementById('fogBand4'), x: '60%',  y: '-25%', scale: 1.4 },
-      { el: document.getElementById('fogBand5'), x: '-50%', y: '15%',  scale: 1.3 },
-    ];
-
-    if (fogZone && fogBands[0].el) {
-      const fogTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: journeyWrap || fogZone,
-          start: 'bottom 55%',
-          end: 'bottom 5%',
-          scrub: 0.6,
-        }
-      });
-
-      // Each band drifts in a different direction as it fades — fog parts, not just disappears
-      fogBands.forEach((band, i) => {
-        if (band.el) {
-          fogTl.to(band.el, {
-            x: band.x,
-            y: band.y,
-            scale: band.scale,
-            opacity: 0,
-            duration: 1,
-            ease: 'power1.in',
-          }, i * 0.06);  // Slight stagger so layers peel away sequentially
-        }
-      });
-    }
 
     // ═══ SVG Node activation ═══
     gsap.utils.toArray<SVGCircleElement>('.chart-node').forEach((node, i) => {
