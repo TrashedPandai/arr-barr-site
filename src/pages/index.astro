@@ -497,9 +497,10 @@ import Terminal from '../components/Terminal.astro';
       opacity:0.35; z-index:0;
     }
     .journey-ship {
-      left:auto; right:25%;
-      opacity:0.4; z-index:0;
-      filter:drop-shadow(0 2px 12px rgba(212,160,74,0.2));
+      left:auto; right:20%;
+      opacity:0.55; z-index:0;
+      filter:drop-shadow(0 2px 12px rgba(212,160,74,0.3));
+      transform:scale(2.2);
     }
     .chapter-node { position:static; width:8px; height:8px; margin-bottom:12px; }
     .chapter { padding-bottom:60px; position:relative; z-index:1; }
@@ -821,13 +822,13 @@ import Terminal from '../components/Terminal.astro';
           align: chartRoute,
           alignOrigin: [0.5, 0.5],
           autoRotate: 270,
-          end: 0.93,
+          end: 0.98,
         },
         ease: 'none',
         scrollTrigger: {
           trigger: journeyWrap,
           start: 'top 70%',
-          end: 'bottom 30%',
+          end: 'bottom 10%',
           scrub: 0.5,
         }
       });
