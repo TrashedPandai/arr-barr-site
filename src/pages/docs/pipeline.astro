@@ -225,90 +225,34 @@ import DocsLayout from '../../layouts/DocsLayout.astro';
   </div>
 </section>
 
-<!-- ═══ SECTION 3: THE DECISION ENGINE ═══ -->
-<section class="pipe-section">
-  <h2 class="pipe-h2">The Decision Engine</h2>
-  <p class="pipe-lead">Every incoming release passes through this five-step evaluation.</p>
-
-  <div class="engine-flow">
-    <div class="engine-step">
-      <span class="engine-num">1</span>
-      <div class="engine-body">
-        <strong>Incoming release</strong> &mdash; Quality allowed?
-        <span class="engine-reject">No &rarr; REJECTED</span>
-      </div>
-    </div>
-    <div class="engine-arrow">&darr;</div>
-    <div class="engine-step">
-      <span class="engine-num">2</span>
-      <div class="engine-body">
-        <strong>Any &minus;10000 custom format?</strong>
-        <span class="engine-reject">Yes &rarr; REJECTED</span>
-      </div>
-    </div>
-    <div class="engine-arrow">&darr;</div>
-    <div class="engine-step">
-      <span class="engine-num">3</span>
-      <div class="engine-body">
-        <strong>Score &ge; minimum?</strong>
-        <span class="engine-reject">No &rarr; REJECTED</span>
-      </div>
-    </div>
-    <div class="engine-arrow">&darr;</div>
-    <div class="engine-step engine-step-accept">
-      <span class="engine-num">4</span>
-      <div class="engine-body">
-        <strong>ACCEPTED</strong> &mdash; Ranked by total score
-      </div>
-    </div>
-    <div class="engine-arrow">&darr;</div>
-    <div class="engine-step">
-      <span class="engine-num">5</span>
-      <div class="engine-body">
-        <strong>Better than existing?</strong>
-        <span class="engine-upgrade">Yes &rarr; UPGRADE</span>
-        <span class="engine-skip">No &rarr; SKIP</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ SECTION 4: SPECIAL PIPELINES ═══ -->
+<!-- ═══ SECTION 3: SPECIAL PIPELINES ═══ -->
 <section class="pipe-section">
   <h2 class="pipe-h2">Special Pipelines</h2>
   <p class="pipe-lead">Non-standard content types have their own automation paths.</p>
 
   <div class="special-grid grid-no-orphan">
 
-    <!-- Games -->
     <div class="special-card" style="--sc:var(--emerald)">
       <h3 class="special-title">Games (QuestArr)</h3>
       <ul class="special-list">
-        <li>QuestArr searches via Prowlarr indexers</li>
-        <li>Downloads through VPN pipeline</li>
-        <li><code>game-import.sh</code> runs every 15 min: checks APIs, 7 safety checks</li>
-        <li>Torrent &rarr; Hardlink, Usenet &rarr; Move &rarr; <code>/media/games/</code></li>
+        <li>Searches via Prowlarr, downloads through VPN</li>
+        <li>Auto-imports to <code>/media/games/</code> every 15 min</li>
       </ul>
     </div>
 
-    <!-- Books & Audiobooks -->
     <div class="special-card" style="--sc:var(--amber)">
       <h3 class="special-title">Books &amp; Audiobooks (LazyLibrarian)</h3>
       <ul class="special-list">
-        <li>PostProcessor runs every 10 min</li>
-        <li>Detects file type: epub/pdf/mobi &rarr; <code>/media/books/</code> (Kavita)</li>
+        <li>epub/pdf/mobi &rarr; <code>/media/books/</code> (Kavita)</li>
         <li>mp3/m4b/m4a &rarr; <code>/media/audiobooks/</code> (Audiobookshelf)</li>
       </ul>
     </div>
 
-    <!-- Subtitles -->
     <div class="special-card" style="--sc:var(--indigo)">
       <h3 class="special-title">Subtitles (Bazarr)</h3>
       <ul class="special-list">
-        <li>Two triggers: new media imported + 6h wanted scan</li>
-        <li>Scores against metadata, threshold check</li>
-        <li>Downloads <code>.srt</code>, Jellyfin auto-detects</li>
-        <li>Subsync corrects timing offsets</li>
+        <li>Auto-fetches <code>.srt</code> on import + 6h scan</li>
+        <li>Subsync corrects timing, Jellyfin auto-detects</li>
       </ul>
     </div>
 
@@ -419,38 +363,6 @@ import DocsLayout from '../../layouts/DocsLayout.astro';
   .score-item span:first-child { color:var(--text-dim); }
   .score-pos { color:var(--emerald); font-weight:600; font-variant-numeric:tabular-nums; }
   .score-neg { color:var(--red); font-weight:600; font-variant-numeric:tabular-nums; }
-
-  /* ═══ DECISION ENGINE ═══ */
-  .engine-flow { display:flex; flex-direction:column; align-items:stretch; gap:0; }
-
-  .engine-step {
-    display:flex; align-items:flex-start; gap:12px;
-    padding:12px 16px;
-    background:var(--card); border-radius:8px;
-    border-left:3px solid var(--border-h);
-  }
-  .engine-step-accept { border-left-color:var(--emerald); background:rgba(16,185,129,0.04); }
-
-  .engine-num {
-    flex-shrink:0;
-    width:24px; height:24px;
-    display:flex; align-items:center; justify-content:center;
-    border-radius:50%;
-    background:var(--border); color:var(--text);
-    font-size:0.68rem; font-weight:700;
-  }
-  .engine-step-accept .engine-num { background:var(--emerald); color:#fff; }
-
-  .engine-body { font-size:0.82rem; color:var(--text-dim); line-height:1.5; }
-  .engine-body strong { color:var(--text); }
-  .engine-reject { display:inline-block; margin-left:8px; color:var(--red); font-weight:600; font-size:0.75rem; }
-  .engine-upgrade { display:inline-block; margin-left:8px; color:var(--emerald); font-weight:600; font-size:0.75rem; }
-  .engine-skip { display:inline-block; margin-left:8px; color:var(--text-muted); font-weight:600; font-size:0.75rem; }
-
-  .engine-arrow {
-    text-align:center; color:var(--text-muted);
-    font-size:0.9rem; line-height:1; padding:4px 0;
-  }
 
   /* ═══ SPECIAL PIPELINES ═══ */
   .special-grid {

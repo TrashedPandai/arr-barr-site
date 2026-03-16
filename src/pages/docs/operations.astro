@@ -132,38 +132,35 @@ import DocsLayout from '../../layouts/DocsLayout.astro';
   <h2 class="ops-h2" id="health">Health Endpoints</h2>
   <p class="ops-desc">All 15 checked in parallel with a 2s timeout. <code>arr health</code> runs them all.</p>
 
-  <div class="health-grid">
-    {[
-      {svc:'Gluetun', ep:'/v1/openvpn/status', code:'302'},
-      {svc:'Transmission', ep:'/transmission/rpc', code:'409'},
-      {svc:'SABnzbd', ep:'/api?mode=version', code:'200'},
-      {svc:'Prowlarr', ep:'/ping', code:'200'},
-      {svc:'FlareSolverr', ep:'/health', code:'200'},
-      {svc:'Radarr', ep:'/ping', code:'200'},
-      {svc:'Sonarr', ep:'/ping', code:'200'},
-      {svc:'Lidarr', ep:'/ping', code:'200'},
-      {svc:'Bazarr', ep:'/ping', code:'200'},
-      {svc:'Jellyfin', ep:'/System/Info/Public', code:'200'},
-      {svc:'Seerr', ep:'/api/v1/status', code:'200'},
-      {svc:'LazyLibrarian', ep:'/api?cmd=getVersion', code:'200'},
-      {svc:'Kavita', ep:'/api/health', code:'200'},
-      {svc:'Audiobookshelf', ep:'/healthcheck', code:'200'},
-      {svc:'QuestArr', ep:'/', code:'200'},
-    ].map(h => (
-      <div class="hc-row">
-        <span class="hc-dot"></span>
-        <span class="hc-svc">{h.svc}</span>
-        <code class="hc-ep">{h.ep}</code>
-        <span class="hc-code">{h.code}</span>
-      </div>
-    ))}
-  </div>
-
-  <div class="health-legend">
-    <span class="hl-item hl-green">Green &lt;1s</span>
-    <span class="hl-item hl-yellow">Yellow &gt;1s</span>
-    <span class="hl-item hl-red">Red = fail</span>
-  </div>
+  <details class="health-collapse">
+    <summary>View all 15 endpoints</summary>
+    <div class="health-grid">
+      {[
+        {svc:'Gluetun', ep:'/v1/openvpn/status', code:'302'},
+        {svc:'Transmission', ep:'/transmission/rpc', code:'409'},
+        {svc:'SABnzbd', ep:'/api?mode=version', code:'200'},
+        {svc:'Prowlarr', ep:'/ping', code:'200'},
+        {svc:'FlareSolverr', ep:'/health', code:'200'},
+        {svc:'Radarr', ep:'/ping', code:'200'},
+        {svc:'Sonarr', ep:'/ping', code:'200'},
+        {svc:'Lidarr', ep:'/ping', code:'200'},
+        {svc:'Bazarr', ep:'/ping', code:'200'},
+        {svc:'Jellyfin', ep:'/System/Info/Public', code:'200'},
+        {svc:'Seerr', ep:'/api/v1/status', code:'200'},
+        {svc:'LazyLibrarian', ep:'/api?cmd=getVersion', code:'200'},
+        {svc:'Kavita', ep:'/api/health', code:'200'},
+        {svc:'Audiobookshelf', ep:'/healthcheck', code:'200'},
+        {svc:'QuestArr', ep:'/', code:'200'},
+      ].map(h => (
+        <div class="hc-row">
+          <span class="hc-dot"></span>
+          <span class="hc-svc">{h.svc}</span>
+          <code class="hc-ep">{h.ep}</code>
+          <span class="hc-code">{h.code}</span>
+        </div>
+      ))}
+    </div>
+  </details>
 </section>
 
 <!-- ═══ SECTION 6: UPDATE PIPELINE ═══ -->
@@ -191,50 +188,6 @@ import DocsLayout from '../../layouts/DocsLayout.astro';
       <span>.env, service configs & databases, media files</span>
     </div>
   </div>
-</section>
-
-<!-- ═══ SECTION 7: DOWNLOADS DASHBOARD ═══ -->
-<section class="ops-section">
-  <h2 class="ops-h2" id="downloads">Downloads Dashboard</h2>
-  <p class="ops-desc"><code>arr downloads</code> — a live TUI with speed gauges, progress bars, and ETAs.</p>
-
-  <div class="dl-flow">
-    <div class="dl-sources">
-      <div class="dl-src dl-cyan">Transmission RPC</div>
-      <div class="dl-src dl-amber">SABnzbd API</div>
-    </div>
-    <div class="dl-arrow"><span>4 parallel curls</span> &darr;</div>
-    <div class="dl-step dl-green">Main Loop <span>100ms poll cycle</span></div>
-    <div class="dl-arrow">&darr;</div>
-    <div class="dl-step dl-indigo">Render <span>Speed gauges, progress bars, ETAs</span></div>
-    <div class="dl-arrow">&darr;</div>
-    <div class="dl-step dl-dim">Keyboard <span>q = quit, r = refresh</span></div>
-  </div>
-</section>
-
-<!-- ═══ SECTION 8: ONBOARDING ═══ -->
-<section class="ops-section">
-  <h2 class="ops-h2" id="onboarding">Onboarding Friends</h2>
-  <p class="ops-desc">Five steps to get a friend running their own stack.</p>
-
-  <div class="onboard-flow">
-    {[
-      {n:'1', label:'Clone repo', color:'cyan'},
-      {n:'2', label:'arr setup', color:'cyan'},
-      {n:'3', label:'Edit .env', color:'amber'},
-      {n:'4', label:'arr start', color:'green'},
-      {n:'5', label:'Open Seerr', color:'green'},
-    ].map((s, i) => (
-      <Fragment>
-        <div class={`ob-step ob-${s.color}`}>
-          <span class="ob-num">{s.n}</span>
-          <span class="ob-label">{s.label}</span>
-        </div>
-        {i < 4 && <span class="ob-arrow">&rarr;</span>}
-      </Fragment>
-    ))}
-  </div>
-  <p class="ops-note">Friends update with <code>arr update</code> — pulls latest code and Docker images in one command.</p>
 </section>
 
 <!-- Page navigation -->
@@ -368,6 +321,14 @@ import DocsLayout from '../../layouts/DocsLayout.astro';
   .doc-warn { background:rgba(251,191,36,0.1); color:var(--yellow); }
 
   /* ═══ HEALTH ENDPOINTS ═══ */
+  .health-collapse { margin-top:8px; }
+  .health-collapse summary {
+    font-size:0.78rem; font-weight:600; color:var(--text-muted);
+    cursor:pointer; user-select:none; letter-spacing:0.04em;
+    text-transform:uppercase; margin-bottom:8px;
+  }
+  .health-collapse summary:hover { color:var(--indigo); }
+  .health-collapse[open] summary { margin-bottom:12px; }
   .health-grid {
     display:flex; flex-direction:column; gap:4px;
     background:var(--surface); border:1px solid var(--border); border-radius:10px;
@@ -383,12 +344,6 @@ import DocsLayout from '../../layouts/DocsLayout.astro';
   .hc-svc { font-size:0.82rem; font-weight:500; color:#f1f5f9; }
   .hc-ep { font-size:0.68rem; color:var(--text-muted); background:none; border:none; padding:0; }
   .hc-code { font-size:0.68rem; font-weight:600; color:var(--emerald); }
-
-  .health-legend { display:flex; gap:16px; margin-top:10px; }
-  .hl-item { font-size:0.7rem; font-weight:600; }
-  .hl-green { color:var(--emerald); }
-  .hl-yellow { color:var(--yellow); }
-  .hl-red { color:var(--pink); }
 
   /* ═══ UPDATE FLOW ═══ */
   .update-flow {
@@ -416,45 +371,6 @@ import DocsLayout from '../../layouts/DocsLayout.astro';
   .us-yes strong { color:var(--emerald); }
   .us-no strong { color:var(--pink); }
 
-  /* ═══ DOWNLOADS DASHBOARD ═══ */
-  .dl-flow { display:flex; flex-direction:column; align-items:center; gap:0; }
-  .dl-sources { display:flex; gap:8px; width:100%; }
-  .dl-src {
-    flex:1; padding:10px 14px; border-radius:8px; text-align:center;
-    font-size:0.82rem; font-weight:600;
-    background:var(--surface); border:1px solid var(--border);
-  }
-  .dl-cyan { color:var(--cyan); }
-  .dl-amber { color:var(--yellow); }
-  .dl-arrow { color:var(--text-muted); font-size:0.82rem; padding:4px 0; }
-  .dl-arrow span { font-size:0.7rem; font-style:italic; margin-right:4px; }
-  .dl-step {
-    width:100%; padding:12px 16px; border-radius:8px; text-align:center;
-    font-size:0.85rem; font-weight:600;
-    background:var(--surface); border:1px solid var(--border);
-  }
-  .dl-step span { font-size:0.72rem; color:var(--text-dim); display:block; margin-top:2px; font-weight:400; }
-  .dl-green { color:var(--emerald); }
-  .dl-indigo { color:var(--indigo); }
-  .dl-dim { color:var(--text-dim); }
-
-  /* ═══ ONBOARDING ═══ */
-  .onboard-flow { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
-  .ob-step {
-    display:flex; align-items:center; gap:8px;
-    padding:10px 16px; border-radius:8px;
-    background:var(--surface); border:1px solid var(--border);
-  }
-  .ob-num {
-    width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-    font-size:0.68rem; font-weight:700;
-  }
-  .ob-cyan .ob-num { background:rgba(34,211,238,0.12); color:var(--cyan); }
-  .ob-amber .ob-num { background:rgba(251,191,36,0.12); color:var(--yellow); }
-  .ob-green .ob-num { background:rgba(16,185,129,0.12); color:var(--emerald); }
-  .ob-label { font-size:0.82rem; font-weight:600; color:#f1f5f9; }
-  .ob-arrow { color:var(--text-muted); font-size:0.9rem; }
-
   /* ═══ PAGE NAV ═══ */
   .page-nav { display:flex; justify-content:space-between; gap:12px; margin-top:48px; padding-top:24px; border-top:1px solid var(--border); }
   .pn-link {
@@ -474,9 +390,6 @@ import DocsLayout from '../../layouts/DocsLayout.astro';
   @media(max-width:640px) {
     .cmd-fan { grid-template-columns:1fr; }
     .update-safe { grid-template-columns:1fr; }
-    .onboard-flow { flex-direction:column; align-items:stretch; }
-    .ob-arrow { transform:rotate(90deg); text-align:center; }
-    .dl-sources { flex-direction:column; }
     .page-nav { flex-direction:column; }
     .pn-next { align-items:flex-start; }
   }
