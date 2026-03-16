@@ -91,8 +91,8 @@ import DocsLayout from '../../../layouts/DocsLayout.astro';
     <div class="flow-step flow-step-safe">
       <span class="flow-num">4</span>
       <div class="flow-body">
-        <strong>Zero traffic leaks</strong>
-        <span>No packets leave your real IP</span>
+        <strong>Zero unencrypted traffic</strong>
+        <span>No packets bypass the tunnel</span>
       </div>
     </div>
     <div class="flow-arrow">&darr;</div>
@@ -144,13 +144,13 @@ import DocsLayout from '../../../layouts/DocsLayout.astro';
         <span class="compare-arrow">&rarr;</span>
         <span class="compare-node">WireGuard tunnel</span>
       </div>
-      <p class="compare-detail">Actual file transfers go through Gluetun's WireGuard tunnel. Torrent swarms and Usenet downloads are the traffic that ISPs and copyright trolls monitor — so this <strong>must</strong> be encrypted.</p>
+      <p class="compare-detail">Actual file transfers go through Gluetun's WireGuard tunnel. Torrent and Usenet traffic involves direct connections to external servers — encrypting this protects your privacy.</p>
     </div>
   </div>
 
   <details class="adv-details">
     <summary>Why search doesn't need VPN</summary>
-    <p>Searching an indexer is like checking a library catalog — it tells you what exists but doesn't transfer any copyrighted content. The HTTPS connection already encrypts the query. VPN-routing search traffic would add latency and reduce reliability for zero privacy benefit. Downloads are different: you're transferring actual files, your IP is visible in torrent swarms, and ISPs can see the volume and destination of Usenet traffic.</p>
+    <p>Searching an indexer is like checking a catalog — it returns metadata, not content. The HTTPS connection already encrypts the query. VPN-routing search traffic would add latency and reduce reliability for no benefit. Downloads are different: you're transferring actual files and making direct connections to external servers, so VPN encryption provides meaningful privacy protection.</p>
   </details>
 </section>
 
@@ -171,7 +171,7 @@ import DocsLayout from '../../../layouts/DocsLayout.astro';
         <span class="dns-arrow">&rarr;</span>
         <span class="dns-target">Cloudflare <code>1.1.1.1</code></span>
       </div>
-      <p class="dns-note">DNS queries go through the VPN tunnel to prevent DNS leaks. Your ISP never sees what domains download clients resolve.</p>
+      <p class="dns-note">DNS queries route through the VPN tunnel to prevent DNS leaks and ensure consistent name resolution.</p>
     </div>
 
     <div class="zone-card zone-bridge">
