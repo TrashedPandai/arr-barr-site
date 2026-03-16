@@ -16,7 +16,7 @@ import DocsLayout from '../../../layouts/DocsLayout.astro';
       <h3 class="zone-title">VPN Tunnel</h3>
     </div>
     <p class="zone-desc">All download traffic encrypted through WireGuard. Kill switch with <code>iptables DROP</code> — if the tunnel drops, nothing leaks.</p>
-    <div class="chip-grid">
+    <div class="chip-grid grid-no-orphan">
       <span class="chip chip-vpn">Gluetun <code>VPN Gateway</code></span>
       <span class="chip chip-vpn">Transmission <code>:9091</code></span>
       <span class="chip chip-vpn">SABnzbd <code>:8080</code></span>
@@ -334,6 +334,9 @@ import DocsLayout from '../../../layouts/DocsLayout.astro';
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 6px;
+  }
+  .grid-no-orphan > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
   }
   @media (max-width: 480px) {
     .grid-no-orphan {
