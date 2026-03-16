@@ -135,6 +135,13 @@ footer {
   margin-top: 0;
   background: linear-gradient(180deg, #161710 0%, #171811 50%, #181912 100%);
 }
+.legal-notice {
+  max-width: 640px;
+  margin: 16px auto 0;
+  font-size: 0.62rem;
+  line-height: 1.6;
+  color: rgba(160,175,140,0.35);
+}
 
 /* ═══ Grid straggler fix ═══
    Add .grid-no-orphan to any 2-column grid so the last item

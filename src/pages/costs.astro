@@ -55,7 +55,7 @@ const usenetConcepts = [
   {
     title: 'Providers',
     icon: '\u2B07',
-    desc: 'Providers host the actual content on independent server networks called "backbones." Your download client connects to them directly. When content gets a takedown on one backbone, it may still exist on another — that\'s why mixing providers matters.',
+    desc: 'Providers host content on independent server networks called "backbones." Your download client connects to them directly. Each backbone has different retention periods and availability — mixing providers across backbones improves reliability.',
     color: 'cyan',
   },
   {
@@ -76,7 +76,7 @@ const usenetTiers = [
       { label: '1 budget provider', cost: '$3-5/mo' },
       { label: '1 free indexer', cost: '$0' },
     ],
-    note: 'One provider, one free indexer. Gets you started with usenet. You\'ll hit some missing content from takedowns, but most things work fine.',
+    note: 'One provider, one free indexer. Gets you started with usenet. You may hit some incomplete downloads, but most things work fine.',
   },
   {
     name: 'Mid-Range',
@@ -169,11 +169,11 @@ const optional = [
 
     <div class="backbone-callout gs">
       <h3>Why different backbones?</h3>
-      <p>Copyright holders send takedown notices to providers. Each backbone processes these independently — content removed from one may still exist on another. Using providers on different backbones is the key to high completion rates.</p>
+      <p>Each backbone operates independently with different retention policies, peering arrangements, and completion rates. Using providers on different backbones gives you redundancy — if one is missing an article, another likely has it. This is the key to high completion rates.</p>
       <div class="backbone-visual">
         <div class="bb-col">
           <span class="bb-label">Backbone A</span>
-          <span class="bb-status bb-down">Taken down</span>
+          <span class="bb-status bb-down">Missing</span>
         </div>
         <div class="bb-arrow">&rarr;</div>
         <div class="bb-col">

@@ -25,26 +25,26 @@ const groups = [
   },
   {
     title: 'The Scouts',
-    subtitle: 'Finding the goods across 12 sources',
+    subtitle: 'Searching 12 sources in parallel',
     color: 'amber',
     services: [
       { name: 'Prowlarr', role: 'Indexer Manager', desc: 'Aggregates 12 indexers (8 torrent + 4 usenet) into one search. Every arr app searches through Prowlarr.', icon: '&#x1F50D;', iconType: 'emoji' },
-      { name: 'FlareSolverr', role: 'Cloudflare Bypass', desc: 'Runs a headless browser to solve Cloudflare challenges. Public torrent sites protected by Cloudflare work seamlessly.', icon: '&#x1F6E1;&#xFE0F;', iconType: 'emoji' },
+      { name: 'FlareSolverr', role: 'Cloudflare Solver', desc: 'Runs a headless browser to solve Cloudflare challenges so indexer queries go through seamlessly.', icon: '&#x1F6E1;&#xFE0F;', iconType: 'emoji' },
     ],
   },
   {
-    title: 'The Smuggler\'s Tunnel',
-    subtitle: 'Everything downloaded through encrypted VPN',
+    title: 'The Secure Channel',
+    subtitle: 'All traffic encrypted through VPN',
     color: 'green',
     services: [
-      { name: 'Gluetun', role: 'VPN Container', desc: 'WireGuard VPN with kill switch. All download traffic flows through an encrypted tunnel. Other containers connect through its network.', icon: '&#x1F512;', iconType: 'emoji' },
+      { name: 'Gluetun', role: 'VPN Container', desc: 'WireGuard VPN with kill switch. All traffic flows through an encrypted tunnel. Other containers connect through its network namespace.', icon: '&#x1F512;', iconType: 'emoji' },
       { name: 'Transmission', role: 'Torrent Client', desc: 'Lightweight torrent client. Runs inside Gluetun\'s network so every connection is VPN-protected. Supports port forwarding for better speeds.', icon: '&#x1F300;', iconType: 'emoji' },
-      { name: 'SABnzbd', role: 'Usenet Client', desc: 'Binary newsreader that downloads from 3 usenet providers (140 connections). SSL encrypted, runs through VPN for extra privacy.', icon: '&#x26A1;', iconType: 'emoji' },
+      { name: 'SABnzbd', role: 'Usenet Client', desc: 'Binary newsreader that downloads from 3 usenet providers (140 connections). SSL encrypted, routed through VPN.', icon: '&#x26A1;', iconType: 'emoji' },
     ],
   },
   {
     title: 'The Taproom',
-    subtitle: 'Pull up a chair &mdash; your media, your servers, no subscriptions',
+    subtitle: 'Pull up a chair &mdash; your media, your server, your way',
     color: 'indigo',
     services: [
       { name: 'Jellyfin', role: 'Movies, TV & Music', desc: 'Free, open-source media server. Stream to any device with hardware-accelerated transcoding. Stream movies, TV &amp; music.', icon: '&#x1F4FA;', iconType: 'emoji' },

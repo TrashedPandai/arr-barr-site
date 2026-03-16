@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import Terminal from '../components/Terminal.astro';
 ---
 
-<Base title="arr-barr — Haul's in. Barr's open.">
+<Base title="arr-barr — Your media. Your server. Your rules.">
 
 <section class="hero">
   <div class="hero-glow"></div>
@@ -87,8 +87,8 @@ import Terminal from '../components/Terminal.astro';
     <div class="chapter-content">
       <span class="chapter-label" data-final="01">01</span>
       <h3 class="chapter-title split-title">What is this thing?</h3>
-      <p class="chapter-analogy">Your own Netflix, Spotify, Kindle, and Audible &mdash; combined.</p>
-      <p class="chapter-desc">arr-barr is a personal media server that runs on hardware you own. Movies, TV shows, music, books, audiobooks, even games &mdash; all in one place, streaming to any device in your house. No monthly subscriptions. No content that disappears. No region locks. Just your library, forever.</p>
+      <p class="chapter-analogy">A personal media server for everything you own.</p>
+      <p class="chapter-desc">arr-barr organizes your media library and streams it to any device in your house. Movies, TV shows, music, books, audiobooks, even games &mdash; all in one place, managed automatically. Your hardware, your library, your rules.</p>
     </div>
   </div>
 
@@ -107,8 +107,8 @@ import Terminal from '../components/Terminal.astro';
     <div class="chapter-content">
       <span class="chapter-label" data-final="03">03</span>
       <h3 class="chapter-title split-title">Private by default</h3>
-      <p class="chapter-analogy">Built-in protection. The crew's got your back. Nothing to worry about.</p>
-      <p class="chapter-desc">Every download is wrapped in the same encryption businesses trust to keep your data safe &mdash; through a VPN tunnel that's always on. If the connection ever hiccups, a kill switch instantly blocks all traffic &mdash; your real identity is never exposed, not even for a millisecond. Your ISP sees nothing. It just works.</p>
+      <p class="chapter-analogy">Built-in privacy. Every connection encrypted.</p>
+      <p class="chapter-desc">All traffic routes through an encrypted WireGuard VPN tunnel. If the tunnel ever drops, a kill switch blocks all outbound connections until it's back &mdash; no traffic ever leaves unencrypted. Privacy isn't an add-on, it's the default.</p>
     </div>
   </div>
 
@@ -118,7 +118,7 @@ import Terminal from '../components/Terminal.astro';
       <span class="chapter-label" data-final="04">04</span>
       <h3 class="chapter-title split-title">Press play</h3>
       <p class="chapter-analogy">Request it. Forget about it. It'll be there when you're ready.</p>
-      <p class="chapter-desc">Request something before bed, wake up to a fully organized library entry &mdash; proper name, cover art, subtitles, all handled. It shows up in Jellyfin ready to stream on your TV, phone, tablet, or browser. Share with family and friends. No extra accounts, no per-screen limits, no ads. Your media, your rules.</p>
+      <p class="chapter-desc">Request something before bed, wake up to a fully organized library entry &mdash; proper name, cover art, subtitles, all handled. It shows up in Jellyfin ready to stream on your TV, phone, tablet, or browser. Share with family and friends &mdash; no per-screen limits, no ads. Your server, your rules.</p>
     </div>
   </div>
 </div>
@@ -560,15 +560,15 @@ import Terminal from '../components/Terminal.astro';
   const heroTag = document.getElementById('heroTag');
   if (heroTag) {
     const taglines = [
-      'The open sea doesn\'t ask for a subscription',
-      'Every file, a treasure. Every stream, yours',
-      'Your ship. Your treasure. Your rules',
-      'Built for crews who share the spoils',
-      'Sail all day. Stream all night',
-      'Haul\'s in. Barr\'s open',
-      'The bounty plays itself',
+      'Your media. Your server. Your rules',
       'Self-served. Self-hosted. Self-poured',
       'Every crew needs a port',
+      'Sail all day. Stream all night',
+      'Set your own course',
+      'Built by the crew, for the crew',
+      'The helm is yours',
+      'All hands on deck. All media in one place',
+      'Chart your own waters',
     ];
     let tagIdx = Math.floor(Math.random() * taglines.length);
     heroTag.textContent = taglines[tagIdx];
