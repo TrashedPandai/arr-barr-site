@@ -795,23 +795,23 @@ import Terminal from '../components/Terminal.astro';
     // ═══ DRAWSVG — Chart route reveals on scroll ═══
     const chartRoute = document.getElementById('chartRoute');
     if (chartRoute) {
+      // Line trails slightly behind the ship — offset by 2% via a slight scrub delay
       gsap.fromTo(chartRoute,
         { drawSVG: '0%' },
         {
-          drawSVG: '93%',
+          drawSVG: '98%',
           ease: 'none',
           scrollTrigger: {
             trigger: '#journeyWrap',
             start: 'top 70%',
-            end: 'bottom 30%',
-            scrub: 0.5,
+            end: 'bottom 5%',
+            scrub: 1.2,
           }
         }
       );
     }
 
     // ═══ MOTIONPATH — Ship sails along the chart route ═══
-    // Ship stops at 93% — anchors just before the shore
     const ship = document.getElementById('journeyShip');
     const journeyWrap = document.getElementById('journeyWrap');
     if (ship && chartRoute && journeyWrap) {
@@ -822,13 +822,13 @@ import Terminal from '../components/Terminal.astro';
           align: chartRoute,
           alignOrigin: [0.5, 0.5],
           autoRotate: 270,
-          end: 0.98,
+          end: 0.99,
         },
         ease: 'none',
         scrollTrigger: {
           trigger: journeyWrap,
           start: 'top 70%',
-          end: 'bottom 10%',
+          end: 'bottom 5%',
           scrub: 0.5,
         }
       });
