@@ -1,0 +1,157 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  breadcrumbs?: { label: string; href?: string }[];
+  activeSection?: string;
+}
+
+import Base from './Base.astro';
+
+const { title, description = 'Technical reference for the arr-barr stack.', breadcrumbs = [], activeSection = '' } = Astro.props;
+const currentPath = Astro.url.pathname.replace(/\/$/, '');
+
+const nav = [
+  { label: 'Overview', href: '/docs' },
+  { type: 'divider' },
+  { type: 'label', label: 'Architecture' },
+  { label: 'Network', href: '/docs/architecture/network' },
+  { label: 'Storage', href: '/docs/architecture/storage' },
+  { type: 'divider' },
+  { type: 'label', label: 'Pipeline' },
+  { label: 'Request → Stream', href: '/docs/pipeline' },
+  { type: 'divider' },
+  { type: 'label', label: 'Operations' },
+  { label: 'CLI & Compose', href: '/docs/operations' },
+  { type: 'divider' },
+  { type: 'label', label: 'Help' },
+  { label: 'Troubleshooting', href: '/docs/troubleshooting' },
+];
+---
+
+<Base title={`arr-barr — ${title}`} description={description}>
+
+<div class="docs-layout">
+
+  <!-- Sidebar -->
+  <aside class="docs-sidebar" id="sidebar">
+    <div class="sb-brand">docs</div>
+    <nav class="sb-nav">
+      {nav.map(item => {
+        if (item.type === 'divider') return <div class="sb-divider" />;
+        if (item.type === 'label') return <span class="sb-label">{item.label}</span>;
+        const isActive = item.href === currentPath || (item.href !== '/docs' && currentPath.startsWith(item.href!));
+        return <a href={item.href} class:list={['sb-link', { active: isActive }]}>{item.label}</a>;
+      })}
+    </nav>
+  </aside>
+
+  <!-- Mobile toggle -->
+  <button class="docs-fab" id="docsFab" aria-label="Toggle navigation">
+    <span></span><span></span><span></span>
+  </button>
+
+  <main class="docs-main">
+    <!-- Breadcrumbs -->
+    {breadcrumbs.length > 0 && (
+      <nav class="docs-crumbs" aria-label="Breadcrumb">
+        <a href="/docs">Docs</a>
+        {breadcrumbs.map((crumb, i) => (
+          <Fragment>
+            <span class="crumb-sep">/</span>
+            {crumb.href && i < breadcrumbs.length - 1
+              ? <a href={crumb.href}>{crumb.label}</a>
+              : <span class="crumb-current">{crumb.label}</span>
+            }
+          </Fragment>
+        ))}
+      </nav>
+    )}
+
+    <slot />
+
+    <!-- Next/Prev navigation -->
+    <slot name="page-nav" />
+  </main>
+</div>
+
+<style>
+  /* ═══ LAYOUT ═══ */
+  .docs-layout { display:grid; grid-template-columns:220px 1fr; min-height:calc(100vh - 56px); }
+
+  /* ═══ SIDEBAR ═══ */
+  .docs-sidebar {
+    position:sticky; top:56px; height:calc(100vh - 56px);
+    overflow-y:auto; padding:20px 0 40px;
+    border-right:1px solid var(--border); background:var(--bg);
+    scrollbar-width:thin; scrollbar-color:var(--border-h) transparent;
+  }
+  .docs-sidebar::-webkit-scrollbar { width:3px; }
+  .docs-sidebar::-webkit-scrollbar-thumb { background:var(--border-h); }
+  .sb-brand {
+    font-size:0.72rem; font-weight:800; text-transform:uppercase;
+    letter-spacing:0.15em; color:var(--indigo); padding:0 16px 12px;
+  }
+  .sb-nav { padding:0 8px; }
+  .sb-label {
+    font-size:0.62rem; font-weight:600; text-transform:uppercase;
+    letter-spacing:0.1em; color:var(--text-muted); padding:12px 8px 4px; display:block;
+  }
+  .sb-divider { height:1px; background:var(--border); margin:4px 8px; }
+  .sb-link {
+    display:block; padding:5px 10px; border-radius:6px;
+    font-size:0.82rem; color:var(--text-dim); text-decoration:none;
+    transition:all 0.15s; border-left:2px solid transparent;
+  }
+  .sb-link:hover { color:var(--text); background:rgba(99,102,241,0.04); }
+  .sb-link.active { color:var(--indigo); border-left-color:var(--indigo); background:rgba(99,102,241,0.06); }
+
+  .docs-fab {
+    display:none; position:fixed; bottom:20px; right:20px; z-index:200;
+    width:48px; height:48px; border-radius:50%; background:var(--indigo); border:none;
+    cursor:pointer; box-shadow:0 4px 20px rgba(99,102,241,0.4);
+    flex-direction:column; align-items:center; justify-content:center; gap:4px;
+  }
+  .docs-fab span { display:block; width:18px; height:2px; background:#fff; border-radius:1px; }
+
+  /* ═══ MAIN ═══ */
+  .docs-main { padding:32px 40px 80px; max-width:860px; min-width:0; }
+
+  /* ═══ BREADCRUMBS ═══ */
+  .docs-crumbs {
+    display:flex; align-items:center; gap:6px; margin-bottom:20px;
+    font-size:0.75rem; font-family:'SF Mono','Fira Code',monospace;
+  }
+  .docs-crumbs a { color:var(--text-muted); text-decoration:none; }
+  .docs-crumbs a:hover { color:var(--sky); }
+  .crumb-sep { color:var(--border-h); }
+  .crumb-current { color:var(--text-dim); }
+
+  /* ═══ RESPONSIVE ═══ */
+  @media(max-width:900px) {
+    .docs-layout { grid-template-columns:1fr; }
+    .docs-sidebar {
+      display:none; position:fixed; top:56px; left:0; right:0;
+      height:calc(100vh - 56px); z-index:150; background:var(--bg);
+    }
+    .docs-sidebar.open { display:block; }
+    .docs-fab { display:flex; }
+    .docs-main { padding:24px 16px 60px; }
+  }
+</style>
+
+<script>
+  // Mobile sidebar toggle
+  document.getElementById('docsFab')?.addEventListener('click', () => {
+    document.getElementById('sidebar')?.classList.toggle('open');
+  });
+
+  // Close sidebar on link click (mobile)
+  document.querySelectorAll('.sb-link').forEach(link => {
+    link.addEventListener('click', () => {
+      document.getElementById('sidebar')?.classList.remove('open');
+    });
+  });
+</script>
+
+</Base>

@@ -1,0 +1,524 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+---
+
+<DocsLayout title="Pipeline & Quality" breadcrumbs={[{label:'Pipeline & Quality'}]}>
+
+<!-- ═══ SECTION 1: THE PIPELINE ═══ -->
+<section class="pipe-section">
+  <h1 class="pipe-h1">The Pipeline</h1>
+  <p class="pipe-lead">Request &rarr; Stream in six stages. Every piece of media follows this exact path.</p>
+
+  <div class="stage-list">
+
+    <!-- Stage 1: Request -->
+    <div class="stage-card" style="--sc:var(--purple)">
+      <div class="stage-head">
+        <span class="stage-num">1</span>
+        <div class="stage-meta">
+          <h3 class="stage-title">Request</h3>
+          <p class="stage-sum">User searches for content. Zero technical knowledge needed.</p>
+          <div class="stage-chips">
+            <span class="chip">Jellyseerr</span>
+          </div>
+        </div>
+      </div>
+      <details class="stage-details">
+        <summary>Details</summary>
+        <div class="kv-list">
+          <div class="kv"><span class="kv-k">Interface</span><span class="kv-v">Jellyseerr web UI or mobile</span></div>
+          <div class="kv"><span class="kv-k">Routes to</span><span class="kv-v">Radarr (movies) / Sonarr (TV)</span></div>
+          <div class="kv"><span class="kv-k">Auto-approve</span><span class="kv-v">Enabled for trusted users</span></div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Stage 2: Search -->
+    <div class="stage-card" style="--sc:var(--amber)">
+      <div class="stage-head">
+        <span class="stage-num">2</span>
+        <div class="stage-meta">
+          <h3 class="stage-title">Search</h3>
+          <p class="stage-sum">12 indexers queried in parallel.</p>
+          <div class="stage-chips">
+            <span class="chip">Prowlarr</span>
+            <span class="chip">FlareSolverr</span>
+          </div>
+        </div>
+      </div>
+      <details class="stage-details">
+        <summary>Details</summary>
+        <div class="kv-list">
+          <div class="kv"><span class="kv-k">Indexers</span><span class="kv-v">8 torrent + 4 usenet</span></div>
+          <div class="kv"><span class="kv-k">Cloudflare</span><span class="kv-v">FlareSolverr bypass</span></div>
+          <div class="kv"><span class="kv-k">Sync</span><span class="kv-v">Event-driven push to all arr apps</span></div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Stage 3: Score -->
+    <div class="stage-card" style="--sc:var(--cyan)">
+      <div class="stage-head">
+        <span class="stage-num">3</span>
+        <div class="stage-meta">
+          <h3 class="stage-title">Score</h3>
+          <p class="stage-sum">48 custom formats rank every result.</p>
+          <div class="stage-chips">
+            <span class="chip">Radarr</span>
+            <span class="chip">Sonarr</span>
+            <span class="chip">Lidarr</span>
+          </div>
+        </div>
+      </div>
+      <details class="stage-details">
+        <summary>Details</summary>
+        <div class="kv-list">
+          <div class="kv"><span class="kv-k">Guide</span><span class="kv-v">TRaSH HD Bluray + WEB</span></div>
+          <div class="kv"><span class="kv-k">Reject</span><span class="kv-v">LQ, 3D, x265(HD), Scene, AV1</span></div>
+          <div class="kv"><span class="kv-k">Learn more</span><span class="kv-v"><a href="#quality-scoring">See Quality Scoring below</a></span></div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Stage 4: Download -->
+    <div class="stage-card" style="--sc:var(--emerald)">
+      <div class="stage-head">
+        <span class="stage-num">4</span>
+        <div class="stage-meta">
+          <h3 class="stage-title">Download</h3>
+          <p class="stage-sum">Encrypted WireGuard tunnel.</p>
+          <div class="stage-chips">
+            <span class="chip">Gluetun</span>
+            <span class="chip">Transmission</span>
+            <span class="chip">SABnzbd</span>
+          </div>
+        </div>
+      </div>
+      <details class="stage-details">
+        <summary>Details</summary>
+        <div class="kv-list">
+          <div class="kv"><span class="kv-k">Protocol</span><span class="kv-v">Best available (torrent or usenet)</span></div>
+          <div class="kv"><span class="kv-k">Encryption</span><span class="kv-v">WireGuard via Proton VPN</span></div>
+          <div class="kv"><span class="kv-k">Kill switch</span><span class="kv-v">iptables DROP &mdash; zero leaks</span></div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Stage 5: Import -->
+    <div class="stage-card" style="--sc:var(--pink)">
+      <div class="stage-head">
+        <span class="stage-num">5</span>
+        <div class="stage-meta">
+          <h3 class="stage-title">Import</h3>
+          <p class="stage-sum">Hardlinked &mdash; zero extra disk space.</p>
+          <div class="stage-chips">
+            <span class="chip">Radarr</span>
+            <span class="chip">Sonarr</span>
+            <span class="chip">Lidarr</span>
+          </div>
+        </div>
+      </div>
+      <details class="stage-details">
+        <summary>Details</summary>
+        <div class="kv-list">
+          <div class="kv"><span class="kv-k">Torrent</span><span class="kv-v">Hardlink (keeps seeding)</span></div>
+          <div class="kv"><span class="kv-k">Usenet</span><span class="kv-v">Move (staging cleared)</span></div>
+          <div class="kv"><span class="kv-k">Rename</span><span class="kv-v">TRaSH naming convention + metadata</span></div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Stage 6: Stream -->
+    <div class="stage-card" style="--sc:var(--indigo)">
+      <div class="stage-head">
+        <span class="stage-num">6</span>
+        <div class="stage-meta">
+          <h3 class="stage-title">Stream</h3>
+          <p class="stage-sum">HW-accelerated, subtitles auto-fetched.</p>
+          <div class="stage-chips">
+            <span class="chip">Jellyfin</span>
+            <span class="chip">Bazarr</span>
+          </div>
+        </div>
+      </div>
+      <details class="stage-details">
+        <summary>Details</summary>
+        <div class="kv-list">
+          <div class="kv"><span class="kv-k">Transcoding</span><span class="kv-v">Hardware QSV/VAAPI if needed</span></div>
+          <div class="kv"><span class="kv-k">Subtitles</span><span class="kv-v">Auto via Bazarr</span></div>
+          <div class="kv"><span class="kv-k">Clients</span><span class="kv-v">Any device, anywhere</span></div>
+        </div>
+      </details>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ SECTION 2: QUALITY SCORING ═══ -->
+<section class="pipe-section" id="quality-scoring">
+  <h2 class="pipe-h2">Quality Scoring</h2>
+  <p class="pipe-lead">Custom formats assign a numeric score to every release. The highest total score wins.</p>
+
+  <div class="tabs" id="qsTabs">
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="radarr">Radarr <span class="tab-count">48 CFs</span></button>
+      <button class="tab-btn" data-tab="sonarr">Sonarr <span class="tab-count">44 CFs</span></button>
+      <button class="tab-btn" data-tab="lidarr">Lidarr <span class="tab-count">5 CFs</span></button>
+    </div>
+
+    <!-- Radarr Tab -->
+    <div class="tab-panel active" data-panel="radarr">
+      <h4 class="qs-group-title">Prefer (positive scores)</h4>
+      <div class="score-list">
+        <div class="score-item"><span>HD Bluray Tier 01</span><span class="score-pos">+1800</span></div>
+        <div class="score-item"><span>HD Bluray Tier 02</span><span class="score-pos">+1750</span></div>
+        <div class="score-item"><span>HD Bluray Tier 03</span><span class="score-pos">+1700</span></div>
+        <div class="score-item"><span>WEB Tier 01</span><span class="score-pos">+1700</span></div>
+        <div class="score-item"><span>WEB Tier 02</span><span class="score-pos">+1650</span></div>
+        <div class="score-item"><span>WEB Tier 03</span><span class="score-pos">+1600</span></div>
+        <div class="score-item"><span>IMAX / IMAX Enhanced</span><span class="score-pos">+800</span></div>
+        <div class="score-item"><span>Special Edition</span><span class="score-pos">+125</span></div>
+      </div>
+
+      <h4 class="qs-group-title reject-title">Reject (&minus;10000)</h4>
+      <div class="score-list">
+        <div class="score-item"><span>LQ, 3D, x265 (720/1080), DV (no HDR fallback), Scene, AV1</span><span class="score-neg">&minus;10000</span></div>
+      </div>
+
+      <h4 class="qs-group-title">Streaming boosts</h4>
+      <p class="qs-note">14 formats at +75 each: AMZN, ATVP, DSNP, HMAX, NF, PMTP, and more.</p>
+    </div>
+
+    <!-- Sonarr Tab -->
+    <div class="tab-panel" data-panel="sonarr">
+      <h4 class="qs-group-title">Prefer (positive scores)</h4>
+      <div class="score-list">
+        <div class="score-item"><span>WEB Tier 01</span><span class="score-pos">+1700</span></div>
+        <div class="score-item"><span>WEB Tier 02</span><span class="score-pos">+1650</span></div>
+        <div class="score-item"><span>WEB Tier 03</span><span class="score-pos">+1600</span></div>
+        <div class="score-item"><span>DV</span><span class="score-pos">+1600</span></div>
+        <div class="score-item"><span>HDR10</span><span class="score-pos">+500</span></div>
+      </div>
+
+      <h4 class="qs-group-title reject-title">Reject (&minus;10000)</h4>
+      <div class="score-list">
+        <div class="score-item"><span>LQ, 3D, x265 (720/1080), Scene, AV1, SDR at 4K</span><span class="score-neg">&minus;10000</span></div>
+      </div>
+
+      <h4 class="qs-group-title">Streaming boosts</h4>
+      <p class="qs-note">Streaming services scored at +75 each: AMZN, ATVP, DSNP, HMAX, NF, PMTP, and more.</p>
+    </div>
+
+    <!-- Lidarr Tab -->
+    <div class="tab-panel" data-panel="lidarr">
+      <h4 class="qs-group-title">Prefer (positive scores)</h4>
+      <div class="score-list">
+        <div class="score-item"><span>FLAC / Lossless</span><span class="score-pos">+500</span></div>
+        <div class="score-item"><span>MP3 (accepted)</span><span class="score-pos">+200</span></div>
+      </div>
+
+      <h4 class="qs-group-title reject-title">Reject (&minus;10000)</h4>
+      <div class="score-list">
+        <div class="score-item"><span>Vinyl</span><span class="score-neg">&minus;10000</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 3: THE DECISION ENGINE ═══ -->
+<section class="pipe-section">
+  <h2 class="pipe-h2">The Decision Engine</h2>
+  <p class="pipe-lead">Every incoming release passes through this five-step evaluation.</p>
+
+  <div class="engine-flow">
+    <div class="engine-step">
+      <span class="engine-num">1</span>
+      <div class="engine-body">
+        <strong>Incoming release</strong> &mdash; Quality allowed?
+        <span class="engine-reject">No &rarr; REJECTED</span>
+      </div>
+    </div>
+    <div class="engine-arrow">&darr;</div>
+    <div class="engine-step">
+      <span class="engine-num">2</span>
+      <div class="engine-body">
+        <strong>Any &minus;10000 custom format?</strong>
+        <span class="engine-reject">Yes &rarr; REJECTED</span>
+      </div>
+    </div>
+    <div class="engine-arrow">&darr;</div>
+    <div class="engine-step">
+      <span class="engine-num">3</span>
+      <div class="engine-body">
+        <strong>Score &ge; minimum?</strong>
+        <span class="engine-reject">No &rarr; REJECTED</span>
+      </div>
+    </div>
+    <div class="engine-arrow">&darr;</div>
+    <div class="engine-step engine-step-accept">
+      <span class="engine-num">4</span>
+      <div class="engine-body">
+        <strong>ACCEPTED</strong> &mdash; Ranked by total score
+      </div>
+    </div>
+    <div class="engine-arrow">&darr;</div>
+    <div class="engine-step">
+      <span class="engine-num">5</span>
+      <div class="engine-body">
+        <strong>Better than existing?</strong>
+        <span class="engine-upgrade">Yes &rarr; UPGRADE</span>
+        <span class="engine-skip">No &rarr; SKIP</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 4: SPECIAL PIPELINES ═══ -->
+<section class="pipe-section">
+  <h2 class="pipe-h2">Special Pipelines</h2>
+  <p class="pipe-lead">Non-standard content types have their own automation paths.</p>
+
+  <div class="special-grid grid-no-orphan">
+
+    <!-- Games -->
+    <div class="special-card" style="--sc:var(--emerald)">
+      <h3 class="special-title">Games (QuestArr)</h3>
+      <ul class="special-list">
+        <li>QuestArr searches via Prowlarr indexers</li>
+        <li>Downloads through VPN pipeline</li>
+        <li><code>game-import.sh</code> runs every 15 min: checks APIs, 7 safety checks</li>
+        <li>Torrent &rarr; Hardlink, Usenet &rarr; Move &rarr; <code>/media/games/</code></li>
+      </ul>
+    </div>
+
+    <!-- Books & Audiobooks -->
+    <div class="special-card" style="--sc:var(--amber)">
+      <h3 class="special-title">Books &amp; Audiobooks (LazyLibrarian)</h3>
+      <ul class="special-list">
+        <li>PostProcessor runs every 10 min</li>
+        <li>Detects file type: epub/pdf/mobi &rarr; <code>/media/books/</code> (Kavita)</li>
+        <li>mp3/m4b/m4a &rarr; <code>/media/audiobooks/</code> (Audiobookshelf)</li>
+      </ul>
+    </div>
+
+    <!-- Subtitles -->
+    <div class="special-card" style="--sc:var(--indigo)">
+      <h3 class="special-title">Subtitles (Bazarr)</h3>
+      <ul class="special-list">
+        <li>Two triggers: new media imported + 6h wanted scan</li>
+        <li>Scores against metadata, threshold check</li>
+        <li>Downloads <code>.srt</code>, Jellyfin auto-detects</li>
+        <li>Subsync corrects timing offsets</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<div class="page-nav" slot="page-nav">
+  <a href="/docs/architecture/storage" class="nav-prev">&larr; Storage &amp; Hardlinks</a>
+  <a href="/docs/operations" class="nav-next">Operations &amp; CLI &rarr;</a>
+</div>
+
+</DocsLayout>
+
+<style>
+  /* ═══ PAGE-LEVEL TOKENS ═══ */
+  .pipe-section { margin-bottom:48px; }
+  .pipe-h1 { font-size:1.6rem; font-weight:700; margin:0 0 6px; color:var(--text); }
+  .pipe-h2 { font-size:1.2rem; font-weight:700; margin:0 0 6px; color:var(--text); }
+  .pipe-lead { font-size:0.82rem; color:var(--text-dim); margin:0 0 24px; line-height:1.5; }
+
+  /* ═══ PIPELINE STAGE CARDS ═══ */
+  .stage-list { display:flex; flex-direction:column; gap:12px; }
+
+  .stage-card {
+    border-left:3px solid var(--sc);
+    background:var(--card);
+    border-radius:8px;
+    padding:16px 18px;
+    transition:border-color 0.2s;
+  }
+  .stage-card:hover { box-shadow:0 2px 12px rgba(0,0,0,0.08); }
+
+  .stage-head { display:flex; align-items:flex-start; gap:14px; }
+
+  .stage-num {
+    flex-shrink:0;
+    width:28px; height:28px;
+    display:flex; align-items:center; justify-content:center;
+    border-radius:50%;
+    background:var(--sc);
+    color:#fff;
+    font-size:0.72rem; font-weight:700;
+  }
+
+  .stage-meta { flex:1; min-width:0; }
+  .stage-title { font-size:0.92rem; font-weight:600; margin:0 0 2px; color:var(--text); }
+  .stage-sum { font-size:0.78rem; color:var(--text-dim); margin:0 0 8px; }
+
+  .stage-chips { display:flex; flex-wrap:wrap; gap:6px; }
+  .chip {
+    font-size:0.68rem; font-weight:600;
+    padding:2px 8px; border-radius:4px;
+    background:rgba(99,102,241,0.08); color:var(--text-dim);
+    letter-spacing:0.02em;
+  }
+
+  .stage-details { margin-top:10px; }
+  .stage-details summary {
+    font-size:0.72rem; font-weight:600; color:var(--text-muted);
+    cursor:pointer; user-select:none; letter-spacing:0.04em;
+    text-transform:uppercase;
+  }
+  .stage-details summary:hover { color:var(--sky); }
+  .stage-details[open] summary { margin-bottom:8px; }
+
+  .kv-list { display:flex; flex-direction:column; gap:4px; }
+  .kv { display:flex; justify-content:space-between; font-size:0.78rem; padding:4px 0; border-bottom:1px solid var(--border); }
+  .kv:last-child { border-bottom:none; }
+  .kv-k { color:var(--text-muted); font-weight:500; flex-shrink:0; margin-right:12px; }
+  .kv-v { color:var(--text-dim); text-align:right; }
+  .kv-v a { color:var(--sky); text-decoration:none; }
+  .kv-v a:hover { text-decoration:underline; }
+
+  /* ═══ QUALITY SCORING TABS ═══ */
+  .tabs { margin-top:8px; }
+
+  .tab-bar { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px; }
+  .tab-btn {
+    font-size:0.78rem; font-weight:600;
+    padding:6px 14px; border-radius:6px;
+    border:1px solid var(--border); background:transparent;
+    color:var(--text-dim); cursor:pointer;
+    transition:all 0.15s;
+  }
+  .tab-btn:hover { border-color:var(--indigo); color:var(--text); }
+  .tab-btn.active { background:var(--indigo); color:#fff; border-color:var(--indigo); }
+  .tab-count { opacity:0.6; font-weight:400; }
+
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+
+  .qs-group-title {
+    font-size:0.78rem; font-weight:600; color:var(--text-muted);
+    text-transform:uppercase; letter-spacing:0.06em;
+    margin:16px 0 8px; padding:0;
+  }
+  .qs-group-title:first-child { margin-top:0; }
+  .reject-title { color:var(--red); }
+  .qs-note { font-size:0.78rem; color:var(--text-dim); margin:4px 0 0; }
+
+  .score-list { display:flex; flex-direction:column; }
+  .score-item {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:4px 0; font-size:0.78rem;
+    border-bottom:1px solid var(--border);
+  }
+  .score-item:last-child { border-bottom:none; }
+  .score-item span:first-child { color:var(--text-dim); }
+  .score-pos { color:var(--emerald); font-weight:600; font-variant-numeric:tabular-nums; }
+  .score-neg { color:var(--red); font-weight:600; font-variant-numeric:tabular-nums; }
+
+  /* ═══ DECISION ENGINE ═══ */
+  .engine-flow { display:flex; flex-direction:column; align-items:stretch; gap:0; }
+
+  .engine-step {
+    display:flex; align-items:flex-start; gap:12px;
+    padding:12px 16px;
+    background:var(--card); border-radius:8px;
+    border-left:3px solid var(--border-h);
+  }
+  .engine-step-accept { border-left-color:var(--emerald); background:rgba(16,185,129,0.04); }
+
+  .engine-num {
+    flex-shrink:0;
+    width:24px; height:24px;
+    display:flex; align-items:center; justify-content:center;
+    border-radius:50%;
+    background:var(--border); color:var(--text);
+    font-size:0.68rem; font-weight:700;
+  }
+  .engine-step-accept .engine-num { background:var(--emerald); color:#fff; }
+
+  .engine-body { font-size:0.82rem; color:var(--text-dim); line-height:1.5; }
+  .engine-body strong { color:var(--text); }
+  .engine-reject { display:inline-block; margin-left:8px; color:var(--red); font-weight:600; font-size:0.75rem; }
+  .engine-upgrade { display:inline-block; margin-left:8px; color:var(--emerald); font-weight:600; font-size:0.75rem; }
+  .engine-skip { display:inline-block; margin-left:8px; color:var(--text-muted); font-weight:600; font-size:0.75rem; }
+
+  .engine-arrow {
+    text-align:center; color:var(--text-muted);
+    font-size:0.9rem; line-height:1; padding:4px 0;
+  }
+
+  /* ═══ SPECIAL PIPELINES ═══ */
+  .special-grid {
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:12px;
+  }
+
+  .special-card {
+    border-left:3px solid var(--sc);
+    background:var(--card);
+    border-radius:8px;
+    padding:16px 18px;
+  }
+  .special-card:hover { box-shadow:0 2px 12px rgba(0,0,0,0.08); }
+
+  .special-title { font-size:0.88rem; font-weight:600; color:var(--text); margin:0 0 10px; }
+  .special-list {
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-direction:column; gap:6px;
+  }
+  .special-list li {
+    font-size:0.78rem; color:var(--text-dim); line-height:1.45;
+    padding-left:14px; position:relative;
+  }
+  .special-list li::before {
+    content:''; position:absolute; left:0; top:7px;
+    width:5px; height:5px; border-radius:50%;
+    background:var(--sc);
+  }
+  .special-list code {
+    font-family:'SF Mono','Fira Code',monospace;
+    font-size:0.72rem; background:rgba(99,102,241,0.08);
+    padding:1px 5px; border-radius:3px;
+  }
+
+  /* ═══ PAGE NAVIGATION ═══ */
+  .page-nav {
+    display:flex; justify-content:space-between;
+    padding-top:32px; border-top:1px solid var(--border);
+    margin-top:48px;
+  }
+  .page-nav a {
+    font-size:0.82rem; color:var(--sky);
+    text-decoration:none; font-weight:500;
+  }
+  .page-nav a:hover { text-decoration:underline; }
+
+  /* ═══ RESPONSIVE ═══ */
+  @media(max-width:900px) {
+    .special-grid { grid-template-columns:1fr; }
+  }
+</style>
+
+<script>
+  // Tab switching
+  document.querySelectorAll('#qsTabs .tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = btn.getAttribute('data-tab');
+      const container = document.getElementById('qsTabs');
+      if (!container || !tab) return;
+
+      container.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      container.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+      btn.classList.add('active');
+      const panel = container.querySelector(`[data-panel="${tab}"]`);
+      if (panel) panel.classList.add('active');
+    });
+  });
+</script>

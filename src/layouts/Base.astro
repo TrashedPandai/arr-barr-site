@@ -6,7 +6,7 @@ interface Props {
 
 import '../styles/global.css';
 
-const { title = 'arr-barr', description = 'Haul\'s in. Barr\'s open.' } = Astro.props;
+const { title = 'arr-barr — Your media. Your server. Your rules.', description = '15 self-hosted services in one repo. Movies, TV, music, books, and games — automated, encrypted, and streaming to any device.' } = Astro.props;
 const currentPath = Astro.url.pathname;
 ---
 
@@ -17,6 +17,20 @@ const currentPath = Astro.url.pathname;
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content={description}>
   <title>{title}</title>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:image" content="https://arrbarr.com/og.png">
+  <meta property="og:url" content={`https://arrbarr.com${Astro.url.pathname}`}>
+  <meta property="og:site_name" content="arr-barr">
+
+  <!-- Twitter / Discord -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={title}>
+  <meta name="twitter:description" content={description}>
+  <meta name="twitter:image" content="https://arrbarr.com/og.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Cinzel+Decorative:wght@400;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">

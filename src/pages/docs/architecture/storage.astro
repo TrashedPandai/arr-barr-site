@@ -1,0 +1,597 @@
+---
+import DocsLayout from '../../../layouts/DocsLayout.astro';
+---
+
+<DocsLayout title="Storage & Hardlinks" breadcrumbs={[{label:'Architecture'}, {label:'Storage'}]}>
+
+  <!-- ═══ SECTION 1: THE SINGLE MOUNT ═══ -->
+  <section class="doc-section">
+    <h2 class="section-heading">The Single Mount</h2>
+    <p class="section-intro">
+      A hardlink is <strong>one file with two directory entries</strong>. Both paths point to the same inode — the same bytes on disk. No duplication. No extra space. The operating system treats them as equal; neither is the "original."
+    </p>
+
+    <div class="hardlink-visual">
+      <div class="path-card download-path">
+        <span class="path-label">Download path</span>
+        <code>/data/downloads/torrents/radarr/Movie.mkv</code>
+      </div>
+      <div class="inode-bridge">
+        <div class="inode-line"></div>
+        <div class="inode-badge">inode #3899</div>
+        <div class="inode-line"></div>
+      </div>
+      <div class="path-card library-path">
+        <span class="path-label">Library path</span>
+        <code>/data/media/movies/Movie (2024)/Movie.mkv</code>
+      </div>
+      <div class="inode-note">Same inode = zero extra disk space</div>
+    </div>
+
+    <!-- Correct vs Wrong -->
+    <h3 class="sub-heading">Correct vs Wrong Mounts</h3>
+    <div class="mount-grid grid-no-orphan">
+      <div class="mount-card mount-correct">
+        <div class="mount-badge correct-badge">Correct</div>
+        <code class="mount-cmd">-v /data:/data</code>
+        <p>Single mount. Same filesystem. Hardlinks work.</p>
+      </div>
+      <div class="mount-card mount-wrong">
+        <div class="mount-badge wrong-badge">Wrong</div>
+        <code class="mount-cmd">-v /downloads:/downloads<br/>-v /media:/media</code>
+        <p>Separate mounts. Cross-device. Files get <strong>COPIED</strong>. Disk doubles.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 2: VOLUME MOUNT TIERS ═══ -->
+  <section class="doc-section">
+    <h2 class="section-heading">Volume Mount Tiers</h2>
+    <p class="section-intro">
+      Not every container needs full access to <code>/data</code>. Three tiers of Docker volume permissions keep the attack surface small and intentions clear.
+    </p>
+
+    <div class="tier-stack">
+      <div class="tier-card tier-1">
+        <div class="tier-header">
+          <span class="tier-label tier-1-label">Tier 1</span>
+          <span class="tier-desc">Full /data r/w</span>
+        </div>
+        <div class="chip-row">
+          <span class="chip chip-t1">Transmission</span>
+          <span class="chip chip-t1">SABnzbd</span>
+          <span class="chip chip-t1">Radarr</span>
+          <span class="chip chip-t1">Sonarr</span>
+          <span class="chip chip-t1">Lidarr</span>
+          <span class="chip chip-t1">Bazarr</span>
+          <span class="chip chip-t1">LazyLibrarian</span>
+        </div>
+      </div>
+
+      <div class="tier-card tier-2">
+        <div class="tier-header">
+          <span class="tier-label tier-2-label">Tier 2</span>
+          <span class="tier-desc">Media only r/o</span>
+        </div>
+        <div class="chip-row">
+          <span class="chip chip-t2">Jellyfin</span>
+          <span class="chip chip-t2">Kavita</span>
+          <span class="chip chip-t2">Audiobookshelf</span>
+        </div>
+      </div>
+
+      <div class="tier-card tier-3">
+        <div class="tier-header">
+          <span class="tier-label tier-3-label">Tier 3</span>
+          <span class="tier-desc">Config only</span>
+        </div>
+        <div class="chip-row">
+          <span class="chip chip-t3">Prowlarr</span>
+          <span class="chip chip-t3">Seerr</span>
+          <span class="chip chip-t3">QuestArr</span>
+          <span class="chip chip-t3">FlareSolverr</span>
+          <span class="chip chip-t3">Gluetun</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 3: THE HARDLINK FLOW ═══ -->
+  <section class="doc-section">
+    <h2 class="section-heading">The Hardlink Flow</h2>
+
+    <div class="flow-steps">
+      <div class="flow-step">
+        <span class="step-num">1</span>
+        <span class="step-text">Download completes — <code>inode #3899</code> created at <code>/data/downloads/torrents/radarr/Movie.mkv</code></span>
+      </div>
+      <div class="flow-step">
+        <span class="step-num">2</span>
+        <span class="step-text">Torrent continues seeding from original download location</span>
+      </div>
+      <div class="flow-step">
+        <span class="step-num">3</span>
+        <span class="step-text">Radarr hardlinks to <code>/data/media/movies/</code> — same inode, new path</span>
+      </div>
+      <div class="flow-step">
+        <span class="step-num">4</span>
+        <span class="step-text">Jellyfin streams from the library path</span>
+      </div>
+      <div class="flow-step">
+        <span class="step-num">5</span>
+        <span class="step-text">Eventually stop seeding — inode persists, library file unaffected</span>
+      </div>
+    </div>
+
+    <div class="callout-warning">
+      <strong>Warning:</strong> If downloads and media are on separate mounts (<code>-v /downloads:/downloads -v /media:/media</code>), hardlinks fail silently. Files get copied instead, doubling disk usage.
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 4: DIRECTORY TREE ═══ -->
+  <section class="doc-section">
+    <h2 class="section-heading">Directory Tree</h2>
+    <p class="section-intro">
+      Everything lives under <code>/data</code>. Three top-level directories serve different purposes.
+    </p>
+
+    <div class="tree-grid">
+      <div class="tree-card">
+        <div class="tree-title">config/</div>
+        <div class="tree-subtitle">15 service databases</div>
+        <div class="tree-list">
+          <span class="tree-item">radarr</span>
+          <span class="tree-item">sonarr</span>
+          <span class="tree-item">lidarr</span>
+          <span class="tree-item">bazarr</span>
+          <span class="tree-item">prowlarr</span>
+          <span class="tree-item">transmission</span>
+          <span class="tree-item">sabnzbd</span>
+          <span class="tree-item">jellyfin</span>
+          <span class="tree-item">jellyfin-cache</span>
+          <span class="tree-item">seerr</span>
+          <span class="tree-item">lazylibrarian</span>
+          <span class="tree-item">kavita</span>
+          <span class="tree-item">audiobookshelf</span>
+          <span class="tree-item">audiobookshelf-meta</span>
+          <span class="tree-item">questarr</span>
+        </div>
+      </div>
+
+      <div class="tree-card">
+        <div class="tree-title">downloads/</div>
+        <div class="tree-subtitle">Staging area</div>
+        <div class="tree-list">
+          <div class="tree-group">
+            <span class="tree-folder">torrents/</span>
+            <span class="tree-item tree-indent">radarr</span>
+            <span class="tree-item tree-indent">tv-sonarr</span>
+            <span class="tree-item tree-indent">lidarr</span>
+            <span class="tree-item tree-indent">books</span>
+            <span class="tree-item tree-indent">games</span>
+          </div>
+          <div class="tree-group">
+            <span class="tree-folder">usenet/</span>
+            <span class="tree-item tree-indent">movies</span>
+            <span class="tree-item tree-indent">tv</span>
+            <span class="tree-item tree-indent">music</span>
+            <span class="tree-item tree-indent">books</span>
+            <span class="tree-item tree-indent">audiobooks</span>
+            <span class="tree-item tree-indent">games</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tree-card">
+        <div class="tree-title">media/</div>
+        <div class="tree-subtitle">Final library</div>
+        <div class="tree-list">
+          <div class="tree-entry">
+            <span class="tree-item">movies/</span>
+            <span class="tree-arrow">Jellyfin</span>
+          </div>
+          <div class="tree-entry">
+            <span class="tree-item">tv/</span>
+            <span class="tree-arrow">Jellyfin</span>
+          </div>
+          <div class="tree-entry">
+            <span class="tree-item">music/</span>
+            <span class="tree-arrow">Jellyfin + Roon</span>
+          </div>
+          <div class="tree-entry">
+            <span class="tree-item">books/</span>
+            <span class="tree-arrow">Kavita</span>
+          </div>
+          <div class="tree-entry">
+            <span class="tree-item">audiobooks/</span>
+            <span class="tree-arrow">Audiobookshelf</span>
+          </div>
+          <div class="tree-entry">
+            <span class="tree-item">games/</span>
+            <span class="tree-arrow">GameVault</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="page-nav" slot="page-nav">
+    <a href="/docs/architecture/network" class="nav-prev">&larr; Network Architecture</a>
+    <a href="/docs/pipeline" class="nav-next">Pipeline & Quality &rarr;</a>
+  </div>
+
+</DocsLayout>
+
+<style>
+  /* ═══ SECTIONS ═══ */
+  .doc-section {
+    margin-bottom: 48px;
+  }
+  .section-heading {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 16px;
+  }
+  .sub-heading {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #f1f5f9;
+    margin: 28px 0 12px;
+  }
+  .section-intro {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    line-height: 1.65;
+    margin-bottom: 20px;
+  }
+  .section-intro code {
+    font-size: 0.78rem;
+    background: rgba(99,102,241,0.08);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--indigo);
+  }
+
+  /* ═══ HARDLINK VISUAL ═══ */
+  .hardlink-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 24px;
+  }
+  .path-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    width: 100%;
+    max-width: 480px;
+  }
+  .path-label {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .path-card code {
+    font-size: 0.76rem;
+    font-family: 'SF Mono','Fira Code',monospace;
+    color: var(--cyan);
+    word-break: break-all;
+  }
+  .download-path {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: none;
+  }
+  .library-path {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top: none;
+  }
+  .inode-bridge {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 480px;
+    gap: 0;
+  }
+  .inode-line {
+    flex: 1;
+    height: 1px;
+    background: var(--emerald);
+    opacity: 0.4;
+  }
+  .inode-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    font-family: 'SF Mono','Fira Code',monospace;
+    color: var(--emerald);
+    background: rgba(16,185,129,0.08);
+    border: 1px solid rgba(16,185,129,0.2);
+    padding: 4px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .inode-note {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  /* ═══ MOUNT CARDS ═══ */
+  .mount-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  @media (min-width: 640px) {
+    .mount-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .mount-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .mount-correct {
+    border-color: rgba(16,185,129,0.25);
+    background: rgba(16,185,129,0.04);
+  }
+  .mount-wrong {
+    border-color: rgba(248,113,113,0.25);
+    background: rgba(248,113,113,0.04);
+  }
+  .mount-badge {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  .correct-badge {
+    color: var(--green);
+    background: rgba(16,185,129,0.1);
+  }
+  .wrong-badge {
+    color: var(--red);
+    background: rgba(248,113,113,0.1);
+  }
+  .mount-cmd {
+    display: block;
+    font-size: 0.76rem;
+    font-family: 'SF Mono','Fira Code',monospace;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.6;
+  }
+  .mount-card p {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* ═══ TIER CARDS ═══ */
+  .tier-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .tier-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .tier-1 { border-color: rgba(16,185,129,0.25); }
+  .tier-2 { border-color: rgba(56,189,248,0.25); }
+  .tier-3 { border-color: rgba(251,191,36,0.25); }
+  .tier-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .tier-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .tier-1-label { color: var(--green); background: rgba(16,185,129,0.1); }
+  .tier-2-label { color: var(--sky); background: rgba(56,189,248,0.1); }
+  .tier-3-label { color: var(--yellow); background: rgba(251,191,36,0.1); }
+  .tier-desc {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+  }
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .chip {
+    font-size: 0.72rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .chip-t1 { color: var(--green); background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.15); }
+  .chip-t2 { color: var(--sky); background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.15); }
+  .chip-t3 { color: var(--yellow); background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.15); }
+
+  /* ═══ HARDLINK FLOW ═══ */
+  .flow-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 20px;
+  }
+  .flow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-bottom: none;
+  }
+  .flow-step:first-child {
+    border-radius: 10px 10px 0 0;
+  }
+  .flow-step:last-child {
+    border-bottom: 1px solid var(--border);
+    border-radius: 0 0 10px 10px;
+  }
+  .step-num {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--indigo);
+    background: rgba(99,102,241,0.1);
+    border-radius: 50%;
+  }
+  .step-text {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+  .step-text code {
+    font-size: 0.76rem;
+    font-family: 'SF Mono','Fira Code',monospace;
+    background: rgba(99,102,241,0.08);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--indigo);
+  }
+
+  /* ═══ WARNING CALLOUT ═══ */
+  .callout-warning {
+    background: rgba(251,191,36,0.06);
+    border: 1px solid rgba(251,191,36,0.15);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+  .callout-warning strong {
+    color: var(--yellow);
+  }
+  .callout-warning code {
+    font-size: 0.74rem;
+    font-family: 'SF Mono','Fira Code',monospace;
+    background: rgba(251,191,36,0.08);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--yellow);
+  }
+
+  /* ═══ DIRECTORY TREE ═══ */
+  .tree-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  @media (min-width: 640px) {
+    .tree-grid {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+  .tree-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .tree-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    font-family: 'SF Mono','Fira Code',monospace;
+    color: var(--cyan);
+    margin-bottom: 2px;
+  }
+  .tree-subtitle {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+  .tree-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .tree-item {
+    font-family: 'SF Mono','Fira Code',monospace;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    padding: 2px 0;
+  }
+  .tree-indent {
+    padding-left: 16px;
+  }
+  .tree-folder {
+    font-family: 'SF Mono','Fira Code',monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--sky);
+    padding: 2px 0;
+    margin-top: 6px;
+  }
+  .tree-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .tree-group:first-child .tree-folder {
+    margin-top: 0;
+  }
+  .tree-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .tree-arrow {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  /* ═══ PAGE NAV ═══ */
+  .page-nav {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+  }
+  .nav-prev, .nav-next {
+    font-size: 0.82rem;
+    color: var(--sky);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .nav-prev:hover, .nav-next:hover {
+    color: var(--text);
+  }
+</style>

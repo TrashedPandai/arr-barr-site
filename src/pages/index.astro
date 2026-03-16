@@ -108,7 +108,7 @@ import Terminal from '../components/Terminal.astro';
       <span class="chapter-label" data-final="03">03</span>
       <h3 class="chapter-title split-title">Private by default</h3>
       <p class="chapter-analogy">Built-in protection. The crew's got your back. Nothing to worry about.</p>
-      <p class="chapter-desc">Every download is wrapped in military-grade encryption through a VPN tunnel that's always on. If the connection ever hiccups, a kill switch instantly blocks all traffic &mdash; your real identity is never exposed, not even for a millisecond. Your ISP sees nothing. It just works.</p>
+      <p class="chapter-desc">Every download is wrapped in the same encryption businesses trust to keep your data safe &mdash; through a VPN tunnel that's always on. If the connection ever hiccups, a kill switch instantly blocks all traffic &mdash; your real identity is never exposed, not even for a millisecond. Your ISP sees nothing. It just works.</p>
     </div>
   </div>
 
@@ -166,7 +166,7 @@ import Terminal from '../components/Terminal.astro';
   <div class="crew-list">
     <div class="crew-group">
       <span class="group-tag">Requests</span>
-      <div class="crew-cards">
+      <div class="crew-cards grid-no-orphan">
         <a class="crew-card" href="https://github.com/Fallenbagel/jellyseerr" target="_blank" rel="noopener">
           <img class="card-icon" src="https://raw.githubusercontent.com/Fallenbagel/jellyseerr/main/public/logo_full.svg" alt="" loading="lazy"/>
           <span class="card-name">Jellyseerr</span>
@@ -178,7 +178,7 @@ import Terminal from '../components/Terminal.astro';
 
     <div class="crew-group">
       <span class="group-tag">Automation</span>
-      <div class="crew-cards">
+      <div class="crew-cards grid-no-orphan">
         <a class="crew-card" href="https://radarr.video" target="_blank" rel="noopener">
           <img class="card-icon" src="https://raw.githubusercontent.com/Radarr/Radarr/develop/Logo/128.png" alt="" loading="lazy"/>
           <span class="card-name">Radarr</span>
@@ -214,7 +214,7 @@ import Terminal from '../components/Terminal.astro';
 
     <div class="crew-group">
       <span class="group-tag">Search</span>
-      <div class="crew-cards">
+      <div class="crew-cards grid-no-orphan">
         <a class="crew-card" href="https://prowlarr.com" target="_blank" rel="noopener">
           <img class="card-icon" src="https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/Logo/128.png" alt="" loading="lazy"/>
           <span class="card-name">Prowlarr</span>
@@ -232,7 +232,7 @@ import Terminal from '../components/Terminal.astro';
 
     <div class="crew-group">
       <span class="group-tag">Downloads</span>
-      <div class="crew-cards">
+      <div class="crew-cards grid-no-orphan">
         <a class="crew-card" href="https://github.com/qdm12/gluetun" target="_blank" rel="noopener">
           <span class="card-emoji">&#x1F512;</span>
           <span class="card-name">Gluetun</span>
@@ -256,7 +256,7 @@ import Terminal from '../components/Terminal.astro';
 
     <div class="crew-group">
       <span class="group-tag">Streaming</span>
-      <div class="crew-cards">
+      <div class="crew-cards grid-no-orphan">
         <a class="crew-card" href="https://jellyfin.org" target="_blank" rel="noopener">
           <img class="card-icon" src="https://raw.githubusercontent.com/jellyfin/jellyfin-ux/master/branding/SVG/icon-transparent.svg" alt="" loading="lazy"/>
           <span class="card-name">Jellyfin</span>
@@ -274,7 +274,7 @@ import Terminal from '../components/Terminal.astro';
 
     <div class="crew-group">
       <span class="group-tag">Reading</span>
-      <div class="crew-cards">
+      <div class="crew-cards grid-no-orphan">
         <a class="crew-card" href="https://www.kavitareader.com" target="_blank" rel="noopener">
           <img class="card-icon" src="https://raw.githubusercontent.com/Kareadita/Kavita/develop/Logo/kavita.svg" alt="" loading="lazy"/>
           <span class="card-name">Kavita</span>
@@ -405,7 +405,6 @@ import Terminal from '../components/Terminal.astro';
   .chapter-analogy { font-size:clamp(0.95rem,2.5vw,1.1rem); color:var(--accent); margin-bottom:20px; line-height:1.6; font-weight:500; }
 
   .chapter-desc { font-size:0.9rem; color:var(--text-dim); max-width:520px; line-height:1.9; }
-
   /* ═══ CREW — card-based, mobile-first ═══ */
   .crew-section { max-width:780px; margin:0 auto; padding:40px 16px 60px; position:relative; }
 

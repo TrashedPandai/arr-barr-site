@@ -1,0 +1,522 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+---
+
+<DocsLayout title="Operations & CLI" breadcrumbs={[{label:'Operations & CLI'}]}>
+
+<!-- ═══ SECTION 1: COMPOSE PROFILES ═══ -->
+<section class="ops-section">
+  <h1 class="ops-h1">Operations & CLI</h1>
+  <p class="ops-lead">12 commands, compose profiles, health checks, and self-repair. Everything you need to run the stack.</p>
+
+  <!-- Compose Profiles -->
+  <h2 class="ops-h2" id="profiles">Compose Profiles</h2>
+  <p class="ops-desc">The stack runs 12 core services by default. Two more are available as optional profiles.</p>
+
+  <div class="prof-tabs" id="profTabs">
+    <button class="prof-tab active" data-prof="core">Core (12)</button>
+    <button class="prof-tab" data-prof="kavita">+ Kavita</button>
+    <button class="prof-tab" data-prof="abs">+ Audiobookshelf</button>
+    <button class="prof-tab" data-prof="all">All (15)</button>
+  </div>
+  <div class="prof-grid" id="profGrid">
+    {['Gluetun','Transmission','SABnzbd','Prowlarr','FlareSolverr','Radarr','Sonarr','Lidarr','Bazarr','Jellyfin','Seerr','QuestArr','LazyLibrarian','Kavita','Audiobookshelf'].map((s, i) => (
+      <div class={`prof-chip ${i >= 12 ? 'prof-optional' : ''}`} data-svc={s.toLowerCase().replace(/\s/g,'')}>{s}</div>
+    ))}
+  </div>
+
+  <div class="prof-usage">
+    <code>docker compose up -d</code> <span class="prof-note">Core 12</span>
+    <code>docker compose --profile kavita up -d</code> <span class="prof-note">+ Books</span>
+    <code>docker compose --profile all up -d</code> <span class="prof-note">All 15</span>
+  </div>
+</section>
+
+<!-- ═══ SECTION 2: CLI REFERENCE ═══ -->
+<section class="ops-section">
+  <h2 class="ops-h2" id="cli">CLI Reference</h2>
+  <p class="ops-desc">One command to rule them all. Every operation is a sub-command of <code>arr</code>.</p>
+
+  <div class="cmd-map">
+    <div class="cmd-hub"><code>arr</code> <span>command</span></div>
+    <div class="cmd-fan grid-no-orphan">
+      {[
+        {cmd:'setup', desc:'First-time wizard', color:'cyan', alias:''},
+        {cmd:'start', desc:'Start all services', color:'green', alias:''},
+        {cmd:'stop', desc:'Stop all services', color:'red', alias:''},
+        {cmd:'restart', desc:'Smart restart (VPN-aware)', color:'amber', alias:''},
+        {cmd:'status', desc:'Container dashboard', color:'indigo', alias:'st'},
+        {cmd:'health', desc:'15 parallel checks', color:'green', alias:'hp'},
+        {cmd:'vpn', desc:'Tunnel status + geolocation', color:'red', alias:''},
+        {cmd:'downloads', desc:'Live TUI dashboard', color:'cyan', alias:'dl'},
+        {cmd:'logs', desc:'Log viewer (-f to follow)', color:'dim', alias:'log'},
+        {cmd:'doctor', desc:'6-check diagnostic + auto-fix', color:'amber', alias:'doc'},
+        {cmd:'update', desc:'Git pull + Docker pull + restart', color:'indigo', alias:'up'},
+        {cmd:'backup', desc:'Config snapshot + prune', color:'dim', alias:'bk'},
+      ].map(c => (
+        <div class={`cmd-leaf cmd-${c.color}`}>
+          <div class="cmd-leaf-top">
+            <code>arr {c.cmd}</code>
+            {c.alias && <span class="cmd-alias">{c.alias}</span>}
+          </div>
+          <span class="cmd-desc">{c.desc}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Category Legend -->
+  <div class="cmd-legend">
+    <span class="leg leg-setup">Setup</span>
+    <span class="leg leg-lifecycle">Lifecycle</span>
+    <span class="leg leg-monitor">Monitor</span>
+    <span class="leg leg-debug">Debug</span>
+    <span class="leg leg-maintain">Maintain</span>
+  </div>
+</section>
+
+<!-- ═══ SECTION 3: SETUP FLOW ═══ -->
+<section class="ops-section">
+  <h2 class="ops-h2" id="setup">Setup Flow</h2>
+  <p class="ops-desc">From zero to running in 6 steps. <code>arr setup</code> handles it all.</p>
+
+  <div class="setup-flow">
+    {[
+      {n:'1', label:'Install CLI', desc:'Downloads arr binary to /usr/local/bin', color:'cyan'},
+      {n:'2', label:'Configure .env', desc:'Interactive wizard for VPN creds, PUID/PGID, paths', color:'cyan'},
+      {n:'3', label:'Create directories', desc:'20 directories for configs, downloads, media library', color:'cyan'},
+      {n:'4', label:'Apply templates', desc:'Copy config templates for all services', color:'amber'},
+      {n:'5', label:'Fix permissions', desc:'Set ownership to match PUID/PGID', color:'amber'},
+      {n:'6', label:'Pull images', desc:'Docker pull for all service images', color:'green'},
+    ].map((s, i) => (
+      <Fragment>
+        <div class={`setup-step ss-${s.color}`}>
+          <span class="ss-num">{s.n}</span>
+          <div class="ss-body">
+            <strong>{s.label}</strong>
+            <span>{s.desc}</span>
+          </div>
+        </div>
+        {i < 5 && <div class="setup-arrow">&darr;</div>}
+      </Fragment>
+    ))}
+  </div>
+</section>
+
+<!-- ═══ SECTION 4: DOCTOR ═══ -->
+<section class="ops-section">
+  <h2 class="ops-h2" id="doctor">Doctor Self-Repair</h2>
+  <p class="ops-desc"><code>arr doctor</code> runs 6 checks and auto-fixes what it can.</p>
+
+  <div class="doctor-grid">
+    {[
+      {check:'arr binary', fix:'Auto-update', type:'fix'},
+      {check:'.env variables', fix:'Append missing', type:'fix'},
+      {check:'VPN credentials', fix:'Warning only', type:'warn'},
+      {check:'20 directories', fix:'Auto-create', type:'fix'},
+      {check:'Config templates', fix:'Auto-copy', type:'fix'},
+      {check:'Seerr permissions', fix:'Auto-chown', type:'fix'},
+    ].map((d, i) => (
+      <div class="doc-row">
+        <span class="doc-num">{i + 1}</span>
+        <span class="doc-check">{d.check}</span>
+        <span class="doc-arrow">&rarr;</span>
+        <span class={`doc-fix doc-${d.type}`}>{d.fix}</span>
+      </div>
+    ))}
+  </div>
+</section>
+
+<!-- ═══ SECTION 5: HEALTH ENDPOINTS ═══ -->
+<section class="ops-section">
+  <h2 class="ops-h2" id="health">Health Endpoints</h2>
+  <p class="ops-desc">All 15 checked in parallel with a 2s timeout. <code>arr health</code> runs them all.</p>
+
+  <div class="health-grid">
+    {[
+      {svc:'Gluetun', ep:'/v1/openvpn/status', code:'302'},
+      {svc:'Transmission', ep:'/transmission/rpc', code:'409'},
+      {svc:'SABnzbd', ep:'/api?mode=version', code:'200'},
+      {svc:'Prowlarr', ep:'/ping', code:'200'},
+      {svc:'FlareSolverr', ep:'/health', code:'200'},
+      {svc:'Radarr', ep:'/ping', code:'200'},
+      {svc:'Sonarr', ep:'/ping', code:'200'},
+      {svc:'Lidarr', ep:'/ping', code:'200'},
+      {svc:'Bazarr', ep:'/ping', code:'200'},
+      {svc:'Jellyfin', ep:'/System/Info/Public', code:'200'},
+      {svc:'Seerr', ep:'/api/v1/status', code:'200'},
+      {svc:'LazyLibrarian', ep:'/api?cmd=getVersion', code:'200'},
+      {svc:'Kavita', ep:'/api/health', code:'200'},
+      {svc:'Audiobookshelf', ep:'/healthcheck', code:'200'},
+      {svc:'QuestArr', ep:'/', code:'200'},
+    ].map(h => (
+      <div class="hc-row">
+        <span class="hc-dot"></span>
+        <span class="hc-svc">{h.svc}</span>
+        <code class="hc-ep">{h.ep}</code>
+        <span class="hc-code">{h.code}</span>
+      </div>
+    ))}
+  </div>
+
+  <div class="health-legend">
+    <span class="hl-item hl-green">Green &lt;1s</span>
+    <span class="hl-item hl-yellow">Yellow &gt;1s</span>
+    <span class="hl-item hl-red">Red = fail</span>
+  </div>
+</section>
+
+<!-- ═══ SECTION 6: UPDATE PIPELINE ═══ -->
+<section class="ops-section">
+  <h2 class="ops-h2" id="updates">Update Pipeline</h2>
+  <p class="ops-desc">One command to update everything. Your configs and media are never touched.</p>
+
+  <div class="update-flow">
+    <div class="uf-step uf-indigo"><code>arr update</code></div>
+    <div class="uf-arrow">&darr;</div>
+    <div class="uf-step uf-cyan"><code>git pull --ff-only</code><span>compose.yaml, CLI, templates</span></div>
+    <div class="uf-arrow">&darr;</div>
+    <div class="uf-step uf-cyan"><code>docker compose pull</code><span>Latest images</span></div>
+    <div class="uf-arrow">&darr;</div>
+    <div class="uf-step uf-green"><code>docker compose up -d</code><span>Only changed containers recreated</span></div>
+  </div>
+
+  <div class="update-safe grid-no-orphan">
+    <div class="us-card us-yes">
+      <strong>Updated</strong>
+      <span>compose.yaml, CLI scripts, templates, Docker images</span>
+    </div>
+    <div class="us-card us-no">
+      <strong>Never touched</strong>
+      <span>.env, service configs & databases, media files</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 7: DOWNLOADS DASHBOARD ═══ -->
+<section class="ops-section">
+  <h2 class="ops-h2" id="downloads">Downloads Dashboard</h2>
+  <p class="ops-desc"><code>arr downloads</code> — a live TUI with speed gauges, progress bars, and ETAs.</p>
+
+  <div class="dl-flow">
+    <div class="dl-sources">
+      <div class="dl-src dl-cyan">Transmission RPC</div>
+      <div class="dl-src dl-amber">SABnzbd API</div>
+    </div>
+    <div class="dl-arrow"><span>4 parallel curls</span> &darr;</div>
+    <div class="dl-step dl-green">Main Loop <span>100ms poll cycle</span></div>
+    <div class="dl-arrow">&darr;</div>
+    <div class="dl-step dl-indigo">Render <span>Speed gauges, progress bars, ETAs</span></div>
+    <div class="dl-arrow">&darr;</div>
+    <div class="dl-step dl-dim">Keyboard <span>q = quit, r = refresh</span></div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 8: ONBOARDING ═══ -->
+<section class="ops-section">
+  <h2 class="ops-h2" id="onboarding">Onboarding Friends</h2>
+  <p class="ops-desc">Five steps to get a friend running their own stack.</p>
+
+  <div class="onboard-flow">
+    {[
+      {n:'1', label:'Clone repo', color:'cyan'},
+      {n:'2', label:'arr setup', color:'cyan'},
+      {n:'3', label:'Edit .env', color:'amber'},
+      {n:'4', label:'arr start', color:'green'},
+      {n:'5', label:'Open Seerr', color:'green'},
+    ].map((s, i) => (
+      <Fragment>
+        <div class={`ob-step ob-${s.color}`}>
+          <span class="ob-num">{s.n}</span>
+          <span class="ob-label">{s.label}</span>
+        </div>
+        {i < 4 && <span class="ob-arrow">&rarr;</span>}
+      </Fragment>
+    ))}
+  </div>
+  <p class="ops-note">Friends update with <code>arr update</code> — pulls latest code and Docker images in one command.</p>
+</section>
+
+<!-- Page navigation -->
+<Fragment slot="page-nav">
+  <nav class="page-nav">
+    <a href="/docs/pipeline" class="pn-link pn-prev">
+      <span class="pn-dir">&larr; Previous</span>
+      <span class="pn-title">Pipeline & Quality</span>
+    </a>
+    <a href="/docs/troubleshooting" class="pn-link pn-next">
+      <span class="pn-dir">Next &rarr;</span>
+      <span class="pn-title">Troubleshooting</span>
+    </a>
+  </nav>
+</Fragment>
+
+<style>
+  /* ═══ BASE ═══ */
+  .ops-section { margin-bottom:48px; }
+  .ops-h1 { font-size:clamp(1.6rem, 4vw, 2rem); font-weight:800; color:#f1f5f9; margin-bottom:6px; }
+  .ops-h2 { font-size:1.2rem; font-weight:700; color:#f1f5f9; margin-bottom:4px; }
+  .ops-lead { font-size:0.92rem; color:var(--text-dim); margin-bottom:32px; line-height:1.6; }
+  .ops-desc { font-size:0.85rem; color:var(--text-dim); margin-bottom:16px; line-height:1.5; }
+  .ops-desc code { font-size:0.78rem; background:rgba(99,102,241,0.1); padding:1px 6px; border-radius:4px; color:var(--indigo); }
+  .ops-note { font-size:0.82rem; color:var(--text-muted); margin-top:12px; }
+  .ops-note code { font-size:0.75rem; background:rgba(99,102,241,0.1); padding:1px 6px; border-radius:4px; color:var(--indigo); }
+
+  /* ═══ COMPOSE PROFILES ═══ */
+  .prof-tabs { display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; }
+  .prof-tab {
+    padding:6px 14px; border-radius:6px; border:1px solid var(--border);
+    background:none; color:var(--text-dim); font-size:0.78rem; font-weight:500;
+    cursor:pointer; transition:all 0.2s;
+  }
+  .prof-tab:hover { border-color:var(--border-h); color:var(--text); }
+  .prof-tab.active { background:rgba(99,102,241,0.1); border-color:var(--indigo); color:var(--indigo); }
+
+  .prof-grid {
+    display:flex; flex-wrap:wrap; gap:6px; padding:16px;
+    background:var(--surface); border:1px solid var(--border); border-radius:10px;
+  }
+  .prof-chip {
+    padding:5px 12px; border-radius:6px; font-size:0.75rem; font-weight:600;
+    background:rgba(99,102,241,0.08); color:var(--indigo); border:1px solid rgba(99,102,241,0.15);
+    transition:all 0.3s;
+  }
+  .prof-optional { opacity:0.35; }
+  .prof-optional.visible { opacity:1; }
+
+  .prof-usage {
+    margin-top:12px; display:flex; flex-direction:column; gap:6px;
+  }
+  .prof-usage code {
+    font-size:0.72rem; background:var(--surface); border:1px solid var(--border);
+    padding:6px 12px; border-radius:6px; color:var(--text-dim); display:inline-block;
+  }
+  .prof-note { font-size:0.7rem; color:var(--text-muted); margin-left:8px; }
+
+  /* ═══ COMMAND MAP ═══ */
+  .cmd-map { margin-bottom:16px; }
+  .cmd-hub {
+    text-align:center; padding:12px; margin-bottom:12px;
+    background:var(--surface); border:1px solid var(--border); border-radius:10px;
+  }
+  .cmd-hub code { font-size:1rem; font-weight:700; color:var(--indigo); }
+  .cmd-hub span { font-size:0.78rem; color:var(--text-muted); margin-left:4px; }
+
+  .cmd-fan { display:grid; grid-template-columns:repeat(2, 1fr); gap:8px; }
+  .cmd-leaf {
+    padding:10px 12px; border-radius:8px;
+    background:var(--surface); border:1px solid var(--border);
+    transition:all 0.2s;
+  }
+  .cmd-leaf:hover { border-color:var(--border-h); transform:translateY(-1px); }
+  .cmd-leaf-top { display:flex; align-items:center; gap:8px; margin-bottom:2px; }
+  .cmd-leaf code { font-size:0.78rem; font-weight:600; }
+  .cmd-alias { font-size:0.65rem; color:var(--text-muted); background:rgba(255,255,255,0.05); padding:1px 5px; border-radius:3px; }
+  .cmd-desc { font-size:0.72rem; color:var(--text-dim); display:block; }
+
+  .cmd-cyan code { color:var(--cyan); }
+  .cmd-green code { color:var(--emerald); }
+  .cmd-red code { color:var(--pink); }
+  .cmd-amber code { color:var(--yellow); }
+  .cmd-indigo code { color:var(--indigo); }
+  .cmd-dim code { color:var(--text-dim); }
+
+  .cmd-legend { display:flex; flex-wrap:wrap; gap:10px; margin-top:8px; }
+  .leg {
+    font-size:0.65rem; font-weight:600; text-transform:uppercase; letter-spacing:0.08em;
+    padding:3px 8px; border-radius:4px;
+  }
+  .leg-setup { background:rgba(34,211,238,0.08); color:var(--cyan); }
+  .leg-lifecycle { background:rgba(16,185,129,0.08); color:var(--emerald); }
+  .leg-monitor { background:rgba(99,102,241,0.08); color:var(--indigo); }
+  .leg-debug { background:rgba(251,191,36,0.08); color:var(--yellow); }
+  .leg-maintain { background:rgba(129,140,248,0.08); color:var(--indigo); }
+
+  /* ═══ SETUP FLOW ═══ */
+  .setup-flow { display:flex; flex-direction:column; align-items:stretch; gap:0; }
+  .setup-step {
+    display:flex; align-items:center; gap:12px;
+    padding:14px 16px; border-radius:10px;
+    background:var(--surface); border:1px solid var(--border);
+  }
+  .ss-num {
+    width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:0.75rem; font-weight:700; flex-shrink:0;
+  }
+  .ss-cyan .ss-num { background:rgba(34,211,238,0.12); color:var(--cyan); }
+  .ss-amber .ss-num { background:rgba(251,191,36,0.12); color:var(--yellow); }
+  .ss-green .ss-num { background:rgba(16,185,129,0.12); color:var(--emerald); }
+  .ss-body strong { font-size:0.85rem; color:#f1f5f9; display:block; }
+  .ss-body span { font-size:0.75rem; color:var(--text-dim); }
+  .setup-arrow { text-align:center; color:var(--text-muted); font-size:0.85rem; padding:2px 0; }
+
+  /* ═══ DOCTOR ═══ */
+  .doctor-grid { display:flex; flex-direction:column; gap:6px; }
+  .doc-row {
+    display:grid; grid-template-columns:28px 1fr auto auto; align-items:center; gap:8px;
+    padding:10px 14px; border-radius:8px;
+    background:var(--surface); border:1px solid var(--border);
+  }
+  .doc-num {
+    width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:0.68rem; font-weight:700; background:rgba(99,102,241,0.1); color:var(--indigo);
+  }
+  .doc-check { font-size:0.82rem; color:var(--text-dim); }
+  .doc-arrow { color:var(--text-muted); font-size:0.8rem; }
+  .doc-fix { font-size:0.75rem; font-weight:600; padding:2px 10px; border-radius:4px; }
+  .doc-fix { background:rgba(16,185,129,0.1); color:var(--emerald); }
+  .doc-warn { background:rgba(251,191,36,0.1); color:var(--yellow); }
+
+  /* ═══ HEALTH ENDPOINTS ═══ */
+  .health-grid {
+    display:flex; flex-direction:column; gap:4px;
+    background:var(--surface); border:1px solid var(--border); border-radius:10px;
+    padding:12px; overflow-x:auto;
+  }
+  .hc-row {
+    display:grid; grid-template-columns:10px 1fr auto auto; align-items:center; gap:10px;
+    padding:6px 8px; border-radius:6px;
+    transition:background 0.15s;
+  }
+  .hc-row:hover { background:rgba(99,102,241,0.04); }
+  .hc-dot { width:8px; height:8px; border-radius:50%; background:var(--emerald); }
+  .hc-svc { font-size:0.82rem; font-weight:500; color:#f1f5f9; }
+  .hc-ep { font-size:0.68rem; color:var(--text-muted); background:none; border:none; padding:0; }
+  .hc-code { font-size:0.68rem; font-weight:600; color:var(--emerald); }
+
+  .health-legend { display:flex; gap:16px; margin-top:10px; }
+  .hl-item { font-size:0.7rem; font-weight:600; }
+  .hl-green { color:var(--emerald); }
+  .hl-yellow { color:var(--yellow); }
+  .hl-red { color:var(--pink); }
+
+  /* ═══ UPDATE FLOW ═══ */
+  .update-flow {
+    display:flex; flex-direction:column; align-items:center; gap:0;
+    margin-bottom:16px;
+  }
+  .uf-step {
+    width:100%; padding:14px 16px; border-radius:10px; text-align:center;
+    background:var(--surface); border:1px solid var(--border);
+  }
+  .uf-step code { font-size:0.82rem; font-weight:600; display:block; }
+  .uf-step span { font-size:0.72rem; color:var(--text-dim); display:block; margin-top:2px; }
+  .uf-indigo code { color:var(--indigo); }
+  .uf-cyan code { color:var(--cyan); }
+  .uf-green code { color:var(--emerald); }
+  .uf-arrow { color:var(--text-muted); font-size:0.85rem; padding:2px 0; }
+
+  .update-safe { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .us-card {
+    padding:14px 16px; border-radius:10px;
+    background:var(--surface); border:1px solid var(--border);
+  }
+  .us-card strong { font-size:0.82rem; display:block; margin-bottom:4px; }
+  .us-card span { font-size:0.75rem; color:var(--text-dim); line-height:1.5; }
+  .us-yes strong { color:var(--emerald); }
+  .us-no strong { color:var(--pink); }
+
+  /* ═══ DOWNLOADS DASHBOARD ═══ */
+  .dl-flow { display:flex; flex-direction:column; align-items:center; gap:0; }
+  .dl-sources { display:flex; gap:8px; width:100%; }
+  .dl-src {
+    flex:1; padding:10px 14px; border-radius:8px; text-align:center;
+    font-size:0.82rem; font-weight:600;
+    background:var(--surface); border:1px solid var(--border);
+  }
+  .dl-cyan { color:var(--cyan); }
+  .dl-amber { color:var(--yellow); }
+  .dl-arrow { color:var(--text-muted); font-size:0.82rem; padding:4px 0; }
+  .dl-arrow span { font-size:0.7rem; font-style:italic; margin-right:4px; }
+  .dl-step {
+    width:100%; padding:12px 16px; border-radius:8px; text-align:center;
+    font-size:0.85rem; font-weight:600;
+    background:var(--surface); border:1px solid var(--border);
+  }
+  .dl-step span { font-size:0.72rem; color:var(--text-dim); display:block; margin-top:2px; font-weight:400; }
+  .dl-green { color:var(--emerald); }
+  .dl-indigo { color:var(--indigo); }
+  .dl-dim { color:var(--text-dim); }
+
+  /* ═══ ONBOARDING ═══ */
+  .onboard-flow { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+  .ob-step {
+    display:flex; align-items:center; gap:8px;
+    padding:10px 16px; border-radius:8px;
+    background:var(--surface); border:1px solid var(--border);
+  }
+  .ob-num {
+    width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:0.68rem; font-weight:700;
+  }
+  .ob-cyan .ob-num { background:rgba(34,211,238,0.12); color:var(--cyan); }
+  .ob-amber .ob-num { background:rgba(251,191,36,0.12); color:var(--yellow); }
+  .ob-green .ob-num { background:rgba(16,185,129,0.12); color:var(--emerald); }
+  .ob-label { font-size:0.82rem; font-weight:600; color:#f1f5f9; }
+  .ob-arrow { color:var(--text-muted); font-size:0.9rem; }
+
+  /* ═══ PAGE NAV ═══ */
+  .page-nav { display:flex; justify-content:space-between; gap:12px; margin-top:48px; padding-top:24px; border-top:1px solid var(--border); }
+  .pn-link {
+    display:flex; flex-direction:column; gap:2px; padding:12px 16px; border-radius:10px;
+    background:var(--surface); border:1px solid var(--border); text-decoration:none;
+    transition:all 0.2s; min-width:0;
+  }
+  .pn-link:hover { border-color:rgba(99,102,241,0.3); transform:translateY(-1px); }
+  .pn-next { align-items:flex-end; margin-left:auto; }
+  .pn-dir { font-size:0.7rem; color:var(--text-muted); }
+  .pn-title { font-size:0.88rem; font-weight:600; color:var(--indigo); }
+
+  /* ═══ RESPONSIVE ═══ */
+  @media(min-width:640px) {
+    .cmd-fan { grid-template-columns:repeat(3, 1fr); }
+  }
+  @media(max-width:640px) {
+    .cmd-fan { grid-template-columns:1fr; }
+    .update-safe { grid-template-columns:1fr; }
+    .onboard-flow { flex-direction:column; align-items:stretch; }
+    .ob-arrow { transform:rotate(90deg); text-align:center; }
+    .dl-sources { flex-direction:column; }
+    .page-nav { flex-direction:column; }
+    .pn-next { align-items:flex-start; }
+  }
+</style>
+
+<script>
+  // Compose profile tabs
+  const tabs = document.querySelectorAll('.prof-tab');
+  const chips = document.querySelectorAll('.prof-chip');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const prof = tab.getAttribute('data-prof');
+
+      chips.forEach((chip, i) => {
+        if (prof === 'core') {
+          chip.classList.toggle('visible', i < 12);
+          if (i >= 12) chip.classList.add('prof-optional');
+          else chip.classList.remove('prof-optional');
+          chip.style.display = '';
+        } else if (prof === 'kavita') {
+          chip.classList.remove('prof-optional');
+          chip.classList.add('visible');
+          const svc = chip.getAttribute('data-svc');
+          chip.style.display = (svc === 'audiobookshelf') ? 'none' : '';
+        } else if (prof === 'abs') {
+          chip.classList.remove('prof-optional');
+          chip.classList.add('visible');
+          const svc = chip.getAttribute('data-svc');
+          chip.style.display = (svc === 'kavita') ? 'none' : '';
+        } else {
+          chip.classList.remove('prof-optional');
+          chip.classList.add('visible');
+          chip.style.display = '';
+        }
+      });
+    });
+  });
+</script>
+
+</DocsLayout>
