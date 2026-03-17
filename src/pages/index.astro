@@ -111,8 +111,23 @@ import Terminal from '../components/Terminal.astro';
   <div class="cta-glow"></div>
   <h2 class="split-title">Clone. Configure. Stream.</h2>
   <p>The entire stack in one repo. Documented, automated, ready.</p>
-  <a href="/guide" class="btn btn-primary">Read the Guide</a>
 </section>
+
+<!-- Bottom nav buttons -->
+<nav class="bottom-nav" aria-label="Explore">
+  <a href="/crew" class="bottom-nav-btn">
+    <span class="bottom-nav-icon">&#9875;</span>
+    <span class="bottom-nav-label">Meet the Crew</span>
+  </a>
+  <a href="/guide" class="bottom-nav-btn bottom-nav-btn--primary">
+    <span class="bottom-nav-icon">&#9758;</span>
+    <span class="bottom-nav-label">Guide</span>
+  </a>
+  <a href="/docs" class="bottom-nav-btn">
+    <span class="bottom-nav-icon">&#9776;</span>
+    <span class="bottom-nav-label">Docs</span>
+  </a>
+</nav>
 
 <!-- Grass transition — sand fades to lush ground with subtle noise texture -->
 <div class="grass-zone" aria-hidden="true">
@@ -223,11 +238,43 @@ import Terminal from '../components/Terminal.astro';
   }
 
   /* ═══ CTA ═══ */
-  .final-cta { text-align:center; padding:100px 24px 60px; position:relative; max-width:600px; margin:0 auto; }
+  .final-cta { text-align:center; padding:80px 24px 24px; position:relative; max-width:600px; margin:0 auto; }
   .cta-glow { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse 60% 50% at 50% 40%,rgba(212,160,74,0.05) 0%,transparent 70%); }
   .final-cta h2 { font-size:clamp(1.8rem,5vw,2.6rem); font-weight:800; color:#f0f0f0; position:relative; letter-spacing:-0.5px; }
-  .final-cta p { color:var(--text-dim); font-size:0.92rem; margin:12px 0 28px; position:relative; }
-  .final-cta .btn { position:relative; }
+  .final-cta p { color:var(--text-dim); font-size:0.92rem; margin:12px 0 0; position:relative; }
+
+  /* ═══ BOTTOM NAV ═══ */
+  .bottom-nav {
+    display:flex; justify-content:center; gap:16px; flex-wrap:wrap;
+    padding:32px 24px 60px; max-width:600px; margin:0 auto;
+  }
+  .bottom-nav-btn {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:12px 28px; border-radius:12px;
+    font-size:0.92rem; font-weight:600; text-decoration:none;
+    background:rgba(255,255,255,0.04); color:var(--text-dim);
+    border:1px solid rgba(255,255,255,0.08);
+    transition:all 0.3s ease;
+    opacity:0; transform:translateY(24px);
+  }
+  .bottom-nav-btn:hover {
+    transform:translateY(-2px);
+    border-color:var(--gold-dim);
+    color:var(--gold);
+    background:rgba(212,160,74,0.06);
+    box-shadow:0 6px 24px rgba(212,160,74,0.12);
+  }
+  .bottom-nav-btn--primary {
+    background:linear-gradient(135deg,var(--gold),#b8860b);
+    color:#1a1204; border-color:transparent;
+  }
+  .bottom-nav-btn--primary:hover {
+    color:#1a1204;
+    box-shadow:0 8px 30px rgba(212,160,74,0.3);
+    background:linear-gradient(135deg,var(--gold),#b8860b);
+    border-color:transparent;
+  }
+  .bottom-nav-icon { font-size:1.1rem; }
 
   /* ═══ GRASS ZONE ═══ */
   .grass-zone {
@@ -257,7 +304,9 @@ import Terminal from '../components/Terminal.astro';
     .chapter:last-child { padding-bottom:20px; }
     .chapter-content { position:relative; z-index:1; }
     .chapter-title { font-size:1.8rem; }
-    .final-cta { padding:60px 20px 40px; }
+    .final-cta { padding:50px 20px 16px; }
+    .bottom-nav { padding:24px 16px 40px; gap:12px; }
+    .bottom-nav-btn { padding:10px 20px; font-size:0.85rem; }
     .beach-shore { height:120px; }
   }
   @media(max-width:480px){
@@ -275,6 +324,7 @@ import Terminal from '../components/Terminal.astro';
     .chapter-content { opacity:1 !important; transform:none !important; }
     .chapter-node { display:none !important; }
     .hero h1 { animation:none !important; background-position:0% 50%; }
+    .bottom-nav-btn { opacity:1 !important; transform:none !important; }
     .particle { opacity:0.3 !important; }
     .star { opacity:0.3 !important; }
   }
@@ -619,13 +669,22 @@ import Terminal from '../components/Terminal.astro';
       scrollTrigger: { trigger: '.final-cta', start: 'top 80%' }
     });
 
-    gsap.from('.final-cta p, .final-cta .btn', {
+    gsap.from('.final-cta p', {
       opacity: 0,
       y: 15,
       duration: 0.5,
-      stagger: 0.1,
       ease: 'power2.out',
       scrollTrigger: { trigger: '.final-cta', start: 'top 75%' }
+    });
+
+    // ═══ Bottom nav buttons — staggered entrance ═══
+    gsap.to('.bottom-nav-btn', {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      stagger: 0.12,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: '.bottom-nav', start: 'top 88%' }
     });
 
   // ═══ Resize — canvas recomputes path from DOM, no desync possible ═══
