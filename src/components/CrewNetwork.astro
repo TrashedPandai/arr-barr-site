@@ -1,0 +1,534 @@
+---
+/* ═══════════════════════════════════════
+   CrewNetwork — Interactive crew visualization
+   Canvas breathing connections + HTML nodes
+   Click any node → short role label + highlight paths
+   Mobile-first • GSAP-powered
+   ═══════════════════════════════════════ */
+
+interface Service {
+  id: string;
+  name: string;
+  role: string;
+  icon: string | null;
+  iconType: 'img' | 'emoji';
+  emoji?: string;
+  stage: string;
+}
+
+const services: Service[] = [
+  { id: 'jellyseerr', name: 'Jellyseerr', role: 'Request Manager', icon: '/icons/jellyseerr.svg', iconType: 'img', stage: 'request' },
+  { id: 'paperseerr', name: 'Paperseerr', role: 'Book Requests', icon: null, iconType: 'emoji', emoji: '📚', stage: 'request' },
+  { id: 'radarr', name: 'Radarr', role: 'Movies', icon: '/icons/radarr.png', iconType: 'img', stage: 'automation' },
+  { id: 'sonarr', name: 'Sonarr', role: 'TV Shows', icon: '/icons/sonarr.png', iconType: 'img', stage: 'automation' },
+  { id: 'lidarr', name: 'Lidarr', role: 'Music', icon: '/icons/lidarr.png', iconType: 'img', stage: 'automation' },
+  { id: 'bazarr', name: 'Bazarr', role: 'Subtitles', icon: '/icons/bazarr.png', iconType: 'img', stage: 'automation' },
+  { id: 'lazylibrarian', name: 'LazyLibrarian', role: 'Books', icon: '/icons/lazylibrarian.png', iconType: 'img', stage: 'automation' },
+  { id: 'prowlarr', name: 'Prowlarr', role: 'Search for Best Files', icon: '/icons/prowlarr.png', iconType: 'img', stage: 'search' },
+  { id: 'gluetun', name: 'Gluetun', role: 'VPN Tunnel', icon: null, iconType: 'emoji', emoji: '🔒', stage: 'downloads' },
+  { id: 'transmission', name: 'Transmission', role: 'Torrents', icon: null, iconType: 'emoji', emoji: '🌀', stage: 'downloads' },
+  { id: 'sabnzbd', name: 'SABnzbd', role: 'Usenet', icon: null, iconType: 'emoji', emoji: '⚡', stage: 'downloads' },
+  { id: 'media-library', name: 'Media Library', role: 'Your Files', icon: null, iconType: 'emoji', emoji: '📁', stage: 'library' },
+  { id: 'jellyfin', name: 'Jellyfin', role: 'Movies, TV & Music', icon: '/icons/jellyfin.svg', iconType: 'img', stage: 'streaming' },
+  { id: 'kavita', name: 'Kavita', role: 'Books & Comics', icon: '/icons/kavita.svg', iconType: 'img', stage: 'streaming' },
+  { id: 'audiobookshelf', name: 'Audiobookshelf', role: 'Audiobooks', icon: '/icons/audiobookshelf.png', iconType: 'img', stage: 'streaming' },
+];
+
+const stageOrder = ['request', 'automation', 'search', 'downloads', 'library', 'streaming'] as const;
+const stageColors: Record<string, { color: string; label: string }> = {
+  request: { color: '#c084fc', label: 'Request' },
+  automation: { color: '#22d3ee', label: 'Automation' },
+  search: { color: '#fbbf24', label: 'Search' },
+  downloads: { color: '#4ade80', label: 'Downloads' },
+  library: { color: '#fb923c', label: 'Library' },
+  streaming: { color: '#818cf8', label: 'Streaming' },
+};
+---
+
+<section class="crew-network" id="crewNetwork">
+  <div class="cn-field" id="cnField">
+    {stageOrder.map((stage) => {
+      const stageInfo = stageColors[stage];
+      const stageServices = services.filter((s) => s.stage === stage);
+      const isDownloads = stage === 'downloads';
+      const gluetun = isDownloads ? stageServices.find((s) => s.id === 'gluetun') : null;
+      const dlClients = isDownloads ? stageServices.filter((s) => s.id !== 'gluetun') : [];
+
+      if (isDownloads && gluetun) {
+        const sc = stageColors[gluetun.stage];
+        // Explicit order: Transmission (left) | Gluetun (center) | SABnzbd (right)
+        const transmission = dlClients.find((s) => s.id === 'transmission');
+        const sabnzbd = dlClients.find((s) => s.id === 'sabnzbd');
+        return (
+          <div class="cn-stage" data-stage-group={stage}>
+            <span class="cn-stage-label" style={`--sc: ${stageInfo.color}`}>{stageInfo.label}</span>
+            <div class="cn-vpn-group" data-node-id="gluetun" style={`--nc: ${sc.color}`}>
+              <span class="cn-vpn-label">VPN-protected network</span>
+              <div class="cn-vpn-row">
+                {transmission && (
+                  <button
+                    class="cn-node"
+                    data-node-id="transmission"
+                    data-stage={transmission.stage}
+                    data-role={transmission.role}
+                    style={`--nc: ${sc.color}`}
+                    aria-label={`${transmission.name} — ${transmission.role}`}
+                    type="button"
+                  >
+                    <span class="cn-glow" aria-hidden="true"></span>
+                    <span class="cn-emoji">{transmission.emoji}</span>
+                    <span class="cn-name">{transmission.name}</span>
+                    <span class="cn-role">{transmission.role}</span>
+                  </button>
+                )}
+                <button
+                  class="cn-node cn-node-vpn"
+                  data-node-id="gluetun"
+                  data-stage={gluetun.stage}
+                  data-role={gluetun.role}
+                  style={`--nc: ${sc.color}`}
+                  aria-label={`${gluetun.name} — ${gluetun.role}`}
+                  type="button"
+                >
+                  <span class="cn-glow" aria-hidden="true"></span>
+                  <span class="cn-emoji">{gluetun.emoji}</span>
+                  <span class="cn-name">{gluetun.name}</span>
+                  <span class="cn-role">{gluetun.role}</span>
+                </button>
+                {sabnzbd && (
+                  <button
+                    class="cn-node"
+                    data-node-id="sabnzbd"
+                    data-stage={sabnzbd.stage}
+                    data-role={sabnzbd.role}
+                    style={`--nc: ${sc.color}`}
+                    aria-label={`${sabnzbd.name} — ${sabnzbd.role}`}
+                    type="button"
+                  >
+                    <span class="cn-glow" aria-hidden="true"></span>
+                    <span class="cn-emoji">{sabnzbd.emoji}</span>
+                    <span class="cn-name">{sabnzbd.name}</span>
+                    <span class="cn-role">{sabnzbd.role}</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div class="cn-stage" data-stage-group={stage}>
+          <span class="cn-stage-label" style={`--sc: ${stageInfo.color}`}>{stageInfo.label}</span>
+          {stageServices.map((svc) => {
+            const sc = stageColors[svc.stage];
+            return (
+              <button
+                class="cn-node"
+                data-node-id={svc.id}
+                data-stage={svc.stage}
+                data-role={svc.role}
+                style={`--nc: ${sc.color}`}
+                aria-label={`${svc.name} — ${svc.role}`}
+                type="button"
+              >
+                <span class="cn-glow" aria-hidden="true"></span>
+                {svc.iconType === 'img' && svc.icon ? (
+                  <img class="cn-icon" src={svc.icon} alt="" loading="lazy" />
+                ) : (
+                  <span class="cn-emoji">{svc.emoji}</span>
+                )}
+                <span class="cn-name">{svc.name}</span>
+                <span class="cn-role">{svc.role}</span>
+              </button>
+            );
+          })}
+        </div>
+      );
+    })}
+  </div>
+</section>
+
+<style>
+  .crew-network {
+    position: relative;
+    padding: 0 24px 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* ═══ Network field ═══ */
+  .cn-field {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 10px 0 80px;
+  }
+
+  /* ═══ Stage groups (mobile) ═══ */
+  .cn-stage {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    padding: 12px 0 8px;
+    position: relative;
+  }
+
+  .cn-stage-label {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 0.58rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--sc);
+    opacity: 0.5;
+    margin-bottom: 4px;
+  }
+
+  /* ═══ Nodes ═══ */
+  .cn-node {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px;
+    background: rgba(19, 26, 46, 0.8);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 3;
+    width: 80px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  .cn-node:hover {
+    border-color: var(--nc);
+    transform: scale(1.08);
+    box-shadow: 0 0 24px rgba(0,0,0,0.3);
+  }
+  .cn-node:focus-visible {
+    outline: 2px solid var(--nc);
+    outline-offset: 3px;
+  }
+  .cn-node.is-dimmed {
+    opacity: 0.25;
+    transform: scale(0.95);
+    pointer-events: none;
+  }
+  .cn-node.is-highlighted {
+    border-color: var(--nc);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--nc) 25%, transparent);
+  }
+  .cn-node.is-active {
+    border-color: var(--nc);
+    box-shadow: 0 0 30px color-mix(in srgb, var(--nc) 40%, transparent);
+    transform: scale(1.12);
+  }
+
+  .cn-glow {
+    position: absolute;
+    inset: -6px;
+    border-radius: 18px;
+    background: radial-gradient(circle, color-mix(in srgb, var(--nc) 12%, transparent) 0%, transparent 70%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .cn-node:hover .cn-glow,
+  .cn-node.is-active .cn-glow { opacity: 1; }
+
+  .cn-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    object-fit: contain;
+  }
+  .cn-emoji {
+    font-size: 1.6rem;
+    line-height: 1;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .cn-name {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-align: center;
+    line-height: 1.2;
+    transition: color 0.3s;
+  }
+  .cn-node:hover .cn-name,
+  .cn-node.is-active .cn-name { color: var(--text); }
+
+  /* ═══ Role label — hidden by default, shown on active ═══ */
+  .cn-role {
+    font-size: 0.55rem;
+    font-weight: 600;
+    color: var(--nc);
+    text-align: center;
+    line-height: 1.2;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.25s ease, max-height 0.25s ease;
+  }
+  .cn-node.is-active .cn-role {
+    opacity: 1;
+    max-height: 2em;
+  }
+
+  /* ═══ VPN group — Gluetun in center, Transmission left, SABnzbd right ═══ */
+  .cn-vpn-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px 10px;
+    border: 1px dashed rgba(74, 222, 128, 0.2);
+    border-radius: 20px;
+    background: rgba(74, 222, 128, 0.03);
+    position: relative;
+  }
+  .cn-vpn-group.is-highlighted,
+  .cn-vpn-group.is-active {
+    border-color: rgba(74, 222, 128, 0.4);
+    background: rgba(74, 222, 128, 0.06);
+  }
+  .cn-vpn-group.is-dimmed {
+    opacity: 0.25;
+    pointer-events: none;
+  }
+  .cn-node-vpn {
+    background: rgba(74, 222, 128, 0.06);
+    border-color: rgba(74, 222, 128, 0.15);
+  }
+  .cn-vpn-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .cn-vpn-label {
+    font-size: 0.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(74, 222, 128, 0.35);
+    text-align: center;
+  }
+
+  /* ═══ Desktop layout ═══ */
+  @media (min-width: 768px) {
+    .cn-field {
+      display: block;
+      min-height: 920px;
+      padding-bottom: 10px;
+    }
+
+    .cn-stage { display: contents; }
+    .cn-stage-label { display: none; }
+
+    .cn-node {
+      position: absolute;
+      width: 90px;
+    }
+
+    /* VPN group on desktop — absolutely positioned container */
+    .cn-vpn-group {
+      position: absolute;
+      left: 50%;
+      top: 60%;
+      transform: translateX(-50%);
+      right: auto;
+      width: auto;
+      z-index: 2;
+    }
+    .cn-vpn-group .cn-node {
+      position: relative;
+    }
+
+    [data-node-id="jellyseerr"]  { left: 40%; top: 2%; }
+    [data-node-id="paperseerr"]  { left: 58%; top: 2%; }
+    [data-node-id="radarr"]         { left: 28%;  top: 16%; }
+    [data-node-id="sonarr"]         { left: 56%;  top: 16%; }
+    [data-node-id="lidarr"]         { left: 20%;  top: 30%; }
+    [data-node-id="bazarr"]         { left: 44%;  top: 33%; }
+    [data-node-id="lazylibrarian"]  { left: 68%;  top: 30%; }
+    [data-node-id="prowlarr"]       { left: 44%;  top: 45%; }
+    [data-node-id="media-library"]  { left: 44%;  top: 76%; }
+    [data-node-id="jellyfin"]       { left: 22%;  top: 90%; }
+    [data-node-id="kavita"]         { left: 44%;  top: 88%; }
+    [data-node-id="audiobookshelf"] { left: 66%;  top: 90%; }
+
+    .cn-node:hover { transform: scale(1.08); }
+    .cn-node.is-active { transform: scale(1.12); }
+    .cn-vpn-group .cn-node:hover,
+    .cn-vpn-group .cn-node.is-active { transform: scale(1.08); }
+  }
+
+  @media (min-width: 1024px) {
+    .cn-field { min-height: 980px; }
+  }
+
+  /* ═══ Hidden until canvas ready — coordinated reveal ═══ */
+  .crew-network {
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .crew-network.is-revealed {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  import { CrewNetwork } from '../lib/crew-network';
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const field = document.getElementById('cnField') as HTMLElement;
+  const section = document.getElementById('crewNetwork') as HTMLElement;
+  const nodes = field.querySelectorAll<HTMLButtonElement>('.cn-node');
+
+  let network: CrewNetwork | null = null;
+
+  // Flow: Request → Automation → Search → Downloads → Media Library → Streaming
+  // Downloads land in organized folders, consumption apps read from those folders
+  const connPairs = [
+    ['jellyseerr', 'radarr'], ['jellyseerr', 'sonarr'],
+    ['paperseerr', 'lazylibrarian'],
+    ['radarr', 'prowlarr'], ['sonarr', 'prowlarr'], ['lidarr', 'prowlarr'], ['lazylibrarian', 'prowlarr'],
+    ['radarr', 'gluetun'], ['sonarr', 'gluetun'], ['lidarr', 'gluetun'], ['lazylibrarian', 'gluetun'],
+    ['prowlarr', 'gluetun'],
+    ['gluetun', 'transmission'], ['gluetun', 'sabnzbd'],
+    ['gluetun', 'media-library'],
+    ['media-library', 'jellyfin'], ['media-library', 'kavita'], ['media-library', 'audiobookshelf'],
+    ['bazarr', 'radarr'], ['bazarr', 'sonarr'],
+  ];
+
+  function isNodeConnected(a: string, b: string): boolean {
+    return connPairs.some(([x, y]) => (x === a && y === b) || (y === a && x === b));
+  }
+
+  // ── Coordinated reveal ──
+  const nodeEls = gsap.utils.toArray<HTMLElement>('.cn-node');
+  gsap.set(nodeEls, { opacity: 0, scale: 0.85 });
+
+  ScrollTrigger.create({
+    trigger: '#crewNetwork',
+    start: 'top 85%',
+    once: true,
+    onEnter: () => {
+      network = new CrewNetwork(field, () => {
+        section.classList.add('is-revealed');
+        gsap.to(nodeEls, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.5,
+          stagger: { amount: 0.6, from: 'start' },
+          ease: 'back.out(1.2)',
+        });
+      });
+    },
+  });
+
+  // ── VPN group element ──
+  const vpnGroup = field.querySelector('.cn-vpn-group') as HTMLElement | null;
+  const vpnNodeIds = new Set(['gluetun', 'transmission', 'sabnzbd']);
+
+  // ── Click to explore ──
+  let activeNode: string | null = null;
+
+  function showRole(node: HTMLElement, show: boolean) {
+    const role = node.querySelector('.cn-role') as HTMLElement | null;
+    if (!role) return;
+    role.style.opacity = show ? '1' : '';
+    role.style.maxHeight = show ? '2em' : '';
+  }
+
+  function selectNode(nodeId: string) {
+    activeNode = nodeId;
+
+    // Determine if any VPN node is connected to the selected node
+    const vpnConnected = isNodeConnected(nodeId, 'gluetun') ||
+      isNodeConnected(nodeId, 'transmission') ||
+      isNodeConnected(nodeId, 'sabnzbd');
+    const isVpnNode = vpnNodeIds.has(nodeId);
+
+    nodes.forEach((n) => {
+      const nid = n.dataset.nodeId!;
+      n.classList.remove('is-dimmed', 'is-active', 'is-highlighted');
+      showRole(n, nid === nodeId);
+      if (nid === nodeId) n.classList.add('is-active');
+      else if (isNodeConnected(nodeId, nid)) n.classList.add('is-highlighted');
+      else if (!isVpnNode || !vpnNodeIds.has(nid)) n.classList.add('is-dimmed');
+    });
+
+    // VPN group container state
+    if (vpnGroup) {
+      vpnGroup.classList.remove('is-dimmed', 'is-active', 'is-highlighted');
+      if (isVpnNode) vpnGroup.classList.add('is-active');
+      else if (vpnConnected) vpnGroup.classList.add('is-highlighted');
+      else vpnGroup.classList.add('is-dimmed');
+    }
+
+    if (network) network.highlightNode(nodeId);
+  }
+
+  function clearSelection() {
+    activeNode = null;
+    nodes.forEach((n) => {
+      n.classList.remove('is-dimmed', 'is-active', 'is-highlighted');
+      showRole(n, false);
+    });
+    if (vpnGroup) vpnGroup.classList.remove('is-dimmed', 'is-active', 'is-highlighted');
+    if (network) network.highlightNode(null);
+  }
+
+  nodes.forEach((node) => {
+    node.addEventListener('click', () => {
+      const id = node.dataset.nodeId!;
+      if (activeNode === id) {
+        clearSelection();
+      } else {
+        selectNode(id);
+      }
+    });
+  });
+
+  // ── Click outside to deselect ──
+  field.addEventListener('click', (e) => {
+    if (activeNode && (e.target as HTMLElement).closest('.cn-node') === null) {
+      clearSelection();
+    }
+  });
+
+  // ── Escape to deselect ──
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && activeNode) {
+      clearSelection();
+    }
+  });
+
+  // ── Resize ──
+  let resizeTimer: ReturnType<typeof setTimeout>;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (network) network.recompute();
+    }, 150);
+  });
+
+  document.addEventListener('astro:before-swap', () => {
+    if (network) network.destroy();
+    network = null;
+  });
+</script>

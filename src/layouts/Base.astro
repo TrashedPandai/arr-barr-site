@@ -136,14 +136,14 @@ const currentPath = Astro.url.pathname;
 </footer>
 
 <style>
-  nav {
+  #nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
     background: rgba(10, 14, 26, 0.85);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(30,41,59,0.6);
     transition: box-shadow 0.3s;
   }
-  nav.scrolled { box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
+  #nav.scrolled { box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
 
   .nav-inner {
     max-width: 1200px; margin: 0 auto;
