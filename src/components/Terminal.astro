@@ -4,7 +4,7 @@
     <span class="term-dot red"></span>
     <span class="term-dot yellow"></span>
     <span class="term-dot green"></span>
-    <span class="term-title">arr-barr</span>
+    <span class="term-title">arr — pandai technologies</span>
   </div>
   <div class="term-body" id="termBody"></div>
 </div>
@@ -12,7 +12,7 @@
 <style>
   .hero-term {
     position: relative;
-    max-width: 520px; margin: 28px auto 0;
+    max-width: 540px; margin: 28px auto 0;
     background: #080c16;
     border: 1px solid rgba(99,102,241,0.15);
     border-radius: 10px; overflow: hidden;
@@ -30,100 +30,477 @@
   .term-dot.yellow { background: #fbbf24; }
   .term-dot.green { background: #4ade80; }
   .term-title {
-    margin-left: auto; font-size: 0.68rem; color: var(--text-muted);
+    margin-left: auto; font-size: 0.6rem; color: var(--text-muted);
     font-family: 'SF Mono', 'Fira Code', monospace; letter-spacing: 0.5px;
   }
   .term-body {
-    padding: 14px 16px; height: 180px;
+    padding: 10px 12px; height: 340px;
     font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
-    font-size: 0.78rem; line-height: 1.65;
-    color: var(--text-dim); overflow: hidden;
+    font-size: 0.66rem; line-height: 1.5;
+    color: var(--text-dim); overflow-y: auto; overflow-x: hidden;
   }
 </style>
 
 <script>
+  // ── Catppuccin Mocha color aliases ──
   const D = 't-dim', G = 't-green', C = 't-cyan', A = 't-amber';
-  const s = (c: string, t: string) => `<span class="${c}">${t}</span>`;
-  const dot = (c: string) => s(c, '&#x25CF;');
-  const pad = (t: string) => s(D, t);
+  const P = 't-peach', M = 't-mauve', T = 't-teal', S1 = 't-surface';
+  const TXT = 't-text', SAP = 't-sapphire', OV = 't-overlay';
+  const RED = 't-red', BLUE = 't-blue';
 
-  const scenes = [
+  const s = (c: string, t: string) => `<span class="${c}">${t}</span>`;
+  const dot = (c: string) => s(c, '●');
+  const chk = (c: string) => s(c, '✓');
+  const pad = (t: string) => s(D, t);
+  const div = () => s(S1, '─'.repeat(44));
+  const bold = (c: string, t: string) => `<span class="${c}" style="font-weight:600">${t}</span>`;
+
+  // Braille spinner frames
+  const SPIN = ['⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏'];
+
+  // ── Pandai ASCII Logo ──
+  const LOGO_LINES = [
+    '       ____                 _       _',
+    '      |  _ \\ __ _ _ __   __| | __ _(_)',
+    '      | |_) / _` | \'_ \\ / _` |/ _` | |',
+    '      |  __/ (_| | | | | (_| | (_| | |',
+    '      |_|   \\__,_|_| |_|\\__,_|\\__,_|_|',
+  ];
+  const LOGO_TAGLINE = '      ──── T E C H N O L O G I E S ───';
+
+  // Logo color flash sequence (8 frames)
+  const LOGO_COLORS = [RED, A, TXT, G, SAP, BLUE, M, SAP];
+
+  // Wave characters for progress bar
+  const WAVE_CHARS = '▁▂▃▄▅▆▇█▇▆▅▄▃▂▁';
+
+  // ── Reusable functions ──
+  function boxHeader(title: string, emoji: string): string {
+    const inner = `  Arr Media Stack  ${emoji}  ${title}  `;
+    const padding = 34 - inner.length;
+    const paddedInner = inner + ' '.repeat(Math.max(0, padding));
+    return [
+      s(S1, '╭' + '─'.repeat(34) + '╮'),
+      s(S1, '│') + `<span class="t-gradient">${paddedInner.slice(0, 34)}</span>` + s(S1, '│'),
+      s(S1, '╰' + '─'.repeat(34) + '╯'),
+    ].join('\n');
+  }
+
+  function waveFrame(offset: number, width: number = 35): string {
+    let bar = '';
+    for (let i = 0; i < width; i++) {
+      bar += WAVE_CHARS[(i + offset) % WAVE_CHARS.length];
+    }
+    return bar;
+  }
+
+  // Services for arr start
+  const SERVICES = [
+    { name: 'gluetun', desc: 'VPN Tunnel', port: ':8888', group: 0 },
+    { name: 'transmission', desc: 'Torrents', port: ':9091', group: 0 },
+    { name: 'sabnzbd', desc: 'Usenet', port: ':8080', group: 0 },
+    { name: 'prowlarr', desc: 'Indexers', port: ':9696', group: 1 },
+    { name: 'flaresolverr', desc: 'Anti-Bot Bypass', port: ':8191', group: 1 },
+    { name: 'radarr', desc: 'Movies', port: ':7878', group: 2 },
+    { name: 'sonarr', desc: 'TV Shows', port: ':8989', group: 2 },
+    { name: 'lidarr', desc: 'Music', port: ':8686', group: 2 },
+    { name: 'bazarr', desc: 'Subtitles', port: ':6767', group: 2 },
+    { name: 'jellyfin', desc: 'Media Server', port: ':8096', group: 3 },
+    { name: 'seerr', desc: 'Requests', port: ':5055', group: 3 },
+    { name: 'lazylibrarian', desc: 'Book Search', port: ':5299', group: 4 },
+    { name: 'kavita', desc: 'Book Reader', port: ':5000', group: 4 },
+    { name: 'audiobookshelf', desc: 'Audiobooks', port: ':13378', group: 4 },
+    { name: 'questarr', desc: 'Games', port: ':7474', group: 5 },
+  ];
+
+  const GROUP_HEADERS = [
+    { name: 'NETWORK & DOWNLOADS', color: G },
+    { name: 'INDEXERS', color: A },
+    { name: 'MEDIA MANAGERS', color: SAP },
+    { name: 'STREAMING', color: M },
+    { name: 'BOOKS & AUDIO', color: C },
+    { name: 'GAMING', color: P },
+  ];
+
+  const scenes: {lines: {type:string, text?:string, delay?:number, duration?:number, msg?:string, pct?:number, emoji?:string, title?:string}[]}[] = [
+    // ── Scene 1: arr start (FLAGSHIP) ──
+    { lines: [
+      { type:'prompt', text:'$ arr start' },
+      { type:'logo' },
+      { type:'box', title:'Start', emoji:'🚀' },
+      { type:'start' }, // Special handler for the full start animation
+    ]},
+
+    // ── Scene 2: arr health ──
     { lines: [
       { type:'prompt', text:'$ arr health' },
-      { type:'out', delay:400, text:s(C,'&#x25B8; NETWORK &amp; DOWNLOADS')+' '+s(G,'&#x2713;') },
-      { type:'out', delay:150, text:'  '+dot(G)+' '+pad('gluetun         ')+s(G,'healthy')+pad('   85ms') },
-      { type:'out', delay:100, text:'  '+dot(G)+' '+pad('transmission    ')+s(G,'healthy')+pad('   82ms') },
-      { type:'out', delay:100, text:'  '+dot(G)+' '+pad('sabnzbd         ')+s(G,'healthy')+pad('   90ms') },
-      { type:'out', delay:200, text:s(C,'&#x25B8; MEDIA MANAGERS')+' '+s(G,'&#x2713;') },
-      { type:'out', delay:100, text:'  '+dot(G)+' '+pad('radarr          ')+s(G,'healthy')+pad('  125ms') },
-      { type:'out', delay:100, text:'  '+dot(G)+' '+pad('sonarr          ')+s(G,'healthy')+pad('  167ms') },
-      { type:'out', delay:100, text:'  '+dot(G)+' '+pad('lidarr          ')+s(G,'healthy')+pad('   79ms') },
-      { type:'out', delay:100, text:'  '+dot(G)+' '+pad('bazarr          ')+s(G,'healthy')+pad('  101ms') },
-      { type:'out', delay:150, text:pad('  ... +6 more all healthy') },
-      { type:'out', delay:300, text:'' },
-      { type:'out', delay:100, text:s(G,'15/15')+' '+pad('healthy') },
+      { type:'logo' },
+      { type:'box', title:'Health', emoji:'❤️' },
+      { type:'out', delay:300, text:bold(G,'▸ NETWORK &amp; DOWNLOADS')+' '+chk(G) },
+      { type:'out', delay:100, text:'  '+dot(G)+' '+pad('gluetun         ')+s(G,'healthy')+pad('   85ms') },
+      { type:'out', delay:80,  text:'  '+dot(G)+' '+pad('transmission    ')+s(G,'healthy')+pad('   82ms') },
+      { type:'out', delay:80,  text:'  '+dot(G)+' '+pad('sabnzbd         ')+s(G,'healthy')+pad('   90ms') },
+      { type:'out', delay:200, text:bold(A,'▸ INDEXERS')+' '+chk(G) },
+      { type:'out', delay:80,  text:'  '+dot(G)+' '+pad('prowlarr        ')+s(G,'healthy')+pad('   71ms') },
+      { type:'out', delay:80,  text:'  '+dot(G)+' '+pad('flaresolverr    ')+s(G,'healthy')+pad('   90ms') },
+      { type:'out', delay:200, text:bold(SAP,'▸ MEDIA MANAGERS')+' '+chk(G) },
+      { type:'out', delay:80,  text:'  '+dot(G)+' '+pad('radarr          ')+s(G,'healthy')+pad('  125ms') },
+      { type:'out', delay:80,  text:'  '+dot(G)+' '+pad('sonarr          ')+s(G,'healthy')+pad('  167ms') },
+      { type:'out', delay:80,  text:'  '+dot(G)+' '+pad('lidarr          ')+s(G,'healthy')+pad('   79ms') },
+      { type:'out', delay:80,  text:'  '+dot(G)+' '+pad('bazarr          ')+s(G,'healthy')+pad('  101ms') },
+      { type:'out', delay:200, text:bold(M,'▸ STREAMING')+' '+chk(G) },
+      { type:'out', delay:80,  text:'  '+dot(G)+' '+pad('jellyfin        ')+s(G,'healthy')+pad('   67ms') },
+      { type:'out', delay:80,  text:'  '+dot(G)+' '+pad('seerr           ')+s(G,'healthy')+pad('   85ms') },
+      { type:'out', delay:200, text:bold(C,'▸ BOOKS &amp; AUDIO')+' '+chk(G) },
+      { type:'out', delay:80,  text:'  '+dot(G)+' '+pad('lazylibrarian   ')+s(G,'healthy')+pad('  105ms') },
+      { type:'out', delay:80,  text:'  '+dot(G)+' '+pad('kavita          ')+s(G,'healthy')+pad('   77ms') },
+      { type:'out', delay:80,  text:'  '+dot(G)+' '+pad('audiobookshelf  ')+s(G,'healthy')+pad('  111ms') },
+      { type:'out', delay:200, text:bold(P,'▸ GAMING')+' '+chk(G) },
+      { type:'out', delay:80,  text:'  '+dot(G)+' '+pad('questarr        ')+s(G,'healthy')+pad('  176ms') },
+      { type:'out', delay:200, text:'' },
+      { type:'out', delay:100, text:bold(G,'15/15')+' '+pad('healthy') },
     ]},
-    { lines: [
-      { type:'prompt', text:'$ arr vpn' },
-      { type:'out', delay:500, text:s(C,'TUNNEL') },
-      { type:'out', delay:300, text:'  '+dot(G)+' '+s(G,'CONNECTED') },
-      { type:'out', delay:200, text:'  Public IP '+pad('.........')+' xxx.xxx.xxx.xx' },
-      { type:'out', delay:200, text:'  Location '+pad('..........')+' Amsterdam, NL' },
-      { type:'out', delay:200, text:'  Provider '+pad('..........')+' '+pad('VPN Provider') },
-      { type:'out', delay:300, text:s(C,'SERVICES IN TUNNEL') },
-      { type:'out', delay:200, text:'  '+dot(G)+' '+pad('transmission  ')+pad(':9091  ')+s(G,'accessible') },
-      { type:'out', delay:200, text:'  '+dot(G)+' '+pad('sabnzbd       ')+pad(':8080  ')+s(G,'accessible') },
-      { type:'out', delay:400, text:'' },
-      { type:'out', delay:100, text:s(G,'Your real IP is hidden.')+pad(' Download traffic is protected.') },
-    ]},
+
+    // ── Scene 3: arr req movie (full interactive flow) ──
     { lines: [
       { type:'prompt', text:'$ arr req movie "Galactic Plumber 3"' },
-      { type:'out', delay:600, text:pad('Searching 12 indexers (4 usenet + 8 torrent)...') },
-      { type:'out', delay:800, text:pad('found 47 results \u2014 scoring against 48 custom formats...') },
-      { type:'out', delay:400, text:s(G,'&#x2713;')+' Galactic.Plumber.3.2024.2160p.IMAX.WEB-DL.DV.HDR.Atmos-FLUX' },
-      { type:'out', delay:200, text:'  '+s(G,'+1700')+' WEB Tier 01 \u00b7 '+s(G,'+800')+' IMAX \u00b7 '+s(G,'+500')+' HDR \u00b7 '+s(G,'+75')+' Streaming' },
-      { type:'out', delay:200, text:'  Score: '+s(G,'3075')+' \u2014 grabbing via tunnel '+pad('......')+' '+s(C,'encrypted') },
-      { type:'out', delay:600, text:pad('hardlinked to library (0 bytes) \u00b7 Jellyfin notified') },
-      { type:'out', delay:200, text:s(G,'&#x25CF; Ready to watch')+pad(' \u2014 4K Dolby Vision') },
+      { type:'logo' },
+      { type:'box', title:'Request', emoji:'🎬' },
+      { type:'menu' }, // Interactive menu selection
+      { type:'spinner', duration:1200, msg:'Searching Radarr...' },
+      { type:'out', delay:100, text:'' },
+      { type:'out', delay:100, text:bold(TXT,'Galactic Plumber 3')+pad('  (2024)') },
+      { type:'out', delay:100, text:pad('Action, Adventure · 142 min · ')+s(A,'★ 8.4') },
+      { type:'out', delay:50,  text:'' },
+      { type:'out', delay:50,  text:pad('A retired plumber must save the galaxy using only') },
+      { type:'out', delay:50,  text:pad('a wrench, duct tape, and questionable plumbing...') },
+      { type:'out', delay:50,  text:s(S1,'──────────────────────────────────────────────') },
+      { type:'spinner', duration:1000, msg:'Checking available releases...' },
+      { type:'out', delay:100, text:s(G,'✓')+' '+s(TXT,'47 releases across 12 indexers')+pad(' (31 torrent, 16 usenet)') },
+      { type:'out', delay:150, text:pad('Upgrade target  ')+s(SAP,'Remux-2160p') },
+      { type:'out', delay:100, text:'' },
+      { type:'out', delay:50,  text:pad('  Release                                 Size      Seeds   Indexer') },
+      { type:'out', delay:50,  text:s(S1,'  ─────────────────────────────────────────────────────────────────') },
+      { type:'out', delay:150, text:s(G,'  Galactic.Plumber.3.2024.Remux.2160p...')+pad('  42.3 GB   ▼ 84    NZBg') },
+      { type:'out', delay:150, text:s(SAP,'  Galactic.Plumber.3.2024.2160p.WEB-DL..')+pad('  15.7 GB   ▼ 312   TL') },
+      { type:'out', delay:150, text:s(OV,'  Galactic.Plumber.3.2024.1080p.BluRay..')+pad('   8.2 GB   ▼ 541   FL') },
+      { type:'out', delay:400, text:'' },
+      { type:'out', delay:100, text:s(P,'?')+' '+s(TXT,'Add to Radarr?')+pad('  ')+s(SAP,'▸ ')+bold(TXT,'Yes') },
+      { type:'out', delay:600, text:s(G,'✓')+' '+s(TXT,'Added!')+pad(' Monitoring for ')+s(SAP,'Remux-2160p')+pad(' quality.') },
     ]},
+
+    // ── Scene 4: arr dl --once (full download dashboard) ──
     { lines: [
       { type:'prompt', text:'$ arr dl --once' },
-      { type:'out', delay:400, text:s(C,'TORRENTS (Transmission)')+pad('            &#x25B2; 4.2 MB/s') },
-      { type:'out', delay:200, text:'  '+s(A,'SEEDING')+pad(' (14)') },
-      { type:'out', delay:150, text:'  '+pad('Space.Cowboy.S02.1080p...')+pad('   ratio 0.32 ')+s(C,'&#x25B2;')+pad(' 841 KB/s') },
-      { type:'out', delay:150, text:'  '+pad('Neon.Depths.2024.2160p...')+pad('   ratio 1.71 ')+s(C,'&#x25B2;')+pad('  15 KB/s') },
-      { type:'out', delay:150, text:pad('  ... and 12 more seeding') },
-      { type:'out', delay:300, text:s(C,'USENET (SABnzbd)')+pad('                      Idle') },
-      { type:'out', delay:200, text:'  '+s(G,'&#x2713;')+' '+pad('Phantom.Route.S01.2160p.WEB-DL')+pad('    25.5 GB') },
-      { type:'out', delay:200, text:'  '+s(G,'&#x2713;')+' '+pad('Signal.Lost.S03E07.1080p')+pad('          314 MB') },
+      { type:'logo' },
+      { type:'box', title:'Downloads', emoji:'⬇️' },
+      { type:'out', delay:300, text:bold(SAP,'TORRENTS')+pad(' (Transmission)') },
+      { type:'out', delay:100, text:s(S1,'────────────────────────────────────────────')+pad('  ▼ 12.4 MB/s  ▲ 3.8 MB/s') },
+      { type:'out', delay:200, text:'  '+s(P,'DOWNLOADING')+pad(' (1)') },
+      { type:'out', delay:100, text:'' },
+      { type:'out', delay:100, text:'  '+s(TXT,'Space.Cowboy.S02E04.2160p.WEB-DL.DDP5.1.H.265-CREW') },
+      { type:'bar', delay:100, pct:68 },
+      { type:'out', delay:100, text:'' },
+      { type:'out', delay:200, text:'  '+s(G,'SEEDING')+pad(' (14)') },
+      { type:'out', delay:100, text:'  '+pad('Neon.Depths.2024.Remux.2160p...')+pad('       ratio 2.41 ')+s(C,'▲')+pad(' 841 KB/s') },
+      { type:'out', delay:100, text:'  '+pad('Phantom.Route.S01E03.1080p...')+pad('        ratio 0.87 ')+s(C,'▲')+pad(' 120 KB/s') },
+      { type:'out', delay:100, text:pad('  ... and 12 more seeding') },
+      { type:'out', delay:200, text:'' },
+      { type:'out', delay:100, text:bold(SAP,'USENET')+pad(' (SABnzbd)') },
+      { type:'out', delay:100, text:s(S1,'────────────────────────────────────────────')+pad('  ▼ 0 B  Idle') },
+      { type:'out', delay:200, text:'  '+s(OV,'RECENT') },
+      { type:'out', delay:100, text:'  '+s(G,'✓')+' '+pad('Signal.Lost.S03E07.2160p.WEB-DL')+pad('             25.5 GB') },
+      { type:'out', delay:100, text:'  '+s(G,'✓')+' '+pad('Starfield.OST.FLAC')+pad('                         1.2 GB') },
+      { type:'out', delay:200, text:s(S1,'──────────────────────────────────────────────────────────────') },
+      { type:'out', delay:100, text:'' },
+      { type:'out', delay:100, text:s(TXT,'Total: 1 downloading, 14 seeding') },
+    ]},
+
+    // ── Scene 5: arr vpn ──
+    { lines: [
+      { type:'prompt', text:'$ arr vpn' },
+      { type:'logo' },
+      { type:'box', title:'VPN', emoji:'🔒' },
+      { type:'spinner', duration:1400, msg:'Checking tunnel...' },
+      { type:'out', delay:100, text:'' },
+      { type:'out', delay:100, text:bold(C,'TUNNEL') },
+      { type:'out', delay:200, text:'  '+dot(G)+' '+bold(G,'CONNECTED') },
+      { type:'out', delay:150, text:'  '+s(D,'Public IP')+pad('  ........... ')+s(TXT,'xxx.xxx.xxx.xx') },
+      { type:'out', delay:150, text:'  '+s(D,'Location')+pad('   ........... ')+s(TXT,'Amsterdam, NL') },
+      { type:'out', delay:150, text:'  '+s(D,'Provider')+pad('   ........... ')+pad('VPN Provider') },
+      { type:'out', delay:200, text:'' },
+      { type:'out', delay:100, text:bold(C,'SERVICES IN TUNNEL') },
+      { type:'out', delay:150, text:'  '+dot(G)+' '+pad('transmission    ')+s(OV,':9091')+pad('  ')+s(G,'accessible') },
+      { type:'out', delay:150, text:'  '+dot(G)+' '+pad('sabnzbd         ')+s(OV,':8080')+pad('  ')+s(G,'accessible') },
       { type:'out', delay:300, text:'' },
-      { type:'out', delay:100, text:pad('Total: 14 seeding, 0 downloading') },
+      { type:'out', delay:100, text:s(G,'✓')+' '+s(TXT,'Your real IP is hidden.')+pad(' Download traffic is protected.') },
     ]},
   ];
 
   function sleep(ms: number) { return new Promise(r => setTimeout(r, ms)); }
 
   let sceneIdx = 0;
-
   let currentAbort: AbortController | null = null;
+
+  // ── Logo animation handler ──
+  async function animateLogo(body: HTMLElement, signal: AbortSignal): Promise<void> {
+    const logoDiv = document.createElement('div');
+    logoDiv.style.cssText = 'white-space:pre;font-size:0.55rem;line-height:1.2;';
+    body.appendChild(logoDiv);
+
+    // Flash through colors (8 frames × 75ms = 600ms)
+    for (const color of LOGO_COLORS) {
+      if (signal.aborted) return;
+      logoDiv.innerHTML = LOGO_LINES.map(l => s(color, l)).join('\n');
+      await sleep(75);
+    }
+    // Add TECHNOLOGIES tagline in cyan
+    logoDiv.innerHTML += '\n' + s(C, LOGO_TAGLINE);
+    await sleep(100);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  // ── arr start animation handler ──
+  async function animateStart(body: HTMLElement, signal: AbortSignal): Promise<void> {
+    // Create service lines with spinners
+    const serviceElements: HTMLElement[] = [];
+    const groupStartIdx = [0, 3, 5, 9, 11, 14]; // Where each group starts
+
+    for (let i = 0; i < SERVICES.length; i++) {
+      if (signal.aborted) return;
+      const svc = SERVICES[i];
+      const div = document.createElement('div');
+      div.style.cssText = 'margin:1px 0;min-height:1.4em;';
+      div.innerHTML = s(SAP, SPIN[0]) + '  ' + pad(svc.name.padEnd(16)) + pad(svc.desc);
+      div.dataset.idx = String(i);
+      body.appendChild(div);
+      serviceElements.push(div);
+      await sleep(20);
+    }
+
+    // Progress bar line
+    const barDiv = document.createElement('div');
+    barDiv.style.cssText = 'margin:8px 0 4px;min-height:1.4em;';
+    body.appendChild(barDiv);
+    body.scrollTop = body.scrollHeight;
+
+    // Animate spinners + progress
+    let completed = 0;
+    const completionTimes = [1200, 1200, 1200, 1400, 1400, 1700, 1700, 1700, 1700, 1900, 1900, 2100, 2100, 2100, 2300];
+    const startTime = Date.now();
+    const completedSet = new Set<number>();
+
+    // Group header elements (to be inserted)
+    const groupHeaders: (HTMLElement | null)[] = [null, null, null, null, null, null];
+    const groupInserted = [false, false, false, false, false, false];
+
+    while (completed < 15) {
+      if (signal.aborted) return;
+      const elapsed = Date.now() - startTime;
+
+      // Update spinners and check completions
+      for (let i = 0; i < SERVICES.length; i++) {
+        if (!completedSet.has(i)) {
+          if (elapsed >= completionTimes[i]) {
+            // Complete this service
+            const svc = SERVICES[i];
+            serviceElements[i].innerHTML = s(G, '●') + '  ' + s(TXT, svc.name.padEnd(16)) + pad(svc.desc) + '  ' + s(OV, svc.port);
+            completedSet.add(i);
+            completed++;
+
+            // Check if group is complete
+            const group = svc.group;
+            const groupServices = SERVICES.filter(s => s.group === group);
+            const allGroupDone = groupServices.every((_, idx) => {
+              const svcIdx = SERVICES.findIndex(s => s === groupServices[idx]);
+              return completedSet.has(svcIdx);
+            });
+
+            if (allGroupDone && !groupInserted[group]) {
+              // Insert group header after 100ms delay
+              setTimeout(() => {
+                if (signal.aborted) return;
+                const headerDiv = document.createElement('div');
+                headerDiv.style.cssText = 'margin:4px 0 2px;opacity:0;transition:opacity 200ms;';
+                headerDiv.innerHTML = bold(GROUP_HEADERS[group].color, '▸ ' + GROUP_HEADERS[group].name) + ' ' + chk(G);
+                // Insert before first service of this group
+                const firstIdx = groupStartIdx[group];
+                body.insertBefore(headerDiv, serviceElements[firstIdx]);
+                setTimeout(() => { headerDiv.style.opacity = '1'; }, 10);
+                groupHeaders[group] = headerDiv;
+              }, 100);
+              groupInserted[group] = true;
+            }
+          } else {
+            // Animate spinner
+            const frame = Math.floor(elapsed / 80) % SPIN.length;
+            const svc = SERVICES[i];
+            serviceElements[i].innerHTML = s(SAP, SPIN[frame]) + '  ' + pad(svc.name.padEnd(16)) + pad(svc.desc);
+          }
+        }
+      }
+
+      // Update progress bar
+      const barWidth = 35;
+      const filled = Math.floor(completed * barWidth / 15);
+      let bar = '█'.repeat(filled) + '░'.repeat(barWidth - filled);
+      barDiv.innerHTML = s(SAP, bar) + '  ' + s(TXT, `${completed}/15`);
+
+      await sleep(40);
+      body.scrollTop = body.scrollHeight;
+    }
+
+    // Wave animation at 15/15
+    const waveStart = Date.now();
+    while (Date.now() - waveStart < 1200) {
+      if (signal.aborted) return;
+      const offset = Math.floor((Date.now() - waveStart) / 80);
+      barDiv.innerHTML = s(SAP, waveFrame(offset)) + '  ' + s(G, '15/15');
+      await sleep(40);
+    }
+
+    // Clear and show completion
+    await sleep(200);
+    if (signal.aborted) return;
+
+    // Add completion output
+    const completionLines = [
+      '',
+      s(S1, '─'.repeat(58)),
+      '  ' + bold(G, 'ALL SYSTEMS OPERATIONAL'),
+      '  ' + s(TXT, '15 containers launched successfully'),
+      '    ' + pad('arr status   — detailed health check'),
+      '    ' + pad('arr logs     — view container logs'),
+    ];
+
+    for (const lineText of completionLines) {
+      if (signal.aborted) return;
+      const div = document.createElement('div');
+      div.style.cssText = 'margin:1px 0;min-height:1.4em;';
+      div.innerHTML = lineText;
+      body.appendChild(div);
+      body.scrollTop = body.scrollHeight;
+      await sleep(50);
+    }
+  }
 
   async function runSceneAbortable(scene: typeof scenes[0], signal: AbortSignal) {
     const body = document.getElementById('termBody');
     if (!body) return;
     body.innerHTML = '';
+
     for (const line of scene.lines) {
       if (signal.aborted) return;
-      const div = document.createElement('div');
-      div.style.cssText = 'margin:2px 0;min-height:1.65em;';
-      body.appendChild(div);
+
+      // Auto-scroll: keep latest content visible
+      body.scrollTop = body.scrollHeight;
+
       if (line.type === 'prompt') {
-        const parts = line.text.split(' '), prompt = parts[0], cmd = parts.slice(1).join(' ');
+        const div = document.createElement('div');
+        div.style.cssText = 'margin:1px 0;min-height:1.4em;';
+        body.appendChild(div);
+        const parts = line.text!.split(' '), prompt = parts[0], cmd = parts.slice(1).join(' ');
         div.innerHTML = `<span class="t-amber">${prompt}</span> <span class="t-cmd"></span><span class="term-cursor"></span>`;
         const cmdEl = div.querySelector('.t-cmd')!;
         const cur = div.querySelector('.term-cursor')!;
-        for (let i = 0; i <= cmd.length; i++) { if (signal.aborted) return; cmdEl.textContent = cmd.slice(0,i); await sleep(45); }
-        cur.remove(); await sleep(200);
-      } else { await sleep(line.delay||100); div.innerHTML = line.text; }
+        for (let i = 0; i <= cmd.length; i++) {
+          if (signal.aborted) return;
+          cmdEl.textContent = cmd.slice(0,i);
+          await sleep(35);
+        }
+        cur.remove();
+        await sleep(200);
+
+      } else if (line.type === 'logo') {
+        await animateLogo(body, signal);
+
+      } else if (line.type === 'box') {
+        const div = document.createElement('div');
+        div.style.cssText = 'margin:4px 0;white-space:pre;';
+        div.innerHTML = boxHeader(line.title || '', line.emoji || '');
+        body.appendChild(div);
+        await sleep(100);
+
+      } else if (line.type === 'start') {
+        await animateStart(body, signal);
+
+      } else if (line.type === 'menu') {
+        // Interactive menu selection animation
+        const menuDiv = document.createElement('div');
+        menuDiv.style.cssText = 'margin:4px 0;white-space:pre;';
+        body.appendChild(menuDiv);
+
+        const options = ['Movie', 'TV Show', 'Music', 'Book', 'Game'];
+        // Show menu with Movie highlighted
+        menuDiv.innerHTML = s(P, '?') + ' ' + s(TXT, 'What are you looking for?') + '\n' +
+          options.map((opt, i) =>
+            i === 0
+              ? '  ' + s(SAP, '▸') + ' ' + bold(TXT, opt)
+              : '    ' + pad(opt)
+          ).join('\n');
+
+        await sleep(800);
+        if (signal.aborted) return;
+
+        // Change selected to green
+        menuDiv.innerHTML = s(P, '?') + ' ' + s(TXT, 'What are you looking for?') + '\n' +
+          options.map((opt, i) =>
+            i === 0
+              ? '  ' + s(G, '▸') + ' ' + bold(G, opt)
+              : '    ' + pad(opt)
+          ).join('\n');
+
+        await sleep(300);
+        if (signal.aborted) return;
+
+        // Remove menu
+        menuDiv.remove();
+
+      } else if (line.type === 'spinner') {
+        const div = document.createElement('div');
+        div.style.cssText = 'margin:1px 0;min-height:1.4em;';
+        body.appendChild(div);
+        const dur = line.duration || 1000;
+        const msg = line.msg || '';
+        const start = Date.now();
+        let frame = 0;
+        while (Date.now() - start < dur) {
+          if (signal.aborted) return;
+          div.innerHTML = `<span class="t-sapphire">${SPIN[frame % SPIN.length]}</span> <span class="t-dim">${msg}</span>`;
+          frame++;
+          await sleep(80);
+        }
+        div.remove(); // spinner line disappears when done
+
+      } else if (line.type === 'bar') {
+        const div = document.createElement('div');
+        div.style.cssText = 'margin:1px 0;min-height:1.4em;';
+        body.appendChild(div);
+        // Animated progress bar fill
+        const target = line.pct || 50;
+        const width = 30;
+        const blocks = ['░','▏','▎','▍','▌','▋','▊','▉','█'];
+        for (let p = 0; p <= target; p += 2) {
+          if (signal.aborted) return;
+          const filled = Math.floor(p * width / 100);
+          const frac = Math.floor(((p * width / 100) - filled) * 8);
+          let bar = '█'.repeat(filled);
+          if (filled < width) bar += blocks[frac] || '░';
+          bar += '░'.repeat(Math.max(0, width - filled - 1));
+          const pctStr = p.toFixed(1) + '%';
+          div.innerHTML = `  <span class="t-sapphire">${bar}</span>  <span class="t-text">${pctStr}</span>   <span class="t-dim">4.2 GB left   ETA 8m 12s</span>`;
+          await sleep(20);
+        }
+
+      } else {
+        const div = document.createElement('div');
+        div.style.cssText = 'margin:1px 0;min-height:1.4em;';
+        body.appendChild(div);
+        await sleep(line.delay || 100);
+        div.innerHTML = line.text || '';
+      }
+
+      body.scrollTop = body.scrollHeight;
     }
   }
 
@@ -140,21 +517,35 @@
     }
   }
 
-  // Click to skip to next scene
   document.querySelector('.hero-term')?.addEventListener('click', skipToNextScene);
-
   termLoop();
 </script>
 
 <style is:global>
-  .t-dim { color: var(--text-muted); }
-  .t-green { color: var(--green); }
-  .t-cyan { color: var(--cyan); }
-  .t-amber { color: var(--yellow); }
-  .t-cmd { color: var(--text); }
+  /* Catppuccin Mocha palette */
+  .t-dim { color: #6c7086; }
+  .t-overlay { color: #7f849c; }
+  .t-surface { color: #45475a; }
+  .t-text { color: #cdd6f4; }
+  .t-green { color: #a6e3a1; }
+  .t-cyan { color: #94e2d5; }
+  .t-amber { color: #f9e2af; }
+  .t-peach { color: #fab387; }
+  .t-mauve { color: #cba6f7; }
+  .t-teal { color: #94e2d5; }
+  .t-sapphire { color: #74c7ec; }
+  .t-red { color: #f38ba8; }
+  .t-blue { color: #89b4fa; }
+  .t-cmd { color: #cdd6f4; }
+  .t-gradient {
+    background: linear-gradient(90deg, #74c7ec, #cba6f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
   .term-cursor {
-    display: inline-block; width: 7px; height: 14px;
-    background: var(--yellow); vertical-align: text-bottom;
+    display: inline-block; width: 6px; height: 12px;
+    background: #f9e2af; vertical-align: text-bottom;
     animation: blink 1s step-end infinite; margin-left: 1px;
   }
   @keyframes blink { 50% { opacity: 0; } }
