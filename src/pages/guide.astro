@@ -33,12 +33,12 @@ import Base from '../layouts/Base.astro';
       <div class="req-card">
         <span class="req-icon">&#x1F5A5;</span>
         <h3>A Server</h3>
-        <p>A Synology NAS, Linux box, or any machine that can run Docker 24/7. The DS920+ is our reference hardware, but anything with 4GB+ RAM works.</p>
+        <p>A NAS, mini PC, old desktop, or even a laptop with the battery removed and always plugged in. Anything that runs Docker 24/7 with 4GB+ RAM works.</p>
       </div>
       <div class="req-card">
         <span class="req-icon">&#x1F433;</span>
         <h3>Docker & Compose</h3>
-        <p>Docker Engine + Docker Compose v2. Synology users get this through Container Manager. Linux users: follow the <a href="https://docs.docker.com/engine/install/">official install guide</a>.</p>
+        <p>Docker Engine + Docker Compose v2. Some NAS devices include this as a built-in package. Linux users: follow the <a href="https://docs.docker.com/engine/install/">official install guide</a>.</p>
       </div>
       <div class="req-card">
         <span class="req-icon">&#x1F510;</span>
@@ -95,7 +95,7 @@ import Base from '../layouts/Base.astro';
     <div class="env-table">
       <div class="env-row env-header"><span>Variable</span><span>What it does</span></div>
       <div class="env-row"><span><code>DATA_ROOT</code></span><span>Where all media and downloads live. Single mount = hardlinks work.</span></div>
-      <div class="env-row"><span><code>PUID</code> / <code>PGID</code></span><span>User/group ID for file ownership. Synology: <code>1026:100</code>.</span></div>
+      <div class="env-row"><span><code>PUID</code> / <code>PGID</code></span><span>User/group ID for file ownership. Run <code>id</code> in your terminal to find yours.</span></div>
       <div class="env-row"><span><code>TZ</code></span><span>Your timezone. e.g. <code>America/New_York</code>.</span></div>
       <div class="env-row"><span><code>VPN_*</code></span><span>WireGuard credentials from your VPN provider (see next step).</span></div>
     </div>
@@ -259,7 +259,7 @@ import Base from '../layouts/Base.astro';
       <details class="faq-item">
         <summary>Jellyfin says "No compatible streams"</summary>
         <div class="faq-body">
-          <p>The file needs transcoding but your server can't keep up. Enable hardware transcoding in Jellyfin settings (QSV for Intel, VAAPI for others). On a Synology DS920+, QSV handles 4K with ease.</p>
+          <p>The file needs transcoding but your server can't keep up. Enable hardware transcoding in Jellyfin settings (QSV for Intel, VAAPI for others). Most modern Intel CPUs handle 4K transcoding with ease via QSV.</p>
         </div>
       </details>
       <details class="faq-item">

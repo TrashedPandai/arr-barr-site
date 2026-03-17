@@ -248,21 +248,21 @@ const currentPath = Astro.url.pathname;
       helmSvg.style.transform = `rotate(${scrollRotation}deg)`;
     }, { passive: true });
 
-    // Click: reel back (counter-clockwise spin to top)
-    helmBtn.addEventListener('click', (e) => {
-      e.preventDefault();
+    // Single click: reel back to top | Double click/tap: navigate home
+    let clickTimer: ReturnType<typeof setTimeout> | null = null;
+    const DOUBLE_TAP_MS = 300;
+
+    function reelToTop() {
       if (window.scrollY < 10) return;
       reeling = true;
 
       const scrollDist = window.scrollY;
       const duration = Math.min(Math.max(scrollDist / 1500, 0.8), 3);
-      // Spin back past 0 for the reeling effect
       const targetRotation = -(Math.max(2, Math.ceil(scrollDist / 800)) * 360);
 
       helmSvg.style.transition = `transform ${duration}s cubic-bezier(0.22,1,0.36,1)`;
       helmSvg.style.transform = `rotate(${targetRotation}deg)`;
 
-      // Scroll to top via Lenis if available
       const lenis = (window as any).__lenis;
       if (lenis) {
         lenis.scrollTo(0, { duration: duration });
@@ -270,16 +270,28 @@ const currentPath = Astro.url.pathname;
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
-      // Reset after reel completes
       setTimeout(() => {
         reeling = false;
         helmSvg.style.transition = 'none';
         helmSvg.style.transform = 'rotate(0deg)';
-        // Re-enable smooth transition after reset
-        requestAnimationFrame(() => {
-          helmSvg.style.transition = '';
-        });
+        requestAnimationFrame(() => { helmSvg.style.transition = ''; });
       }, duration * 1000 + 200);
+    }
+
+    helmBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (clickTimer) {
+        // Double click — navigate home
+        clearTimeout(clickTimer);
+        clickTimer = null;
+        window.location.href = '/';
+      } else {
+        // Wait to see if a second click comes
+        clickTimer = setTimeout(() => {
+          clickTimer = null;
+          reelToTop();
+        }, DOUBLE_TAP_MS);
+      }
     });
   }
 
