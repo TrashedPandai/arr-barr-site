@@ -142,7 +142,7 @@ import Terminal from '../components/Terminal.astro';
 
 <style>
   /* ═══ HERO ═══ */
-  .hero { text-align:center; padding:80px 20px 120px; background:linear-gradient(180deg,#0a1530 0%,#0f1f45 30%,#132a55 60%,#0a0e1a 100%); position:relative; overflow:hidden; }
+  .hero { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:80px 20px; min-height:100svh; background:linear-gradient(180deg,#0a1530 0%,#0f1f45 30%,#132a55 60%,#0a0e1a 100%); position:relative; overflow:hidden; }
   .hero-glow { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse 30% 40% at 70% 15%,rgba(200,220,255,0.08) 0%,transparent 70%),radial-gradient(ellipse 60% 50% at 50% 20%,rgba(100,140,200,0.1) 0%,transparent 70%); }
   .hero h1 { font-size:clamp(2.8rem,8vw,4.2rem); font-weight:800; background:linear-gradient(135deg,#7aa2f7,var(--indigo),var(--purple),#c084fc); background-size:300% 300%; animation:grad 8s ease infinite; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; position:relative; letter-spacing:-1px; }
   @keyframes grad{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
@@ -191,8 +191,8 @@ import Terminal from '../components/Terminal.astro';
     pointer-events:none;
   }
 
-  @media(max-width:768px){ .hero{padding:70px 16px 80px} }
-  @media(max-width:480px){ .hero h1{font-size:2rem} .hero{padding:60px 14px 60px} }
+  @media(max-width:768px){ .hero{padding:70px 16px} }
+  @media(max-width:480px){ .hero h1{font-size:2rem} .hero{padding:60px 14px} }
 
   /* ═══ JOURNEY ═══ */
   .journey-wrap { position:relative; max-width:780px; margin:0 auto; padding:100px 24px 40px 80px; }
